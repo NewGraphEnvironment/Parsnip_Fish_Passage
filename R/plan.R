@@ -7,7 +7,7 @@ plan <- drake_plan(
         path = "./data/parsnip_habitat_assessments.xls", 
         .name_repair = janitor::make_clean_names) %>% 
     purrr::set_names(janitor::make_clean_names(names(.))) %>% 
-    map(at_trim_xlsheet2),
+    map(altools::at_trim_xlsheet2),
   site_data = data_raw %>% 
     purrr::pluck("step_4_stream_site_data"), 
   loc_data = data_raw %>% 
