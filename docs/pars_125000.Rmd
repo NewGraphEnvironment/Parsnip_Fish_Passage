@@ -1,0 +1,106 @@
+---
+title: "habitat_confirmation"
+author: "Al Irvine"
+date: "April 5, 2020"
+output: html_document
+---
+
+```{r setup, include = TRUE, results='hide', echo =FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo=FALSE, results='hide', message=FALSE, warning=FALSE, 
+                      fig.align="center", fig.width = 5.118, fig.height = 3.409,
+                      fig.path = ('fig/'))
+
+```
+
+```{r}
+library(knitr)
+library(drake)
+library(tidyverse)
+library(ggplot2)
+library(altools)
+library(readxl)
+library(janitor)
+library(sf)
+library(data.table)
+library(leaflet)
+library(geosphere)
+library(htmlwidgets)
+```
+
+```{r}
+##filter the points
+make_tracks_of_points <- function(track_points, idx){
+  track_points %>% 
+    slice(min(idx):max(idx))
+}
+
+##turn points into a line for GPS tracks
+##from https://geocompr.github.io/geocompkg/articles/gps-tracks.html
+points2line_trajectory = function(p) {
+  c = st_coordinates(p)
+  i = seq(nrow(p) - 2)
+  l = purrr::map(i, ~ sf::st_linestring(c[.x:(.x + 1), ]))
+  s = purrr::map_dbl(i, function(x) {
+    geosphere::distHaversine(c[x, ], c[(x + 1), ]) /
+      as.numeric(p$time[x + 1] - p$time[x])
+  }
+  )
+  lfc = sf::st_sfc(l)
+  a = seq(length(lfc)) + 1 # sequence to subset
+  p_data = cbind(sf::st_set_geometry(p[a, ], NULL), s)
+  sf::st_sf(p_data, geometry = lfc)
+}
+```
+
+
+```{r}
+##bring in the data
+#we are using drake now and source("make.R") to set up our environment
+drake::loadd(c(fish_data, site_data, loc_data, tracks, track_points))
+```
+
+```{r}
+my_site <- '125000'
+
+
+##doll up the gpx data
+##here are the indexes of the points
+track_point_idx_list <- sf::st_intersects(tracks, track_points) %>% 
+  purrr::set_names(., nm = pull(tracks, name))
+
+tracks_of_points <- lapply(track_point_idx_list, 
+                           make_tracks_of_points, track_points = track_points)
+
+
+my_tracks <- tracks_of_points %>% 
+  keep(names(.) %like% my_site) %>% 
+  map(points2line_trajectory)  ##convert our points to lines
+
+test <- my_tracks %>% pluck(1)
+# addPolylines_multi <- function(x){
+#     addPolylines(data=x,  opacity=1, color = 'red',
+#                    fillOpacity = 0.75, weight=2)
+# }
+
+#clean up workspace
+rm(track_point_idx_list, track_points, tracks)
+```
+
+Get some basic information about our stream and watershed.
+
+```{r }
+##--------lets map it-----------------------------------------------------------------------
+m <- leaflet() %>%
+  addTiles() %>%
+  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
+  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  addPolylines(data=test,  opacity=1, color = 'red',
+                   fillOpacity = 0.75, weight=2) %>%
+  # addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'blue',
+  #              fillOpacity = 0.75, weight=2) %>%
+  addLayersControl(
+    baseGroups = c("Topo","ESRI Aerial"),
+    overlayGroups = c(my_tracks$`125000_ds_track`),
+    options = layersControlOptions(collapsed = T))
+m
+```
