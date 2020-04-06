@@ -6,7 +6,7 @@ plan <- drake_plan(
     map(read_excel, 
         path = "./data/parsnip_habitat_assessments.xls", 
         .name_repair = janitor::make_clean_names) %>% 
-    purrr::set_names(janitor::make_clean_names(names(.))) %>% 
+    purrr::set_names(janitor::make_clean_names(names(.))) %>% #https://github.com/NewGraphEnvironment/altools
     map(altools::at_trim_xlsheet2),
   site_data = data_raw %>% 
     purrr::pluck("step_4_stream_site_data"), 
