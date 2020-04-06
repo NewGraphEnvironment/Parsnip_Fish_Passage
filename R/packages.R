@@ -11,3 +11,4 @@ library(sf)
 library(data.table)
 library(leaflet)
 library(geosphere)
+library(htmlwidgets) ##not sure if we need this
