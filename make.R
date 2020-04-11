@@ -12,7 +12,10 @@ source("R/plan.R")      # Create your drake plan.
 # Call make() to run your work.
 # Your targets will be stored in a hidden .drake/ cache,
 # and you can read them back into memory with loadd() and readd().
-make(plan, lock_envir = FALSE)
+make(plan, 
+     lock_envir = FALSE, ## this seems to solve html rendering issue
+     lock_cache = F,
+     cache_log_file = TRUE)  
 
 
 
