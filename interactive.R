@@ -13,4 +13,3 @@ r_make()
 r_outdated()
 
 library(visNetwork) # so the graph renders
-r_vis_drake_graph()
