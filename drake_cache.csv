@@ -7,13 +7,10 @@ b589a1fab8a20208,import,janitor::make_clean_names
 36d796eb45d1e0e9,import,purrr::pluck
 89bb083f3d897faf,import,purrr::set_names
 d1ab99cba1c328de,import,rmarkdown::render
-cefbe79014649076,target,file ./docs/pars_125000.html
-59fc517dc218c5a2,target,file ./docs/test.html
-de99508e4957f721,target,file ./docs/test2.html
+7427ded11f956fc7,target,file ./docs/pars_125000.html
 f8823c06e759a07c,import,file ./data/field_cleaned.gpx
 177fc3d0ff29cf6a,import,file ./data/parsnip_habitat_assessments.xls
 80c70e16c249d6cf,import,file pars_125000.Rmd
-8fb5bbd454eee6e2,import,file test2.Rmd
 531572991dc29cb7,target,report
 db556de5a7663607,target,site_data
 36122892059f2a3e,target,track_points
