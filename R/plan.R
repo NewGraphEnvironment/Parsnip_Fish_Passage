@@ -20,9 +20,9 @@ plan <- drake_plan(
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
   report = rmarkdown::render(
     knitr_in("pars_125000.Rmd"),
-    output_file = file_out("pars_125000.html"),
+    output_file = file_out("./docs/pars_125000.html"),
     quiet = TRUE
   )
 )
 
-  
+
