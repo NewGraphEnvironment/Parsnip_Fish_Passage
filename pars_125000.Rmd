@@ -1,25 +1,34 @@
 ---
-title: "habitat_confirmation"
-author: "Al Irvine"
+title: "pars_125000"
+author: "Al Irvine and Simon Norris"
 date: "April 5, 2020"
 output: html_document
 ---
 
-```{r setup, include = TRUE, results='hide', echo =FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(echo=FALSE, results='hide', message=FALSE, warning=FALSE, 
+```{r setup, include = TRUE, echo =FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, 
                       fig.align="center", fig.width = 5.118, fig.height = 3.409,
                       fig.path = ('fig/'))
-
 ```
 
 
-```{r}
-##bring in the data
-#we are using drake now and source("make.R") to set up our environment
-drake::loadd(c(fish_data, site_data, loc_data, tracks, track_points))
+```{r include = FALSE, echo =TRUE, message=FALSE}
+
+plot <- drake::r_vis_drake_graph(main = 'Interactive Drake Workflow Graph Showing Project Structure and Dependencies')
 ```
 
+ 
+I believe this reads the _drake.R file in the main project directory
 ```{r}
+plot
+```
+
+Set up for the leaflet map with tracks and track points loaded within the same chunk.  All the packages, functions and plan for data targets is detailed in our .R/ folder.
+```{r echo=TRUE}
+loadd(tracks)
+loadd(track_points)
+
+
 my_site <- '125000'
 
 
@@ -36,27 +45,25 @@ my_tracks <- tracks_of_points %>%
   keep(names(.) %like% my_site) %>% 
   map(points2line_trajectory)  ##convert our points to lines
 
+# names(my_tracks)
 # addPolylines_multi <- function(x){
 #     addPolylines(data=x,  opacity=1, color = 'red',
 #                    fillOpacity = 0.75, weight=2)
 # }
 
 #clean up workspace
-rm(track_point_idx_list, track_points, tracks)
+rm(track_point_idx_list, tracks_of_points)
 ```
 
-Get some basic information about our stream and watershed.
+Map our stream, watershed and key points.
 
-```{r }
+```{r map, echo=TRUE}
 ##--------lets map it-----------------------------------------------------------------------
-##this refuses to render through drake... Maybe we need to make it a function or put it in another 
-##script and point to it...
-##some info on hml widgets here https://data.nozav.org/post/2019-a-short-introduction-to-drake/
 map <- leaflet() %>%
   addTiles() %>%
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
-  addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'red',
+  addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'red',
                    fillOpacity = 0.75, weight=2) %>%
   addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'blue',
                fillOpacity = 0.75, weight=2) %>%
@@ -66,3 +73,13 @@ map <- leaflet() %>%
     options = layersControlOptions(collapsed = T))
 map
 ```
+
+
+```{r echo=TRUE}
+
+history <- drake_history(analyze = TRUE)
+knitr::kable(
+  head(history)
+)
+```
+
