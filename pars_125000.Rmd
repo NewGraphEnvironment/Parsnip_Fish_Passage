@@ -1,9 +1,22 @@
+
+```{r importdata, echo=TRUE}
+drake::loadd(tracks)
+drake::loadd(track_points)
+drake::loadd(c(loc_data, site_data))
+my_site <- '125000'
+# test <- pull_data(sheet = try)
+
+```
+
+
 ---
-title: "pars_125000"
-author: "Al Irvine and Simon Norris"
-date: "April 5, 2020"
 output: html_document
+params:
+  set_title: "My Title!"
+title: "Fish Habitat confirmation - PSCIS Crossing `r my_site` - `r pull_data(sheet = loc_data, site = my_site)`"
+date: "`r format(Sys.time(), '%B %Y')`"
 ---
+
 
 ```{r setup, include = TRUE, echo =FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, 
@@ -17,22 +30,89 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE,
 plot <- drake::r_vis_drake_graph(main = 'Interactive Drake Workflow Graph Showing Project Structure and Dependencies')
 ```
 
- 
-I believe this reads the _drake.R file in the main project directory
+
 ```{r}
+test <- pull_data(sheet = loc_data, site = my_site)
+
+```
+
+
+# Workflow Layout
+
+r_vis_drake_graph creates this plot but needs info from configuration file (defaults to the _drake.R file in the main project directory) [Details Here](https://books.ropensci.org/drake/projects.html#safer-interactivity)
+```{r out.width = '100%'}
 plot
 ```
 
-Set up for the leaflet map with tracks and track points loaded within the same chunk.  All the packages, functions and plan for data targets is detailed in our .R/ folder.
+```{r}
+##need to get basic information
+#road name
+#tenure holder
+#order
+#watershed area
+#mainstem length
+#name stream flows into
+#distance from the downstream confluence to the crossing
+#fish species known in the stream
+#fish species known in downstream system
+#amount of habitat upstream of the crossing
+#table of the type of habitat upstream
+#table of habitat characteristics upstream and downstream
+
+```
+
+
+```{r}
+loadd(table)
+
+names_table <- tibble(old_names = names(table),
+                      new_names = c('alias_local_name', 'Site', 'Location', 'Zone (UTM)',
+                                    'Easting', 'Northing',
+                                    'Stream', 'Channel Width (m)', 'Wetted Width (m)',
+                                    'Pool depth (m)','Bankfull Depth (m)', 'Gradient (%)',
+                                    'Substrate (dom)', 'Substrate (subdom)', 'Feature',
+                                    'utm_zone', 'utm_easting', 'utm_northing'))
+
+names_hab_table <- c('alias_local_name', 'Site', 'Location', 'gazetted_names','avg_channel_width_m',
+         'avg_wetted_width_m', 'average_residual_pool_depth_m',
+         'average_bankfull_depth_m','average_gradient_percent',
+         'bed_material_dominant', 'bed_material_subdominant')
+
+hab_table <- table %>%
+  dplyr::select(all_of(names_hab_table)) %>%
+  purrr::set_names(., nm = dplyr::pull(
+    dplyr::filter(names_table, 
+                  old_names %in% names_hab_table), 
+    new_names))
+  
+
+
+# names(hab_table) <- pull(table_names, new_names)  
+
+# ##make the hab table for the memo
+# table_memo <- table %>% 
+#   select(-utm_zone, -utm_easting, -utm_northing)
+
+
+  # filter(local_name == paste0(my_site, '_us')) %>% 
+  # t() %>% 
+  # as_tibble()
+#   filter(local_name %ilike% my_site) %>% 
+
+# local_name, 
+#          avg_channel_width_m, 
+#          avg_wetted_width_m,
+#          )
+
+
+```
+
+# Site Location
+PSCIS crossing `r my_site` is located on XXXXXXX rd, UTM:`r pull_utm(sheet = loc_data, site = my_site)`
+
 ```{r echo=TRUE}
-loadd(tracks)
-loadd(track_points)
 
-
-my_site <- '125000'
-
-
-##doll up the gpx data
+##Set up for the leaflet map with tracks and track points loaded within the same chunk.  All the packages, functions and plan for data targets is detailed in our .R/ folder.
 ##here are the indexes of the points
 track_point_idx_list <- sf::st_intersects(tracks, track_points) %>% 
   purrr::set_names(., nm = pull(tracks, name))
@@ -55,9 +135,10 @@ my_tracks <- tracks_of_points %>%
 rm(track_point_idx_list, tracks_of_points)
 ```
 
-Map our stream, watershed and key points.
+# Mapping
+Map our stream, watershed and key points.  We still need georeferenced field maps for people to use I think so something to consider.
 
-```{r map, echo=TRUE}
+```{r map, echo=TRUE, out.width = '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 map <- leaflet() %>%
   addTiles() %>%
@@ -65,7 +146,7 @@ map <- leaflet() %>%
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
   addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'red',
                    fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'blue',
+  addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'blue',
                fillOpacity = 0.75, weight=2) %>%
   addLayersControl(
     baseGroups = c("Topo","ESRI Aerial"),
@@ -74,12 +155,4 @@ map <- leaflet() %>%
 map
 ```
 
-
-```{r echo=TRUE}
-
-history <- drake_history(analyze = TRUE)
-knitr::kable(
-  head(history)
-)
-```
 
