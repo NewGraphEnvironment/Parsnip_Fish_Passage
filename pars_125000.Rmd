@@ -10,7 +10,10 @@ my_site <- '125000'
 
 
 ---
-output: html_document
+output: 
+  html_document:
+    self_contained: true 
+ 
 params:
   set_title: "My Title!"
 title: "Fish Habitat confirmation - PSCIS Crossing `r my_site` - `r pull_data(sheet = loc_data, site = my_site)`"
@@ -88,7 +91,7 @@ hab_table <- table %>%
   
 
 knitr::kable(
-  hab_table
+  hab_table %>% filter(Site %like% my_site)
 )
 # names(hab_table) <- pull(table_names, new_names)  
 
