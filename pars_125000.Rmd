@@ -83,10 +83,13 @@ hab_table <- table %>%
   purrr::set_names(., nm = dplyr::pull(
     dplyr::filter(names_table, 
                   old_names %in% names_hab_table), 
-    new_names))
+    new_names)) %>% 
+  select(-alias_local_name)
   
 
-
+knitr::kable(
+  hab_table
+)
 # names(hab_table) <- pull(table_names, new_names)  
 
 # ##make the hab table for the memo
