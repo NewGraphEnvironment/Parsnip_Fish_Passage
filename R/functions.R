@@ -41,8 +41,8 @@ paste0(pull_data(sheet, site, column = 'utm_zone'),
 make_table <- function(loc_dat, site_dat){
   left_join(
     loc_dat %>%
-    select(alias_local_name, 'Zone' = utm_zone,
-           'Easting' = utm_easting, 'Northing' = utm_northing),
+    select(alias_local_name, 'zone' = utm_zone,
+           'easting' = utm_easting, 'northing' = utm_northing),
     site_dat %>%
     select(local_name, gazetted_names,avg_channel_width_m,
            avg_wetted_width_m, average_residual_pool_depth_m,
@@ -53,7 +53,19 @@ make_table <- function(loc_dat, site_dat){
     mutate_at(vars(avg_channel_width_m:average_gradient_percent), round, 2) %>%
     mutate(average_gradient_percent = average_gradient_percent * 100) ,
   by = c('alias_local_name' = 'local_name')) %>%
-  tidyr::separate(alias_local_name, into = c('Site', 'Location'), remove = F)
+  tidyr::separate(alias_local_name, into = c('site', 'location'), remove = F) %>% 
+    mutate(gazetted_names = stringr::str_replace_all(gazetted_names, 'Unnamed tributary', 'Trib'))
+}
+
+##import pscis info
+import_pscis <- function(workbook_name = 'pscis_phase2.xls'){
+  read_excel(path = paste0("./data/", workbook_name), 
+                    sheet = 'PSCIS Assessment Worksheet') %>% 
+  # purrr::set_names(janitor::make_clean_names(names(.))) %>% 
+  altools::at_trim_xlsheet2() %>% 
+  rename(date = date_of_assessment_yyyy_mm_dd) %>% 
+  mutate(date = excel_numeric_to_date(as.numeric(date))) %>% 
+  filter(!is.na(date))
 }
 
 

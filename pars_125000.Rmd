@@ -1,5 +1,5 @@
 
-```{r importdata, echo=TRUE}
+```{r importdata, echo=FALSE}
 drake::loadd(tracks)
 drake::loadd(track_points)
 drake::loadd(c(loc_data, site_data))
@@ -16,7 +16,7 @@ output:
  
 params:
   set_title: "My Title!"
-title: "Fish Habitat confirmation - PSCIS Crossing `r my_site` - `r pull_data(sheet = loc_data, site = my_site)`"
+title: "Parsnip Watershed Fish Habitat Confirmations"
 date: "`r format(Sys.time(), '%B %Y')`"
 ---
 
@@ -25,10 +25,12 @@ date: "`r format(Sys.time(), '%B %Y')`"
 knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, 
                       fig.align="center", fig.width = 5.118, fig.height = 3.409,
                       fig.path = ('fig/'))
+
+##this is from our title if we want it to autogenerate "Fish Habitat confirmation - PSCIS Crossing `r my_site` - `r pull_data(sheet = loc_data, site = my_site)`"
 ```
 
 
-```{r include = FALSE, echo =TRUE, message=FALSE}
+```{r include = FALSE,  message=FALSE}
 
 plot <- drake::r_vis_drake_graph(main = 'Interactive Drake Workflow Graph Showing Project Structure and Dependencies')
 ```
@@ -39,13 +41,6 @@ test <- pull_data(sheet = loc_data, site = my_site)
 
 ```
 
-
-# Workflow Layout
-
-r_vis_drake_graph creates this plot but needs info from configuration file (defaults to the _drake.R file in the main project directory) [Details Here](https://books.ropensci.org/drake/projects.html#safer-interactivity)
-```{r out.width = '100%'}
-plot
-```
 
 ```{r}
 ##need to get basic information
@@ -64,6 +59,9 @@ plot
 
 ```
 
+# Restoration Candidates {.tabset}
+
+## Overview
 
 ```{r}
 loadd(table)
@@ -76,23 +74,66 @@ names_table <- tibble(old_names = names(table),
                                     'Substrate (dom)', 'Substrate (subdom)', 'Feature',
                                     'utm_zone', 'utm_easting', 'utm_northing'))
 
-names_hab_table <- c('alias_local_name', 'Site', 'Location', 'gazetted_names','avg_channel_width_m',
+names_hab_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','avg_channel_width_m',
          'avg_wetted_width_m', 'average_residual_pool_depth_m',
          'average_bankfull_depth_m','average_gradient_percent',
          'bed_material_dominant', 'bed_material_subdominant')
 
-hab_table <- table %>%
+names_overview_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','zone', 
+                          'easting', 'northing')
+
+
+
+table_hab <- table %>%
   dplyr::select(all_of(names_hab_table)) %>%
   purrr::set_names(., nm = dplyr::pull(
     dplyr::filter(names_table, 
                   old_names %in% names_hab_table), 
     new_names)) %>% 
   select(-alias_local_name)
-  
+
+table_overview <- table %>%
+  dplyr::select(all_of(names_overview_table)) %>%  
+  purrr::set_names(., nm = dplyr::pull(
+  left_join(as_tibble_col(names_overview_table, column_name = 'old_names'),
+               names_table, by = 'old_names'),
+            new_names)) %>% 
+  select(-alias_local_name)
+
+
+##clean up the site_id column of our priorities so we can join to the overview table
+priorities <- drake::readd(priorities) %>% 
+  tidyr::separate(site_id, into = c('site', 'location'), remove = F)
+
+table_overview <- left_join(
+  table_overview, 
+  select(priorities,
+         site, location, length_surveyed = length, priority, comments),
+  by = c('Site' = 'site','Location' = 'location')
+) %>%
+  select(Site, Stream, Location:Northing, everything())
+
+##add the name of the road and the tenure holder from our pscis sheet
+pscis <- drake::readd(pscis)
+# 
+table_overview <-  left_join(table_overview,
+                              select(drake::readd(pscis),
+                              pscis_crossing_id, road_name, road_tenure),
+                              by = c('Site' = 'pscis_crossing_id')) %>% 
+  # filter(priority %ilike% 'high') %>% 
+  select(Site, Stream, Location, Road = road_name, road_tenure, everything()) 
+  # select(-priority)
+  # filter(priority %ilike% 'high' & Location %ilike% 'us')
+
+##add the comments from the priorities table
+
+
 
 knitr::kable(
-  hab_table %>% filter(Site %like% my_site)
-)
+  table_overview
+  )
+
+
 # names(hab_table) <- pull(table_names, new_names)  
 
 # ##make the hab table for the memo
@@ -113,13 +154,24 @@ knitr::kable(
 
 ```
 
-# Site Location
-PSCIS crossing `r my_site` is located on XXXXXXX rd, UTM:`r pull_utm(sheet = loc_data, site = my_site)`
+## Habitat Summaries
 
-```{r echo=TRUE}
+```{r}
+knitr::kable(
+  table_hab
+  )
+```
+
+
+
+
+```{r }
 
 ##Set up for the leaflet map with tracks and track points loaded within the same chunk.  All the packages, functions and plan for data targets is detailed in our .R/ folder.
 ##here are the indexes of the points
+
+
+##!!!!!!!!!!!need to change the name of track 57687 in the gpx!!!!!!!!!!!!
 track_point_idx_list <- sf::st_intersects(tracks, track_points) %>% 
   purrr::set_names(., nm = pull(tracks, name))
 
@@ -138,15 +190,35 @@ my_tracks <- tracks_of_points %>%
 # }
 
 #clean up workspace
-rm(track_point_idx_list, tracks_of_points)
+rm(track_point_idx_list
+   # , tracks_of_points
+   )
 ```
 
-# Mapping
-Map our stream, watershed and key points.  We still need georeferenced field maps for people to use I think so something to consider.
+## High Priority Crossings {.tabset}
 
-```{r map, echo=TRUE, out.width = '100%'}
+### PSCIS 125000 
+
+If it doesn't end up being too big each crossing could have its own tab with its own map.  Another and possibly preferable solution might be to have the same map but just different zoom buttons (see zoom button on PSCIS 125000b map) to change the bounding box of the map so that it centers on each individual crossing watershed.
+
+This is a start on a semi-automated write-up for each of the crossings built from our source files.  
+PSCIS crossing `r my_site` is located on "link to source" rd, UTM:`r pull_utm(sheet = loc_data, site = my_site)`.
+
+```{r}
+knitr::kable(
+  table_overview %>% filter(Site %like% my_site)
+  )
+
+knitr::kable(
+  table_hab %>% filter(Site %like% my_site)
+  )
+```
+
+
+```{r map, out.width = '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 map <- leaflet() %>%
+  leaflet(height=1000, width=1000) %>% 
   addTiles() %>%
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
@@ -155,10 +227,54 @@ map <- leaflet() %>%
   addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'blue',
                fillOpacity = 0.75, weight=2) %>%
   addLayersControl(
-    baseGroups = c("Topo","ESRI Aerial"),
+    baseGroups = c("ESRI Aerial", "Topo"),
     overlayGroups = c(my_tracks$`125000_ds_track`),
-    options = layersControlOptions(collapsed = T))
+    options = layersControlOptions(collapsed = F)) %>% 
+  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
+             zoomLevelOffset = -9)
 map
 ```
 
+### PSCIS 125000b
+
+```{r map2}
+##--------lets map it-----------------------------------------------------------------------
+##easybutton info  https://rstudio.github.io/leaflet/morefeatures.html
+map <- leaflet() %>%
+  leaflet(height=1000, width=1000) %>% 
+  addTiles() %>%
+  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
+  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  addPolylines(data=my_tracks$`125000_us_track2`,  opacity=1, color = 'red',
+               fillOpacity = 0.75, weight=2) %>%
+  # addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'blue',
+  #              fillOpacity = 0.75, weight=2) %>%
+  addEasyButton(easyButton(
+    icon="fa-globe", title="Zoom to Site",
+    onClick=JS("function(btn, map){ map.setZoom(12); }"))) %>% 
+  addLayersControl(
+    baseGroups = c("Topo","ESRI Aerial"),
+    overlayGroups = c(my_tracks$`125000_ds_track`),
+    options = layersControlOptions(collapsed = T)) %>% 
+  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
+             zoomLevelOffset = -7)
+map
+```
+
+
+
+This is a test to check out tabs
+
+
+## Workflow Layout
+
+
+
+r_vis_drake_graph creates this plot but needs info from configuration file (defaults to the _drake.R file in the main project directory) [Details Here](https://books.ropensci.org/drake/projects.html#safer-interactivity).  Check out how the files in our data folder and the functions in our functions.R file create the outputs that we see.
+
+
+
+```{r out.width = '100%'}
+plot
+```
 
