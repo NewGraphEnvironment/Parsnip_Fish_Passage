@@ -214,24 +214,37 @@ knitr::kable(
   )
 ```
 
+```{r}
+
+```
 
 ```{r map, out.width = '100%'}
 ##--------lets map it-----------------------------------------------------------------------
+##time to set the watershed code here
+##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
+##add a culvert measurements output table with all the usual photos
+##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
+
+
 map <- leaflet() %>%
   leaflet(height=1000, width=1000) %>% 
   addTiles() %>%
+    addMouseCoordinates(epsg = 26911) %>% 
+
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+    # setView(lng = -105.644, lat = 51.618, zoom = 3) 
   addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'red',
                    fillOpacity = 0.75, weight=2) %>%
   addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'blue',
                fillOpacity = 0.75, weight=2) %>%
+  
   addLayersControl(
     baseGroups = c("ESRI Aerial", "Topo"),
     overlayGroups = c(my_tracks$`125000_ds_track`),
     options = layersControlOptions(collapsed = F)) %>% 
   addMiniMap(tiles = providers$"Esri.WorldTopoMap",
-             zoomLevelOffset = -9)
+             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
 map
 ```
 
@@ -243,6 +256,7 @@ map
 map <- leaflet() %>%
   leaflet(height=1000, width=1000) %>% 
   addTiles() %>%
+    addMouseCoordinates(epsg = 26911 ) %>% 
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
   addPolylines(data=my_tracks$`125000_us_track2`,  opacity=1, color = 'red',
@@ -256,6 +270,8 @@ map <- leaflet() %>%
     baseGroups = c("Topo","ESRI Aerial"),
     overlayGroups = c(my_tracks$`125000_ds_track`),
     options = layersControlOptions(collapsed = T)) %>% 
+  # addMouseCoordinates() %>% 
+    # setView(lng = -105.644, lat = 51.618, zoom = 3) 
   addMiniMap(tiles = providers$"Esri.WorldTopoMap",
              zoomLevelOffset = -7)
 map
