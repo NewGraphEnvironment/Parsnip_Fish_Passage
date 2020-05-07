@@ -98,7 +98,7 @@ table_overview <- table %>%
   left_join(as_tibble_col(names_overview_table, column_name = 'old_names'),
                names_table, by = 'old_names'),
             new_names)) %>% 
-  select(-alias_local_name)
+  select(-alias_local_name) 
 
 
 ##clean up the site_id column of our priorities so we can join to the overview table
@@ -121,18 +121,27 @@ table_overview <-  left_join(table_overview,
                               pscis_crossing_id, road_name, road_tenure),
                               by = c('Site' = 'pscis_crossing_id')) %>% 
   # filter(priority %ilike% 'high') %>% 
-  select(Site, Stream, Location, Road = road_name, road_tenure, everything()) 
-  # select(-priority)
-  # filter(priority %ilike% 'high' & Location %ilike% 'us')
+  select(Site, Stream, Location, `Road Name` = road_name, road_tenure, everything()) %>% 
+  mutate(Locaton = case_when(Location == 'ds' ~ 'Downstream',
+                             Location == 'us' ~ 'Upstream',
+                             TRUE ~ Location))
 
 ##add the comments from the priorities table
 
 
 
-knitr::kable(
-  table_overview
-  )
-
+DT::datatable(
+  select(table_overview, -length_surveyed),
+  caption = 'Table 1: Overview of Parsnip River Watershed with Crossings Assessed with Habitat Confirmations.',
+  rownames = FALSE,
+    options = list(columnDefs = list(list(
+    targets = ncol(table_overview)-2, 
+    render = JS(
+      "function(data, type, row, meta) {",
+      "return type === 'display' && data.length > 20 ?",
+      "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
+      "}")
+  ))))
 
 # names(hab_table) <- pull(table_names, new_names)  
 
@@ -227,12 +236,13 @@ knitr::kable(
 
 
 map <- leaflet() %>%
-  leaflet(height=1000, width=1000) %>% 
+  leaflet(height=500, width=500) %>% 
   addTiles() %>%
-    addMouseCoordinates(epsg = 26911) %>% 
+    addMouseCoordinates(proj4 = 26911) %>% ##can't seem to get it to render utms yet
 
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  # addMeasure() %>% 
     # setView(lng = -105.644, lat = 51.618, zoom = 3) 
   addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'red',
                    fillOpacity = 0.75, weight=2) %>%
