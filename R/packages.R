@@ -11,4 +11,5 @@ pacman::p_load(data.table)
 pacman::p_load(leaflet)
 pacman::p_load(geosphere)
 pacman::p_load(htmlwidgets) ##not sure if we need this
-
+pacman::p_load(leafem)
+pacman::p_load(DT)
