@@ -60,11 +60,26 @@ dbGetQuery(conn,"SELECT DISTINCT(watershed_group_name)
 ##this is using dbplyr
 test <- tbl(conn, in_schema("whse_basemapping", "fwa_watershed_groups_poly")) 
 
+##here is the info on the fish habitat etc
+fish_habitat_info <- dbGetQuery(conn,
+                 "
+                                  SELECT fh.*, ST_X (ST_Transform (fh.geom, 4326)) AS long, ST_Y (ST_Transform (fh.geom, 4326)) AS lat
+                                  FROM fish_passage.pscis_model_combined fh
+                                  INNER JOIN
+                                  whse_basemapping.fwa_watershed_groups_poly wg
+                                  ON ST_Intersects(fh.geom,wg.geom)
+                                  WHERE wg.watershed_group_id IN
+                                  ('166')")
+
+
+##lets save it as a csv to keep it simple
+write.csv(fish_habitat_info,'data/fish_habitat_info.csv')
+
 
 
 # #this gives us the fish habitat for the Parsnip zone - parsnip (166), parsnip arm (164), carp(22) and nation (152) watersheds...
 dl <- dbGetQuery(conn,
-                                  "
+                 "
                                   SELECT fh.*
                                   FROM fish_passage.modelled_habitat_potential fh
                                   INNER JOIN
