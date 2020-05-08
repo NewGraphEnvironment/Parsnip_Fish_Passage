@@ -3,7 +3,7 @@
 drake::loadd(tracks)
 drake::loadd(track_points)
 drake::loadd(c(loc_data, site_data))
-my_site <- '125000'
+
 # test <- pull_data(sheet = try)
 
 ```
@@ -37,7 +37,7 @@ plot <- drake::r_vis_drake_graph(main = 'Interactive Drake Workflow Graph Showin
 
 
 ```{r}
-test <- pull_data(sheet = loc_data, site = my_site)
+# test <- pull_data(sheet = loc_data, site = my_site)
 
 ```
 
@@ -85,12 +85,8 @@ names_overview_table <- c('alias_local_name', 'site', 'location', 'gazetted_name
 
 
 table_hab <- table %>%
-  dplyr::select(all_of(names_hab_table)) %>%
-  purrr::set_names(., nm = dplyr::pull(
-    dplyr::filter(names_table, 
-                  old_names %in% names_hab_table), 
-    new_names)) %>% 
-  select(-alias_local_name)
+  dplyr::select(all_of(names_hab_table)) 
+
 
 table_overview <- table %>%
   dplyr::select(all_of(names_overview_table)) %>%  
@@ -98,7 +94,7 @@ table_overview <- table %>%
   left_join(as_tibble_col(names_overview_table, column_name = 'old_names'),
                names_table, by = 'old_names'),
             new_names)) %>% 
-  select(-alias_local_name)
+  select(-alias_local_name) 
 
 
 ##clean up the site_id column of our priorities so we can join to the overview table
@@ -121,18 +117,39 @@ table_overview <-  left_join(table_overview,
                               pscis_crossing_id, road_name, road_tenure),
                               by = c('Site' = 'pscis_crossing_id')) %>% 
   # filter(priority %ilike% 'high') %>% 
-  select(Site, Stream, Location, Road = road_name, road_tenure, everything()) 
-  # select(-priority)
-  # filter(priority %ilike% 'high' & Location %ilike% 'us')
+  select(Site, Stream, Location, road_name, road_tenure, everything()) %>% 
+  mutate(Location = case_when(Location == 'ds' ~ 'Downstream',
+                             TRUE ~ 'Upstream'))
 
 ##add the comments from the priorities table
 
 
 
-knitr::kable(
-  table_overview
-  )
 
+```
+
+
+
+```{r}
+
+table_overview_prep <- table_overview %>% 
+  select(-length_surveyed) %>% 
+  rename(`Road Name` = road_name, `Road Responsibility` = road_tenure,
+         Priority = priority, Comments = comments) 
+
+
+DT::datatable(
+  table_overview_prep,
+  caption = 'Table 1: Overview of Parsnip River Watershed Crossings Assessed with Habitat Confirmations.',
+  rownames = FALSE,
+    options = list(columnDefs = list(list(
+    targets = ncol(table_overview_prep)-1, 
+    render = JS(
+      "function(data, type, row, meta) {",
+      "return type === 'display' && data.length > 20 ?",
+      "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
+      "}")
+  ))))
 
 # names(hab_table) <- pull(table_names, new_names)  
 
@@ -151,15 +168,36 @@ knitr::kable(
 #          avg_wetted_width_m,
 #          )
 
-
 ```
+
 
 ## Habitat Summaries
 
 ```{r}
-knitr::kable(
-  table_hab
-  )
+
+table_hab_prep <- table_hab %>% 
+  purrr::set_names(., nm = dplyr::pull(
+    dplyr::filter(names_table, 
+                  old_names %in% names_hab_table), 
+    new_names)) %>% 
+   mutate(Location = case_when(Location == 'ds' ~ 'Downstream',
+                             TRUE ~ 'Upstream')) %>% 
+  select(-alias_local_name)
+
+
+DT::datatable(
+  table_hab_prep,
+  caption = 'Table 2: Summary of Habitat for Parsnip River Watershed Habitat Confirmations.',
+  rownames = FALSE,
+    options = list(columnDefs = list(list(
+    targets = ncol(table_hab_prep)-1, 
+    render = JS(
+      "function(data, type, row, meta) {",
+      "return type === 'display' && data.length > 20 ?",
+      "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
+      "}")
+  ))))
+
 ```
 
 
@@ -180,7 +218,7 @@ tracks_of_points <- lapply(track_point_idx_list,
 
 
 my_tracks <- tracks_of_points %>% 
-  keep(names(.) %like% my_site) %>% 
+  # keep(names(.) %like% my_site) %>% 
   map(points2line_trajectory)  ##convert our points to lines
 
 # names(my_tracks)
@@ -198,24 +236,54 @@ rm(track_point_idx_list
 ## High Priority Crossings {.tabset}
 
 ### PSCIS 125000 
+```{r}
+my_site <- '125000'
+```
 
-If it doesn't end up being too big each crossing could have its own tab with its own map.  Another and possibly preferable solution might be to have the same map but just different zoom buttons (see zoom button on PSCIS 125000b map) to change the bounding box of the map so that it centers on each individual crossing watershed.
 
 This is a start on a semi-automated write-up for each of the crossings built from our source files.  
 PSCIS crossing `r my_site` is located on "link to source" rd, UTM:`r pull_utm(sheet = loc_data, site = my_site)`.
 
 ```{r}
-knitr::kable(
-  table_overview %>% filter(Site %like% my_site)
-  )
 
-knitr::kable(
-  table_hab %>% filter(Site %like% my_site)
-  )
+DT::datatable(
+  filter(table_overview_prep,
+         Site == my_site),
+  caption = 'Table 3: Summary of Habitat for Parsnip River Watershed Habitat Confirmations.',
+  rownames = FALSE,
+    options = list(columnDefs = list(list(
+    targets = ncol(table_hab_prep)-1, 
+    render = JS(
+      "function(data, type, row, meta) {",
+      "return type === 'display' && data.length > 20 ?",
+      "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
+      "}")
+  ))))
+# knitr::kable(
+#   table_overview %>% filter(Site %like% my_site)
+#   )
+
+
+
+# knitr::kable(
+#   table_hab %>% filter(Site %like% my_site)
+#   )
 ```
 
 ```{r}
-
+DT::datatable(
+  filter(table_hab_prep,
+         Site == my_site),
+  caption = paste0('Summary of Habitat for PSCIS Crossing #', my_site, '.'),
+  rownames = FALSE,
+    options = list(columnDefs = list(list(
+    targets = ncol(table_hab_prep)-1, 
+    render = JS(
+      "function(data, type, row, meta) {",
+      "return type === 'display' && data.length > 20 ?",
+      "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
+      "}")
+  ))))
 ```
 
 ```{r map, out.width = '100%'}
@@ -227,12 +295,13 @@ knitr::kable(
 
 
 map <- leaflet() %>%
-  leaflet(height=1000, width=1000) %>% 
+  leaflet(height=500, width=500) %>% 
   addTiles() %>%
-    addMouseCoordinates(epsg = 26911) %>% 
+    addMouseCoordinates(proj4 = 26911) %>% ##can't seem to get it to render utms yet
 
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  # addMeasure() %>% 
     # setView(lng = -105.644, lat = 51.618, zoom = 3) 
   addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'red',
                    fillOpacity = 0.75, weight=2) %>%
@@ -248,33 +317,57 @@ map <- leaflet() %>%
 map
 ```
 
-### PSCIS 125000b
+### PSCIS 125180
+```{r}
+my_site <- '125180'
+```
+
+```{r}
+DT::datatable(
+  filter(table_hab_prep,
+         Site == my_site),
+  caption = paste0('Summary of Habitat for PSCIS Crossing #', my_site, '.'),
+  rownames = FALSE,
+    options = list(columnDefs = list(list(
+    targets = ncol(table_hab_prep)-1, 
+    render = JS(
+      "function(data, type, row, meta) {",
+      "return type === 'display' && data.length > 20 ?",
+      "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
+      "}")
+  ))))
+```
+
+
 
 ```{r map2}
 ##--------lets map it-----------------------------------------------------------------------
 ##easybutton info  https://rstudio.github.io/leaflet/morefeatures.html
 map <- leaflet() %>%
-  leaflet(height=1000, width=1000) %>% 
+  leaflet(height=500, width=500) %>% 
   addTiles() %>%
-    addMouseCoordinates(epsg = 26911 ) %>% 
+    addMouseCoordinates(proj4 = 26911) %>% ##can't seem to get it to render utms yet
+
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
-  addPolylines(data=my_tracks$`125000_us_track2`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  # addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'blue',
-  #              fillOpacity = 0.75, weight=2) %>%
-  addEasyButton(easyButton(
-    icon="fa-globe", title="Zoom to Site",
-    onClick=JS("function(btn, map){ map.setZoom(12); }"))) %>% 
-  addLayersControl(
-    baseGroups = c("Topo","ESRI Aerial"),
-    overlayGroups = c(my_tracks$`125000_ds_track`),
-    options = layersControlOptions(collapsed = T)) %>% 
-  # addMouseCoordinates() %>% 
+  # addMeasure() %>% 
     # setView(lng = -105.644, lat = 51.618, zoom = 3) 
+  addPolylines(data=my_tracks$`125180_us`,  opacity=1, color = 'red',
+                   fillOpacity = 0.75, weight=2) %>%
+  addPolylines(data=my_tracks$`125180_ds`,  opacity=1, color = 'blue',
+               fillOpacity = 0.75, weight=2) %>%
+  
+  addLayersControl(
+    baseGroups = c("ESRI Aerial", "Topo"),
+    overlayGroups = c(my_tracks$`125000_ds_track`),
+    options = layersControlOptions(collapsed = F)) %>% 
   addMiniMap(tiles = providers$"Esri.WorldTopoMap",
-             zoomLevelOffset = -7)
+             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
 map
+
+
+
+
 ```
 
 
