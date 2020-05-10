@@ -364,7 +364,7 @@ DT::datatable(
 map <- leaflet() %>%
   leaflet(height=500, width=500) %>% 
   addTiles() %>%
-    addMouseCoordinates(proj4 = 26911) %>% ##can't seem to get it to render utms yet
+    leafem::addMouseCoordinates(proj4 = 26911) %>% ##can't seem to get it to render utms yet
 
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
@@ -388,6 +388,19 @@ map
 
 ```
 
+```{r}
+
+pnt = st_as_sf(data.frame(x = 174.764474, y = -36.877245),
+               coords = c("x", "y"),
+               crs = 4326)
+
+img = "http://bit.ly/1TVwRiR"
+
+leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(data = pnt, group = "pnt") %>%
+  addPopupImages(img, group = "pnt")
+```
 
 
 ## Workflow Layout
