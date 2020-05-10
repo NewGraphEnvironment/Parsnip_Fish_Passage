@@ -54,7 +54,7 @@ make_table <- function(loc_dat, site_dat){
     mutate(average_gradient_percent = average_gradient_percent * 100) ,
   by = c('alias_local_name' = 'local_name')) %>%
   tidyr::separate(alias_local_name, into = c('site', 'location'), remove = F) %>% 
-    mutate(gazetted_names = stringr::str_replace_all(gazetted_names, 'Unnamed tributary', 'Trib'))
+    mutate(gazetted_names = stringr::str_replace_all(gazetted_names, 'Unnamed tributary', 'Trib')) 
 }
 
 ##import pscis info
@@ -67,5 +67,4 @@ import_pscis <- function(workbook_name = 'pscis_phase2.xls'){
   mutate(date = excel_numeric_to_date(as.numeric(date))) %>% 
   filter(!is.na(date))
 }
-
 
