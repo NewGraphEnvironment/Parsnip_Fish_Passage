@@ -15,24 +15,27 @@ plan1 <- drake_plan(
     dplyr::filter(!is.na(site_number)), 
   fish_data = data_raw %>% 
     purrr::pluck("step_2_fish_coll_data"),
-  tracks = st_read(file_in("./data/field_cleaned.gpx"), layer = "tracks") %>% 
-    separate(name, into = c('site', 'direction', 'track_num'), remove = F),
-  track_points = read_sf(file_in("./data/field_cleaned.gpx"), layer = "track_points") %>% 
-    separate(name, into = c('site', 'direction', 'track_num'), remove = F),
   table = make_table(loc_dat = loc_data, site_dat = site_data),
   priorities = read_excel(path = "./data/priorities.xlsx"),
   pscis = import_pscis(),
-  report = rmarkdown::render(
-    knitr_in("pars_125000.Rmd"),
+  fish_habitat_info = read.csv('./data/fish_habitat_info.csv'),
+  #this section for locational info
+  tracks = st_read(file_in("./data/field_cleaned.gpx"), layer = "tracks") %>% ##we need this to make track of points
+    separate(name, into = c('site', 'direction', 'track_num'), remove = F),
+  track_points = read_sf(file_in("./data/field_cleaned.gpx"), layer = "track_points") %>% 
+    separate(name, into = c('site', 'direction', 'track_num'), remove = F),
+  track_point_idx_list = sf::st_intersects(tracks, track_points) %>% 
+    purrr::set_names(., nm = pull(tracks, name)),
+  tracks_of_points = lapply(track_point_idx_list, 
+                            make_tracks_of_points, track_points = track_points),
+  my_tracks = tracks_of_points %>% 
+    map(points2line_trajectory),  ##convert our points to lines
+  ##now make the report
+    report = rmarkdown::render(
+    knitr_in("Parsnip_report.Rmd"),
     output_file = file_out("./docs/index.html"),
     quiet = TRUE
   )
 )
 
-plan2 <- drake_plan(
-  track_points2 = read_sf(file_in("./data/field_cleaned.gpx"), layer = "track_points") %>% ##this is just a test
-  separate(name, into = c('site', 'direction', 'track_num'), remove = F)
-)
 
-
-  

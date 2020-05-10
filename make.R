@@ -17,12 +17,5 @@ make(plan1,
      lock_cache = F
      # ,
      # cache_log_file = TRUE
-     )  
-
-make(plan2, 
-     lock_envir = FALSE, ## this seems to solve html rendering issue
-     lock_cache = F
-     # ,
-     # cache_log_file = TRUE
-) 
+)  
 
