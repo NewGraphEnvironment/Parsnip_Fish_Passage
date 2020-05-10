@@ -304,6 +304,15 @@ DT::datatable(
 ```
 
 
+```{r}
+photoPoints <- read.csv(file = 'data/photos/photo_metadata.csv')
+# remove photos with no coordinates
+photoPoints <- photoPoints[!is.na(photoPoints$lat_map),]
+
+photoPoints$url <- as.character (photoPoints$url)
+photoPoints
+```
+
 ```{r map, out.width = '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
@@ -325,12 +334,15 @@ map <- leaflet() %>%
                    fillOpacity = 0.75, weight=2) %>%
   addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'red',
                fillOpacity = 0.75, weight=2) %>%
-  
+
+  addMarkers(lng = photoPoints$lon_map,lat = photoPoints$lat_map, popup = popupImage(photoPoints$url, src = "remote")) %>% 
+
   addLayersControl(
     baseGroups = c("ESRI Aerial", "Topo"),
     overlayGroups = c(my_tracks$`125000_ds_track`),
     options = layersControlOptions(collapsed = F)) %>% 
-  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
+  
+    addMiniMap(tiles = providers$"Esri.WorldTopoMap",
              zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
 map
 ```
