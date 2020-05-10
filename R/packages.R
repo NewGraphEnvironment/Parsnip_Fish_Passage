@@ -18,7 +18,9 @@ pacman::p_load(leafem)
 pacman::p_load(DT)
 pacman::p_load(
   lubridate,
-  exifr
+  exifr,
+  leafpop,
+  tools
   )
 #pacman::p_load(mapview)
 
