@@ -14,3 +14,7 @@ pacman::p_load(geosphere)
 pacman::p_load(htmlwidgets) ##not sure if we need this
 pacman::p_load(leafem)
 pacman::p_load(DT)
+pacman::p_load(
+  lubridate,
+  exifr
+  )
