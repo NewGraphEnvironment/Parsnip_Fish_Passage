@@ -80,14 +80,15 @@ pscis2 <- drake::readd(pscis) %>%
   sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>% 
   st_transform(crs = 4326) %>% 
   mutate(lon_pscis = st_coordinates(.)[,1],
-         lat_pscis = st_coordinates(.)[,2])
+         lat_pscis = st_coordinates(.)[,2]) %>% 
+  select(-geometry) 
          
   
 ##add the pscis coordinates and point to when the shoe fits
 
 crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'barrel', 'road')
 
-photo_metadata2 <- left_join(
+photo_metadata3 <- left_join(
   photo_metadata2,
   select(pscis2, 
          crossing_id = pscis_crossing_id, lon_pscis, lat_pscis),
@@ -99,9 +100,12 @@ photo_metadata2 <- left_join(
                         TRUE ~ lat_map),
     lon_map = case_when(tools::file_path_sans_ext(filename) %in% 
                           crossing_photos ~ lon_pscis,
-                        TRUE ~ lon_map))
+                        TRUE ~ lon_map)) %>% 
+  tibble::rownames_to_column() %>% 
+  select(-geometry) ##not sure this is necessary . read_csv doesn't like our file .  
 
 
 ##write to a csv
-write.csv(photo_metadata2, file = 'data/photos/photo_metadata.csv')
+write.csv(photo_metadata3, file = 'data/photos/photo_metadata.csv', row.names = F)
+
 
