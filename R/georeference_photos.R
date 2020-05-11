@@ -1,8 +1,16 @@
 ##lets bring our photos and get filename on git as well as lat, longs for the ones that have geo info
+make_photo_metadata_list <- function(input_file){
+  exifr::read_exif(input_file,recursive=T) %>% 
+    mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
+    purrr::set_names(., nm = tolower(names(.))) ##column names lowercase
+  
+}
 
-photo_metadata <- exifr::read_exif("data/photos/125000",recursive=T) %>% 
-  mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
-  purrr::set_names(., nm = tolower(names(.))) ##column names lowercase
+files <- paste0('data/photos/',list.files('data/photos'))
+
+photo_metadata_list <- files %>% 
+  map(make_photo_metadata_list)
+
 
 #GPSLatitude and GPSLongitude CreateDate
 
@@ -48,64 +56,133 @@ get_closest_line_in_history <- function(x, history){
 }
 
 
-##so this give us the index from the gps points
-indx_closest_point <- sapply(photo_metadata$createdate, 
-                             get_closest_line_in_history, 
-                             track_points2$time) %>% 
-  as.character() %>% 
-  as_tibble_col(column_name = "gps_idx")
-
-##so here we join it to our metadata
-photo_metadata <- bind_cols(photo_metadata,
-                             indx_closest_point)
-
-##then we join it to the lat long info we need
-photo_metadata2 <- left_join(photo_metadata,
-                             select(track_points2, track_name, rowname, time, ele, lon_gps_linked, lat_gps_linked),
-                             by = c("gps_idx" = "rowname")) %>% 
-  mutate(url  = paste0('https://raw.githubusercontent.com/NewGraphEnvironment/Parsnip_Fish_Passage/master/', 
-                       sourcefile)) %>% 
-  select(crossing_id = directory, filename, createdate, gps_extracted_time = time, track_name, ele,
-         gpslatitude, gpslongitude, lon_gps_linked, lat_gps_linked, imagedescription, model, url) %>% 
-  mutate(lat_map = case_when(!is.na(gpslatitude) ~ gpslatitude,  ##use the gps from the camera when possible
-                                 TRUE ~ lat_gps_linked),
-         lon_map = case_when(!is.na(gpslongitude) ~ gpslongitude,
-                                  TRUE ~ lon_gps_linked)) %>% 
-  mutate(crossing_id = basename(crossing_id))
-
-##probably makes sense to just give the photos the crossing lat, lons when the photo is named upstream, downstream, inlet, outlet, barrel, aerial
-##get lat lons for pscis
-pscis2 <- drake::readd(pscis) %>% 
-  filter(!is.na(easting)) %>% ##remove the ones with no info yet
-  sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>% 
-  st_transform(crs = 4326) %>% 
-  mutate(lon_pscis = st_coordinates(.)[,1],
-         lat_pscis = st_coordinates(.)[,2]) %>% 
-  select(-geometry) 
-         
+###########try as a function, bind and add back
+make_photo_metadata <- function(meta){
+  indx_closest_point <- sapply(meta$createdate, 
+                               get_closest_line_in_history, 
+                               track_points2$time) %>% 
+    as.character() %>% 
+    as_tibble_col(column_name = "gps_idx")
+  meta_w_index <- bind_cols(meta,
+                            indx_closest_point)
+  meta_joined_to_tracks <- left_join(meta_w_index,
+            select(track_points2, track_name, rowname, time, ele, lon_gps_linked, lat_gps_linked),
+            by = c("gps_idx" = "rowname")) %>% 
+    mutate(url  = paste0('https://raw.githubusercontent.com/NewGraphEnvironment/Parsnip_Fish_Passage/master/', 
+                         sourcefile)) %>% 
+    select(crossing_id = directory, filename, createdate, gps_extracted_time = time, track_name, ele,
+           gpslatitude, gpslongitude, lon_gps_linked, lat_gps_linked, imagedescription, model, url) %>% 
+    mutate(lat_map = case_when(!is.na(gpslatitude) ~ gpslatitude,  ##use the gps from the camera when possible
+                               TRUE ~ lat_gps_linked),
+           lon_map = case_when(!is.na(gpslongitude) ~ gpslongitude,
+                               TRUE ~ lon_gps_linked)) %>% 
+    mutate(crossing_id = basename(crossing_id))
+  ##probably makes sense to just give the photos the crossing lat, lons when the photo is named upstream, downstream, inlet, outlet, barrel, aerial
+  ##get lat lons for pscis
+  pscis2 <- drake::readd(pscis) %>% 
+    filter(!is.na(easting)) %>% ##remove the ones with no info yet
+    sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>% 
+    st_transform(crs = 4326) %>% 
+    mutate(lon_pscis = st_coordinates(.)[,1],
+           lat_pscis = st_coordinates(.)[,2]) %>% 
+    select(-geometry) 
   
-##add the pscis coordinates and point to when the shoe fits
+  crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'barrel', 'road')
+  
+  meta_final_list <- left_join(
+    meta_joined_to_tracks,
+    select(pscis2, 
+           crossing_id = pscis_crossing_id, lon_pscis, lat_pscis),
+    by = 'crossing_id'
+  )  %>% 
+    mutate(
+      lat_map = case_when(tools::file_path_sans_ext(filename) %in% 
+                            crossing_photos & 
+                            lat_map != gpslatitude ~ 
+                            lat_pscis,  #gps info trumps all
+                          TRUE ~ lat_map),
+      lon_map = case_when(tools::file_path_sans_ext(filename) %in% 
+                            crossing_photos & 
+                            lon_map != gpslongitude ~ 
+                            lon_pscis,
+                          TRUE ~ lon_map)) %>% 
+    mutate(time_diff = difftime(createdate, gps_extracted_time)) %>% 
+    select(crossing_id, filename, track_name, time_diff, 
+           gpslatitude, lat_map, lat_gps_linked, lat_pscis,  gpslongitude, lon_map,
+           lon_gps_linked,lon_pscis, everything(), 
+           -geometry) ##not sure this is necessary . read_csv doesn't like our file . 
+}
 
-crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'barrel', 'road')
-
-photo_metadata3 <- left_join(
-  photo_metadata2,
-  select(pscis2, 
-         crossing_id = pscis_crossing_id, lon_pscis, lat_pscis),
-  by = 'crossing_id'
-)  %>% 
-  mutate(
-    lat_map = case_when(tools::file_path_sans_ext(filename) %in% 
-                          crossing_photos ~ lat_pscis,
-                        TRUE ~ lat_map),
-    lon_map = case_when(tools::file_path_sans_ext(filename) %in% 
-                          crossing_photos ~ lon_pscis,
-                        TRUE ~ lon_map)) %>% 
-  tibble::rownames_to_column() %>% 
-  select(-geometry) ##not sure this is necessary . read_csv doesn't like our file .  
-
+photo_metadata_processed <- photo_metadata_list %>% 
+  map(make_photo_metadata) %>% 
+  bind_rows()
 
 ##write to a csv
-write.csv(photo_metadata3, file = 'data/photos/photo_metadata.csv', row.names = F)
+write.csv(photo_metadata_processed, file = 'data/photo_metadata2.csv', row.names = F) ##moved this up a level
 
 
+
+
+###---------------------------------------this is before we moved it to a function--------------##############
+
+# photo_metadata <- exifr::read_exif("data/photos/125000",recursive=T) %>% 
+#   mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
+#   purrr::set_names(., nm = tolower(names(.))) ##column names lowercase
+
+
+
+# ##so this give us the index from the gps points
+# indx_closest_point <- sapply(photo_metadata$createdate, 
+#                              get_closest_line_in_history, 
+#                              track_points2$time) %>% 
+#   as.character() %>% 
+#   as_tibble_col(column_name = "gps_idx")
+# 
+# ##so here we join it to our metadata
+# photo_metadata <- bind_cols(photo_metadata,
+#                             indx_closest_point)
+
+##then we join it to the lat long info we need
+# photo_metadata2 <- left_join(photo_metadata,
+#                              select(track_points2, track_name, rowname, time, ele, lon_gps_linked, lat_gps_linked),
+#                              by = c("gps_idx" = "rowname")) %>% 
+#   mutate(url  = paste0('https://raw.githubusercontent.com/NewGraphEnvironment/Parsnip_Fish_Passage/master/', 
+#                        sourcefile)) %>% 
+#   select(crossing_id = directory, filename, createdate, gps_extracted_time = time, track_name, ele,
+#          gpslatitude, gpslongitude, lon_gps_linked, lat_gps_linked, imagedescription, model, url) %>% 
+#   mutate(lat_map = case_when(!is.na(gpslatitude) ~ gpslatitude,  ##use the gps from the camera when possible
+#                              TRUE ~ lat_gps_linked),
+#          lon_map = case_when(!is.na(gpslongitude) ~ gpslongitude,
+#                              TRUE ~ lon_gps_linked)) %>% 
+#   mutate(crossing_id = basename(crossing_id))
+
+# ##probably makes sense to just give the photos the crossing lat, lons when the photo is named upstream, downstream, inlet, outlet, barrel, aerial
+# ##get lat lons for pscis
+# pscis2 <- drake::readd(pscis) %>% 
+#   filter(!is.na(easting)) %>% ##remove the ones with no info yet
+#   sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>% 
+#   st_transform(crs = 4326) %>% 
+#   mutate(lon_pscis = st_coordinates(.)[,1],
+#          lat_pscis = st_coordinates(.)[,2]) %>% 
+#   select(-geometry) 
+
+
+# ##add the pscis coordinates and point to when the shoe fits
+# 
+# crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'barrel', 'road')
+# 
+# photo_metadata3 <- left_join(
+#   photo_metadata2,
+#   select(pscis2, 
+#          crossing_id = pscis_crossing_id, lon_pscis, lat_pscis),
+#   by = 'crossing_id'
+# )  %>% 
+#   mutate(
+#     lat_map = case_when(tools::file_path_sans_ext(filename) %in% 
+#                           crossing_photos ~ lat_pscis,
+#                         TRUE ~ lat_map),
+#     lon_map = case_when(tools::file_path_sans_ext(filename) %in% 
+#                           crossing_photos ~ lon_pscis,
+#                         TRUE ~ lon_map)) %>% 
+#   tibble::rownames_to_column() %>% 
+#   select(-geometry) ##not sure this is necessary . read_csv doesn't like our file .  
