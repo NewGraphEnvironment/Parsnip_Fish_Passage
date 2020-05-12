@@ -20,7 +20,8 @@ pacman::p_load(
   lubridate,
   exifr,
   leafpop,
-  tools
+  tools,
+  gt
   )
 #pacman::p_load(mapview)
 

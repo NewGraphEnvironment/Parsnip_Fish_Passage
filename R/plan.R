@@ -30,7 +30,7 @@ plan1 <- drake_plan(
                             make_tracks_of_points, track_points = track_points),
   my_tracks = tracks_of_points %>% 
     map(points2line_trajectory),  ##convert our points to lines
-  photo_metadata = readr::read_csv(file = 'data/photos/photo_metadata.csv'),
+  photo_metadata = readr::read_csv(file = 'data/photo_metadata.csv'),
   ##now make the report
     report = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"),

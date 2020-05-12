@@ -264,10 +264,11 @@ photo_metadata$url <- as.character(photo_metadata$url)
 ```
 
 
-### Chuchinka-Arctic FSR 
-#### Tributary to Parsnip River - PSCIS 125000 {.tabset}
+### Chuchinka-Arctic FSR {.tabset}
+
 
 ```{r site125000}
+#### Tributary to Parsnip River - PSCIS 125000 
 my_site <- '125000'
 ```
 
@@ -362,6 +363,9 @@ filter(table_hab_prep, Site == my_site) %>%
 
 <br>
 
+#### Map
+
+
 ```{r out.width= '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
@@ -401,30 +405,32 @@ map
 
 ### Chuchinka-Missinka FSR  {.tabset}
 
-#### Tributary to Missinka River - PSCIS 125179
+
 
 ```{r site125179}
-my_site <- '125179'
+##this is doing nothing right now
+# my_site <- '125179'
+#### Tributary to Missinka River - PSCIS 125179
 ```
 
 
 ```{r}
 photo_metadata_site <- photo_metadata %>% 
-  filter(crossing_id == my_site)
+  filter(crossing_id %in% c('125179', '125180', '125186'))
 ```
 
 <br>
 
 ```{r}
 filter(table_overview_prep,
-         Site == my_site) %>%
+         Site %in% c('125179', '125180', '125186')) %>%
   select(-Comments) %>% 
   gt::gt() %>% 
   tab_header(title="Overview") %>%
   cols_width(
     # vars(Comments) ~ px(300),
-    vars(`Habitat Gain (km)`) ~ px(70),
-    everything() ~ px(60)
+    # vars(`Habitat Gain (km)`) ~ px(70),
+    everything() ~ px(80)
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
@@ -437,7 +443,8 @@ filter(table_overview_prep,
 <br>
 
 ```{r}
-filter(table_hab_prep, Site == my_site) %>%
+filter(table_hab_prep, 
+       Site %in% c('125179', '125180', '125186')) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
   cols_width(
@@ -451,6 +458,8 @@ filter(table_hab_prep, Site == my_site) %>%
 ```
 
 <br>
+
+#### Map
 
 ```{r out.width= '100%'}
 ##--------lets map it-----------------------------------------------------------------------
@@ -473,6 +482,14 @@ map <- leaflet() %>%
                fillOpacity = 0.75, weight=2) %>%
   addPolylines(data=my_tracks$`125179_ds_track`,  opacity=1, color = 'red',
                fillOpacity = 0.75, weight=2) %>%
+  addPolylines(data=my_tracks$`125180_ds`,  opacity=1, color = 'red',
+               fillOpacity = 0.75, weight=2) %>%
+  addPolylines(data=my_tracks$`125180_us`,  opacity=1, color = 'red',
+               fillOpacity = 0.75, weight=2) %>%
+  addPolylines(data=my_tracks$`125186_ds`,  opacity=1, color = 'red',
+               fillOpacity = 0.75, weight=2) %>%
+  addPolylines(data=my_tracks$`125186_us2`,  opacity=1, color = 'red',
+               fillOpacity = 0.75, weight=2) %>%
   addAwesomeMarkers(lng = photo_metadata_site$lon_map,lat = photo_metadata_site$lat_map,
                     popup = popupImage(photo_metadata_site$url, src = "remote"),
                     clusterOptions = markerClusterOptions(),
@@ -488,23 +505,24 @@ map
 ```
 
 
-#### Tributary to Missinka River - PSCIS 125180
 
 <br>
 
 
-```{r site125180}
+```{r site125180, eval=FALSE}
 my_site <- '125180'
+
+#### Tributary to Missinka River - PSCIS 125180
+
 ```
 
-```{r}
+```{r eval=FALSE}
 photo_metadata_site <- photo_metadata %>% 
   filter(crossing_id == my_site)
 ```
 
-<br>
 
-```{r}
+```{r eval=FALSE}
 filter(table_overview_prep,
          Site == my_site) %>%
   select(-Comments) %>% 
@@ -523,9 +541,8 @@ filter(table_overview_prep,
 
 ```
 
-<br>
 
-```{r}
+```{r eval=FALSE}
 filter(table_hab_prep, Site == my_site) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
@@ -541,7 +558,7 @@ filter(table_hab_prep, Site == my_site) %>%
 
 <br>
 
-```{r out.width= '100%'}
+```{r eval=FALSE, out.width= '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
@@ -577,20 +594,21 @@ map
 ```
 
 
-#### Tributary to Missinka River - PSCIS 	125186
-```{r site125186}
+
+```{r site125186, eval=FALSE}
 my_site <- '125186'
+#### Tributary to Missinka River - PSCIS 	125186
 ```
 
 
-```{r}
+```{r eval=FALSE}
 photo_metadata_site <- photo_metadata %>% 
   filter(crossing_id == my_site)
 ```
 
 <br>
 
-```{r}
+```{r eval=FALSE}
 filter(table_overview_prep,
          Site == my_site) %>%
   select(-Comments) %>% 
@@ -611,7 +629,7 @@ filter(table_overview_prep,
 
 <br>
 
-```{r}
+```{r eval=FALSE}
 filter(table_hab_prep, Site == my_site) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
@@ -627,7 +645,7 @@ filter(table_hab_prep, Site == my_site) %>%
 
 <br>
 
-```{r out.width= '100%'}
+```{r eval=FALSE, out.width= '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
