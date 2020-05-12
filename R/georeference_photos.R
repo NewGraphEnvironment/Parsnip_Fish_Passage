@@ -1,9 +1,14 @@
 ##lets bring our photos and get filename on git as well as lat, longs for the ones that have geo info
+
+##need to add the gpslat long columns if they do not exist - hence the tibble::add_column
+# https://stackoverflow.com/questions/45857787/adding-column-if-it-does-not-exist
+
 make_photo_metadata_list <- function(input_file){
+  cols <- c(gpslatitude = NA_real_, gpslongitude = NA_real_, imagedescription = NA)
   exifr::read_exif(input_file,recursive=T) %>% 
     mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
-    purrr::set_names(., nm = tolower(names(.))) ##column names lowercase
-  
+    purrr::set_names(., nm = tolower(names(.))) %>% ##column names lowercase
+    tibble::add_column(!!!cols[setdiff(names(cols), names(.))])
 }
 
 files <- paste0('data/photos/',list.files('data/photos'))
@@ -87,7 +92,7 @@ make_photo_metadata <- function(meta){
            lat_pscis = st_coordinates(.)[,2]) %>% 
     select(-geometry) 
   
-  crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'barrel', 'road')
+  crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'barrel', 'barrel2', 'road')
   
   meta_final_list <- left_join(
     meta_joined_to_tracks,
@@ -96,22 +101,31 @@ make_photo_metadata <- function(meta){
     by = 'crossing_id'
   )  %>% 
     mutate(
-      lat_map = case_when(tools::file_path_sans_ext(filename) %in% 
+      lat_map = case_when((tools::file_path_sans_ext(filename) %in% 
                             crossing_photos & 
-                            lat_map != gpslatitude ~ 
+                            is.na(gpslatitude)) ~ 
                             lat_pscis,  #gps info trumps all
                           TRUE ~ lat_map),
-      lon_map = case_when(tools::file_path_sans_ext(filename) %in% 
+      lon_map = case_when((tools::file_path_sans_ext(filename) %in% 
                             crossing_photos & 
-                            lon_map != gpslongitude ~ 
+                             is.na(gpslatitude)) ~ 
                             lon_pscis,
                           TRUE ~ lon_map)) %>% 
     mutate(time_diff = difftime(createdate, gps_extracted_time)) %>% 
     select(crossing_id, filename, track_name, time_diff, 
            gpslatitude, lat_map, lat_gps_linked, lat_pscis,  gpslongitude, lon_map,
            lon_gps_linked,lon_pscis, everything(), 
-           -geometry) ##not sure this is necessary . read_csv doesn't like our file . 
-}
+           -geometry) %>% ##not sure this is necessary . read_csv doesn't like our file . 
+    ######################  SPECIFIC CASES  ############################
+    mutate(lat_map = case_when(crossing_id == '125231' & 
+                                 filename == 'downstream2.jpg' ~
+                                 lat_pscis,
+                               TRUE ~ lat_map),
+           lon_map = case_when(crossing_id == '125231' & 
+                                 filename == 'downstream2.jpg' ~
+                                 lon_pscis,
+                               TRUE ~ lon_map))
+    }
 
 photo_metadata_processed <- photo_metadata_list %>% 
   map(make_photo_metadata) %>% 
@@ -123,12 +137,13 @@ write.csv(photo_metadata_processed, file = 'data/photo_metadata2.csv', row.names
 
 
 
+
 ###---------------------------------------this is before we moved it to a function--------------##############
 
-# photo_metadata <- exifr::read_exif("data/photos/125000",recursive=T) %>% 
+# photo_metadata <- exifr::read_exif("data/photos/125000",recursive=T) %>%
 #   mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
-#   purrr::set_names(., nm = tolower(names(.))) ##column names lowercase
-
+#   purrr::set_names(., nm = tolower(names(.))) %>% ##column names lowercase
+#   tibble::add_column(!!!cols[!names(cols) %in% names(.)])
 
 
 # ##so this give us the index from the gps points
