@@ -296,8 +296,8 @@ filter(table_overview_prep,
   tab_header(title="Overview") %>%
   cols_width(
     # vars(Comments) ~ px(300),
-    vars(`Habitat Gain (km)`) ~ px(70),
-    everything() ~ px(60)
+    # vars(`Habitat Gain (km)`) ~ px(70),
+    everything() ~ px(90)
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
@@ -433,7 +433,7 @@ filter(table_overview_prep,
   cols_width(
     # vars(Comments) ~ px(300),
     # vars(`Habitat Gain (km)`) ~ px(70),
-    everything() ~ px(80)
+    everything() ~ px(90)
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
@@ -523,21 +523,21 @@ map
 
 ```{r eval = FALSE}
 photo_metadata_site <- photo_metadata %>% 
-  filter(crossing_id %in% c('125247', '125253', 'CV1'))
+  filter(crossing_id %in% c('125247', '125253'))
 ```
 
 <br>
 
 ```{r}
 filter(table_overview_prep,
-         Site %in% c('125247', '125253','CV1')) %>%
+         Site %in% c('125247', '125253')) %>%
   select(-Comments) %>% 
   gt::gt() %>% 
   tab_header(title="Overview") %>%
   cols_width(
     # vars(Comments) ~ px(300),
     # vars(`Habitat Gain (km)`) ~ px(70),
-    everything() ~ px(80)
+    everything() ~ px(90)
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
@@ -551,7 +551,7 @@ filter(table_overview_prep,
 
 ```{r}
 filter(table_hab_prep, 
-       Site %in% c('125247', '125253', 'CV1')) %>%
+       Site %in% c('125247', '125253')) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
   cols_width(
@@ -589,8 +589,8 @@ filter(table_overview_prep,
   tab_header(title="Overview") %>%
   cols_width(
     # vars(Comments) ~ px(300),
-    vars(`Habitat Gain (km)`) ~ px(70),
-    everything() ~ px(60)
+    # vars(`Habitat Gain (km)`) ~ px(70),
+    everything() ~ px(90)
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
@@ -745,16 +745,22 @@ map
 ```
 
 ## Workflow Layout
-Raw data is built from populated:
+This project is in the early stages of active development, is incomplete, may contain errors and is expected to change substantially. It has been made available for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any questions or concerns.  
 
-[Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) 
+<br>
 
-[pscis_assessment_template_v23.xls](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/assessment-projects)
+ * Code and data for the workflow is available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage).  This report is generated from scratch from a Rmarkdown document processing raw data from populated:
+
+    + [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) 
+
+    + [pscis_assessment_template_v23.xls](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/assessment-projects)
 
 
-Excel spreadsheet with priority level detailed for each of the crossings surveyed.
+    + Excel spreadsheet with priority level detailed for each of the crossings surveyed.
 
-GPS tracks and GPS track points from field surveys.  
+    + GPS tracks and points from field surveys.  
+
+    + Photos and photo metadata.  When not available in metadata photos georeferenced by aligning photostamp time with GPS track times.
 
 <br>
 
