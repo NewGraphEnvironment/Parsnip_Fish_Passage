@@ -375,7 +375,7 @@ filter(table_hab_prep, Site == my_site) %>%
 
 
 map <- leaflet() %>%
-  # leaflet(height=500, width=500) %>% 
+  leaflet(height=500, width=780) %>% 
   addTiles() %>%
     addMouseCoordinates(proj4 = 26911) %>% ##can't seem to get it to render utms yet
 
@@ -470,7 +470,7 @@ filter(table_hab_prep,
 
 
 map <- leaflet() %>%
-  # leaflet(height=500, width=500) %>% 
+  leaflet(height=500, width=780) %>% 
   addTiles() %>%
   addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
   
@@ -558,40 +558,6 @@ filter(table_hab_prep, Site == my_site) %>%
 
 <br>
 
-```{r eval=FALSE, out.width= '100%'}
-##--------lets map it-----------------------------------------------------------------------
-##time to set the watershed code here
-##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
-##add a culvert measurements output table with all the usual photos
-##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
-
-
-map <- leaflet() %>%
-  # leaflet(height=500, width=500) %>% 
-  addTiles() %>%
-  addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
-  
-  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
-  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
-  # addMeasure() %>% 
-  # setView(lng = -105.644, lat = 51.618, zoom = 3)
-  addPolylines(data=my_tracks$`125180_ds`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125180_us`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addAwesomeMarkers(lng = photo_metadata_site$lon_map,lat = photo_metadata_site$lat_map,
-                    popup = popupImage(photo_metadata_site$url, src = "remote"),
-                    clusterOptions = markerClusterOptions(),
-                    label = photo_metadata_site$filename) %>%
-  addLayersControl(
-    baseGroups = c("ESRI Aerial", "Topo"),
-    # overlayGroups = c(my_tracks$`125000_ds_track`),
-    options = layersControlOptions(collapsed = F)) %>% 
-  
-  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
-             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
-map
-```
 
 
 
@@ -680,7 +646,42 @@ map <- leaflet() %>%
 map
 ```
 
+## Overview Map
 
+```{r eval=TRUE, out.width= '100%'}
+##--------lets map it-----------------------------------------------------------------------
+##time to set the watershed code here
+##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
+##add a culvert measurements output table with all the usual photos
+##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
+
+loadd(tracks, photo_metadata)
+map <- leaflet() %>%
+  leaflet(height=500, width=780) %>% 
+  addTiles() %>%
+  addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
+  
+  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
+  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  # addMeasure() %>% 
+  # setView(lng = -105.644, lat = 51.618, zoom = 3)
+  addPolylines(data=tracks,  opacity=1, color = 'red',
+               fillOpacity = 0.75, weight=2) %>%
+  # addPolylines(data=my_tracks$`125180_us`,  opacity=1, color = 'red',
+  #              fillOpacity = 0.75, weight=2) %>%
+  addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
+                    popup = popupImage(photo_metadata$url, src = "remote"),
+                    clusterOptions = markerClusterOptions(),
+                    label = paste0('site', '_', photo_metadata$filename)) %>%
+  addLayersControl(
+    baseGroups = c("ESRI Aerial", "Topo"),
+    # overlayGroups = c(my_tracks$`125000_ds_track`),
+    options = layersControlOptions(collapsed = F)) %>% 
+  
+  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
+             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
+map
+```
 
 ## Workflow Layout
 Raw data is built from populated:
