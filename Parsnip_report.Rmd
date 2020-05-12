@@ -16,7 +16,7 @@ output:
  
 params:
   set_title: "My Title!"
-title: "Parsnip Watershed Fish Habitat Confirmations"
+title: "Parsnip Watershed Fish Habitat Confirmations - DRAFT"
 date: "`r format(Sys.time(), '%B %Y')`"
 ---
 
@@ -149,10 +149,13 @@ table_overview_prep <- table_overview %>%
          `UTM (10N)` = paste0(Easting, " ", Northing),
          road_tenure = str_to_title(road_tenure),
          road_tenure = str_replace_all(road_tenure, 'Dmpg', 'FLNRORD'),
-         upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
+         upstr_species = str_replace_all(upstr_species, ',', ', '),
+         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low')) %>% 
   
   select(Site, Stream, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
-         `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_integer, -Location, -'Zone (UTM)', -'Easting', -'Northing') 
+         `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_integer, -Location, -'Zone (UTM)', -'Easting', -'Northing') %>% 
+  arrange(Priority, Site)
+  
   
 
 
@@ -390,7 +393,7 @@ map <- leaflet() %>%
   addAwesomeMarkers(lng = photo_metadata_site$lon_map,lat = photo_metadata_site$lat_map,
              popup = popupImage(photo_metadata_site$url, src = "remote"),
 clusterOptions = markerClusterOptions(),
-label = photo_metadata_site$filename) %>%
+label = paste0(photo_metadata_site$crossing_id, '_', photo_metadata_site$filename)) %>%
   addLayersControl(
     baseGroups = c("ESRI Aerial", "Topo"),
     # overlayGroups = c(my_tracks$`125000_ds_track`),
@@ -407,7 +410,7 @@ map
 
 
 
-```{r site125179}
+```{r}
 ##this is doing nothing right now
 # my_site <- '125179'
 #### Tributary to Missinka River - PSCIS 125179
@@ -493,7 +496,7 @@ map <- leaflet() %>%
   addAwesomeMarkers(lng = photo_metadata_site$lon_map,lat = photo_metadata_site$lat_map,
                     popup = popupImage(photo_metadata_site$url, src = "remote"),
                     clusterOptions = markerClusterOptions(),
-                    label = photo_metadata_site$filename) %>%
+                    label = paste0(photo_metadata_site$crossing_id, '_', photo_metadata_site$filename)) %>%
   addLayersControl(
     baseGroups = c("ESRI Aerial", "Topo"),
     # overlayGroups = c(my_tracks$`125000_ds_track`),
@@ -508,9 +511,65 @@ map
 
 <br>
 
+### Chuchinka-Table FSR {.tabset}
 
-```{r site125180, eval=FALSE}
-my_site <- '125180'
+
+```{r}
+##this is doing nothing right now
+# my_site <- '125179'
+#### Tributary to Missinka River - PSCIS 125179
+```
+
+
+```{r eval = FALSE}
+photo_metadata_site <- photo_metadata %>% 
+  filter(crossing_id %in% c('125247', '125253', 'CV1'))
+```
+
+<br>
+
+```{r}
+filter(table_overview_prep,
+         Site %in% c('125247', '125253','CV1')) %>%
+  select(-Comments) %>% 
+  gt::gt() %>% 
+  tab_header(title="Overview") %>%
+  cols_width(
+    # vars(Comments) ~ px(300),
+    # vars(`Habitat Gain (km)`) ~ px(70),
+    everything() ~ px(80)
+  ) %>% 
+  tab_options(table.font.size = 11) %>% 
+  tab_footnote(
+    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    locations =  cells_column_labels(
+      columns = vars(`Habitat Gain (km)`)))
+
+```
+
+<br>
+
+```{r}
+filter(table_hab_prep, 
+       Site %in% c('125247', '125253', 'CV1')) %>%
+  gt::gt() %>% 
+  tab_header(title="Habitat Summary") %>% 
+  cols_width(
+    vars(Comments) ~ px(250),
+    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+    vars(Location) ~ px(60),
+    everything() ~ px(50)
+  ) %>% 
+  tab_options(table.font.size = 11) 
+
+```
+
+
+### Chuchinka-Colbourne FSR {.tabset}
+
+
+```{r site125345}
+my_site <- '125345'
 
 #### Tributary to Missinka River - PSCIS 125180
 
@@ -522,7 +581,7 @@ photo_metadata_site <- photo_metadata %>%
 ```
 
 
-```{r eval=FALSE}
+```{r}
 filter(table_overview_prep,
          Site == my_site) %>%
   select(-Comments) %>% 
@@ -542,7 +601,7 @@ filter(table_overview_prep,
 ```
 
 
-```{r eval=FALSE}
+```{r}
 filter(table_hab_prep, Site == my_site) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
@@ -646,6 +705,8 @@ map <- leaflet() %>%
 map
 ```
 
+
+
 ## Overview Map
 
 ```{r eval=TRUE, out.width= '100%'}
@@ -672,7 +733,7 @@ map <- leaflet() %>%
   addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
                     popup = popupImage(photo_metadata$url, src = "remote"),
                     clusterOptions = markerClusterOptions(),
-                    label = paste0('site', '_', photo_metadata$filename)) %>%
+                    label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
   addLayersControl(
     baseGroups = c("ESRI Aerial", "Topo"),
     # overlayGroups = c(my_tracks$`125000_ds_track`),

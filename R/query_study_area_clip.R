@@ -71,6 +71,17 @@ fish_habitat_info <- dbGetQuery(conn,
                                   WHERE wg.watershed_group_id IN
                                   ('166')")
 
+# fish_habitat_info2 <- dbGetQuery(conn,
+#                                 "
+#                                   SELECT fh.*
+#                                   FROM fish_passage.pscis_model_combined fh
+#                                   INNER JOIN
+#                                   whse_basemapping.fwa_watershed_groups_poly wg
+#                                   ON ST_Intersects(fh.geom,wg.geom)
+#                                   WHERE wg.watershed_group_id IN
+#                                   ('166')")
+
+
 
 ##lets save it as a csv to keep it simple
 write.csv(fish_habitat_info,'data/fish_habitat_info.csv')

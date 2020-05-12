@@ -21,7 +21,8 @@ pacman::p_load(
   exifr,
   leafpop,
   tools,
-  gt
+  gt,
+  rpostgis
   )
 #pacman::p_load(mapview)
 

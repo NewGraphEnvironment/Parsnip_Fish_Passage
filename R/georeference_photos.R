@@ -92,7 +92,7 @@ make_photo_metadata <- function(meta){
            lat_pscis = st_coordinates(.)[,2]) %>% 
     select(-geometry) 
   
-  crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'barrel', 'barrel2', 'road')
+  crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'outlet2', 'outlet3', 'barrel', 'barrel2', 'road')
   
   meta_final_list <- left_join(
     meta_joined_to_tracks,
@@ -118,11 +118,11 @@ make_photo_metadata <- function(meta){
            -geometry) %>% ##not sure this is necessary . read_csv doesn't like our file . 
     ######################  SPECIFIC CASES  ############################
     mutate(lat_map = case_when(crossing_id == '125231' & 
-                                 filename == 'downstream2.jpg' ~
+                                 filename == 'downstream2.JPG' ~
                                  lat_pscis,
                                TRUE ~ lat_map),
            lon_map = case_when(crossing_id == '125231' & 
-                                 filename == 'downstream2.jpg' ~
+                                 filename == 'downstream2.JPG' ~
                                  lon_pscis,
                                TRUE ~ lon_map))
     }
@@ -132,7 +132,7 @@ photo_metadata_processed <- photo_metadata_list %>%
   bind_rows()
 
 ##write to a csv
-write.csv(photo_metadata_processed, file = 'data/photo_metadata2.csv', row.names = F) ##moved this up a level
+write.csv(photo_metadata_processed, file = 'data/photo_metadata.csv', row.names = F) ##moved this up a level
 
 
 
