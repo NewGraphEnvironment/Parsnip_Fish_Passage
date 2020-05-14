@@ -64,7 +64,7 @@ plot <- drake::r_vis_drake_graph(main = 'Interactive Drake Workflow Graph Showin
 ## Overview
 
 ```{r}
-loadd(table)
+drake::loadd(table)
 
 names_table <- tibble(old_names = names(table),
                       new_names = c('alias_local_name', 'Site', 'Location', 'Zone (UTM)',
@@ -126,12 +126,57 @@ table_overview <- left_join(
                      pscis_stream_crossing_id, uphab_gross_sub22, upstr_species),
          by =  c('site_integer' = 'pscis_stream_crossing_id'), 
   na_matches = "never") %>% ##nice little trick
-  mutate(uphab_gross_sub22 = round(uphab_gross_sub22/1000, 1)) %>% 
+  mutate(uphab_gross_sub22 = round(uphab_gross_sub22/1000, 1),
+         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low')) %>% 
   arrange((site_integer), desc(Location)) %>% 
   select(Site,  Stream, road_name, Location, 'Zone (UTM)', 'Easting', 'Northing',
          road_tenure, upstr_species, uphab_gross_sub22, everything()) 
 ```
 
+```{r priorities_kml, eval = FALSE}
+##here is the kml of the crossings for people to download
+##this is one of several kml to be zipped to kmz by the make_kml_geopackage file.
+##put this here to line up with the report overview table
+
+table_overview_kml <- table_overview %>% 
+  mutate_at(vars(Easting:Northing), as.numeric) %>% 
+  filter(Location %ilike% 'upstream') %>% 
+  select(-site_integer, -Location) %>% 
+  mutate(label = paste0(priority, ' priority', '-', Site))
+
+##make a kml
+sp::coordinates(table_overview_kml) <- ~ Easting + Northing
+sp::proj4string(table_overview_kml) <- sp::CRS("+init=epsg:32610")
+table_overview_kml <- reproject(table_overview_kml)
+
+shape = "http://maps.google.com/mapfiles/kml/pal2/icon18.png"
+
+
+# kml_open("data/priorities_crossings.kml")
+# kml_layer(table_overview_kml, shape = shape, colour = priority, labels = label)
+# kml_close("data/priorities_crossings.kml")
+
+##see the output
+# library(XML)
+# xmlRoot(xmlTreeParse("data/priorities_crossings.kml"))[["Document"]]
+
+
+##also save it in the geopackage so we need as sf
+table_overview_sf <- table_overview %>% 
+  sf::st_as_sf(coords = c("Easting", "Northing"), crs = 26910) %>% 
+  mutate(Easting = st_coordinates(.)[,1],
+         Northing = st_coordinates(.)[,2]) %>% 
+  select(Site,  Stream, road_name, 'Zone (UTM)', 'Easting', 'Northing',
+         road_tenure, upstr_species, uphab_gross_sub22, everything(), -site_integer) %>% 
+  filter(Location %ilike% 'upstream') %>% 
+  st_transform(crs = 4326)
+  
+
+##write to the geopackage
+# st_write(table_overview_sf, "data/parsnip.gpkg", "priorities", update = TRUE)
+
+
+```
 
 ```{r}
 
@@ -150,7 +195,7 @@ table_overview_prep <- table_overview %>%
          road_tenure = str_to_title(road_tenure),
          road_tenure = str_replace_all(road_tenure, 'Dmpg', 'FLNRORD'),
          upstr_species = str_replace_all(upstr_species, ',', ', '),
-         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low')) %>% 
+         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low')) %>% ##can remove once tested
   
   select(Site, Stream, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
          `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_integer, -Location, -'Zone (UTM)', -'Easting', -'Northing') %>% 
@@ -249,6 +294,76 @@ table_hab_prep <- table_hab %>%
 
 
 
+
+
+## Overview Map
+
+
+<br>
+
+**A zip file containing google earth .kml files with crossing locations as well as associated forest tenure roads and railway lines are included for download [HERE AT THIS LINK](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage/raw/master/data/parsnip_priorities.zip)**
+
+<br>
+
+
+Please note that data is subject to change and the reporting, maps and kml files will be updated as the report is completed.
+
+<br>
+
+```{r eval=TRUE, out.width= '100%', fig.cap="Overview Map of Parsnip River Watershed fish passage restoration candidates.  High priority crossings are red, moderate priorities are orange and low priorities are grey. Forest tenure roads are orange. Details of sites provided in pop-up windows of crossings with photos currently provided for high priority sites."}
+##--------lets map it-----------------------------------------------------------------------
+##time to set the watershed code here
+##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
+##add a culvert measurements output table with all the usual photos
+##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
+
+loadd(tracks, photo_metadata, rds_ften_priority)
+
+
+##make colors for the priorities
+pal <- 
+   colorFactor(palette = c("red", "orange", "grey"), 
+               levels = c("High", "Moderate", "Low"))
+
+map <- leaflet() %>%
+  leaflet(height=500, width=780) %>% 
+  addTiles() %>%
+  addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
+  
+  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
+  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  # addMeasure() %>% 
+  # setView(lng = -105.644, lat = 51.618, zoom = 3)
+  addPolylines(data=tracks,  opacity=1, color = 'red',
+               fillOpacity = 0.75, weight=2) %>%
+  addPolylines(data=rds_ften_priority,  opacity=1, color = '#ff7f00',
+               fillOpacity = 0.75, weight=2) %>%
+  addCircleMarkers(
+    data=table_overview_sf,
+    label = table_overview_sf$Site,
+    popup = popupTable(select(table_overview_sf, Site, priority, Stream, road_name, comments)),
+    radius = 7,
+    fillColor = ~pal(priority),
+    color= "#ffffff",
+    stroke = TRUE, 
+    fillOpacity = 1.0,
+    weight = 2,
+    opacity = 1.0
+  ) %>% 
+  addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
+                    popup = popupImage(photo_metadata$url, src = "remote"),
+                    clusterOptions = markerClusterOptions(),
+                    label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
+  addLayersControl(
+    baseGroups = c("ESRI Aerial", "Topo"),
+    # overlayGroups = c(my_tracks$`125000_ds_track`),
+    options = layersControlOptions(collapsed = F)) %>% 
+  
+  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
+             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
+map
+
+```
 
 
 ## High Priority Crossings {.tabset}
@@ -369,7 +484,7 @@ filter(table_hab_prep, Site == my_site) %>%
 #### Map
 
 
-```{r out.width= '100%'}
+```{r eval=FALSE, out.width= '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
@@ -464,7 +579,7 @@ filter(table_hab_prep,
 
 #### Map
 
-```{r out.width= '100%'}
+```{r eval=FALSE, out.width= '100%'}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
@@ -705,44 +820,6 @@ map <- leaflet() %>%
 map
 ```
 
-
-
-## Overview Map
-
-```{r eval=TRUE, out.width= '100%'}
-##--------lets map it-----------------------------------------------------------------------
-##time to set the watershed code here
-##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
-##add a culvert measurements output table with all the usual photos
-##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
-
-loadd(tracks, photo_metadata)
-map <- leaflet() %>%
-  leaflet(height=500, width=780) %>% 
-  addTiles() %>%
-  addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
-  
-  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
-  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
-  # addMeasure() %>% 
-  # setView(lng = -105.644, lat = 51.618, zoom = 3)
-  addPolylines(data=tracks,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  # addPolylines(data=my_tracks$`125180_us`,  opacity=1, color = 'red',
-  #              fillOpacity = 0.75, weight=2) %>%
-  addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
-                    popup = popupImage(photo_metadata$url, src = "remote"),
-                    clusterOptions = markerClusterOptions(),
-                    label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
-  addLayersControl(
-    baseGroups = c("ESRI Aerial", "Topo"),
-    # overlayGroups = c(my_tracks$`125000_ds_track`),
-    options = layersControlOptions(collapsed = F)) %>% 
-  
-  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
-             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
-map
-```
 
 ## Workflow Layout
 This project is in the early stages of active development, is incomplete, may contain errors and is expected to change substantially. It has been made available for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any questions or concerns.  
