@@ -129,6 +129,8 @@ priorities <- drake::readd(priorities) %>%
 rds_ften_priority <- rds_ften %>% 
   filter(stream_crossing_id %in% priorities)
 
+rds_ften_priority_wsg <- st_transform(rds_ften_priority, crs = 4326)
+
 
 ##write the roads to a kml ---- NOTE that the crossings are written with the report.rmd script to link with overview table of report
 ##need to turn into a spatial line data frame
@@ -170,7 +172,7 @@ zip::zipr("data/parsnip_priorities.zip", files = files_to_zip)  ##it does not wo
 st_write(rds_dra,     "./data/parsnip.gpkg", "rds_dra", update = TRUE)
 st_write(towns,     "./data/parsnip.gpkg", "towns", update = TRUE)
 st_write(rds_ften,     "./data/parsnip.gpkg", "rds_ften", update = TRUE)
-st_write(rds_ften_priority,     "./data/parsnip.gpkg", "rds_ften_priority", update = TRUE)
+st_write(rds_ften_priority_wsg,     "./data/parsnip.gpkg", "rds_ften_priority", update = TRUE)
 st_write(fish_habitat_info,     "./data/parsnip.gpkg", "pscis_model_combined", update = TRUE)
 st_write(railway,     "./data/parsnip.gpkg", "railway", update = TRUE)
 
