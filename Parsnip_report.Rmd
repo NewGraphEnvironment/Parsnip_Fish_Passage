@@ -339,7 +339,20 @@ map <- leaflet() %>%
                fillOpacity = 0.75, weight=2) %>%
   addPolylines(data=rds_ften_priority,  opacity=1, color = '#ff7f00',
                fillOpacity = 0.75, weight=2) %>%
-  addCircleMarkers(
+
+  # addLegend(pal = pal, values = ~table_overview_sf$priority, group = "circles", position = "bottomleft") %>%
+  addLegend(
+    position = "bottomleft",
+    colors = c("red", "orange", "grey"),
+    labels = c("High", "Moderate", "Low"), opacity = 1,
+    title = "Fish Passage Priorities",
+  ) %>% 
+  addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
+                    popup = popupImage(photo_metadata$url, src = "remote"),
+                    clusterOptions = markerClusterOptions(),
+                    labelOptions = offset(c(1,0)),
+                    label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
+    addCircleMarkers(
     data=table_overview_sf,
     label = table_overview_sf$Site,
     popup = popupTable(select(table_overview_sf, Site, priority, Stream, road_name, comments)),
@@ -349,19 +362,16 @@ map <- leaflet() %>%
     stroke = TRUE, 
     fillOpacity = 1.0,
     weight = 2,
-    opacity = 1.0
+    opacity = 1.0,
+    group = 'Reset View'
   ) %>% 
-  # addLegend(pal = pal, values = ~table_overview_sf$priority, group = "circles", position = "bottomleft") %>%
-  addLegend(
-    position = "bottomleft",
-    colors = c("red", "orange", "grey"),
-    labels = c("High", "Moderate", "Low"), opacity = 1,
-    title = "Priorities",
-  ) %>% 
-  addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
-                    popup = popupImage(photo_metadata$url, src = "remote"),
-                    clusterOptions = markerClusterOptions(),
-                    label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
+  # addEasyButton(easyButton(
+  #     icon = 'ion-arrow-shrink',
+  #     title = 'Zoom Out',
+  #     onClick=JS("function(btn, map){ map.setZoom(9);}"))) %>%  ##leaem::addHomeButton is promising
+  leafem::addHomeButton(ext = raster::extent(table_overview_sf),
+                        position = "topleft", 
+                        group = 'Reset View') %>% 
   addLayersControl(
     baseGroups = c(
       "Esri.DeLorme",
@@ -369,7 +379,7 @@ map <- leaflet() %>%
     # overlayGroups = c(my_tracks$`125000_ds_track`),
     options = layersControlOptions(collapsed = F)) %>% 
   
-  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
+  addMiniMap(tiles = providers$"Esri.NatGeoWorldMap",
              zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
 map
 
@@ -491,7 +501,7 @@ filter(table_hab_prep, Site == my_site) %>%
 
 <br>
 
-#### Map
+
 
 
 ```{r eval=FALSE, out.width= '100%'}
