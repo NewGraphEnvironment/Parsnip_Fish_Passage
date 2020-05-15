@@ -329,7 +329,8 @@ map <- leaflet() %>%
   leaflet(height=500, width=780) %>% 
   addTiles() %>%
   addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
-  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  addProviderTiles(providers$"Esri.DeLorme") %>% 
+  # addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   
   # addMeasure() %>% 
@@ -355,7 +356,9 @@ map <- leaflet() %>%
                     clusterOptions = markerClusterOptions(),
                     label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
   addLayersControl(
-    baseGroups = c("Topo", "ESRI Aerial"),
+    baseGroups = c(
+      "Esri.DeLorme",
+      "ESRI Aerial"),
     # overlayGroups = c(my_tracks$`125000_ds_track`),
     options = layersControlOptions(collapsed = F)) %>% 
   
