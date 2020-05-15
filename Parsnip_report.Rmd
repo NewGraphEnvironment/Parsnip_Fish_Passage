@@ -133,7 +133,7 @@ table_overview <- left_join(
          road_tenure, upstr_species, uphab_gross_sub22, everything()) 
 ```
 
-```{r priorities_kml, eval = FALSE}
+```{r priorities_kml}
 ##here is the kml of the crossings for people to download
 ##this is one of several kml to be zipped to kmz by the make_kml_geopackage file.
 ##put this here to line up with the report overview table
@@ -329,9 +329,9 @@ map <- leaflet() %>%
   leaflet(height=500, width=780) %>% 
   addTiles() %>%
   addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
-  
-  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
+  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
+  
   # addMeasure() %>% 
   # setView(lng = -105.644, lat = 51.618, zoom = 3)
   addPolylines(data=tracks,  opacity=1, color = 'red',
@@ -355,7 +355,7 @@ map <- leaflet() %>%
                     clusterOptions = markerClusterOptions(),
                     label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
   addLayersControl(
-    baseGroups = c("ESRI Aerial", "Topo"),
+    baseGroups = c("Topo", "ESRI Aerial"),
     # overlayGroups = c(my_tracks$`125000_ds_track`),
     options = layersControlOptions(collapsed = F)) %>% 
   
@@ -577,9 +577,10 @@ filter(table_hab_prep,
 
 <br>
 
-#### Map
+
 
 ```{r eval=FALSE, out.width= '100%'}
+#### Map
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
