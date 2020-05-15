@@ -325,8 +325,13 @@ pal <-
    colorFactor(palette = c("red", "orange", "grey"), 
                levels = c("High", "Moderate", "Low"))
 
-map <- leaflet() %>%
-  leaflet(height=500, width=780) %>% 
+#https://stackoverflow.com/questions/61026700/bring-a-group-of-markers-to-front-in-leaflet
+# marker_options <- markerOptions(  
+#   zIndexOffset = 1000)
+  
+  
+map <- leaflet(height=500, width=780) %>%
+  # leaflet() %>% 
   addTiles() %>%
   addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
   addProviderTiles(providers$"Esri.DeLorme") %>% 
@@ -339,8 +344,6 @@ map <- leaflet() %>%
                fillOpacity = 0.75, weight=2) %>%
   addPolylines(data=rds_ften_priority,  opacity=1, color = '#ff7f00',
                fillOpacity = 0.75, weight=2) %>%
-
-  # addLegend(pal = pal, values = ~table_overview_sf$priority, group = "circles", position = "bottomleft") %>%
   addLegend(
     position = "bottomleft",
     colors = c("red", "orange", "grey"),
@@ -350,7 +353,7 @@ map <- leaflet() %>%
   addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
                     popup = popupImage(photo_metadata$url, src = "remote"),
                     clusterOptions = markerClusterOptions(),
-                    labelOptions = offset(c(1,0)),
+                    labelOptions = offset(c(0,0)),
                     label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
     addCircleMarkers(
     data=table_overview_sf,
@@ -362,16 +365,38 @@ map <- leaflet() %>%
     stroke = TRUE, 
     fillOpacity = 1.0,
     weight = 2,
-    opacity = 1.0,
-    group = 'Reset View'
+    opacity = 1.0
   ) %>% 
-  # addEasyButton(easyButton(
-  #     icon = 'ion-arrow-shrink',
-  #     title = 'Zoom Out',
-  #     onClick=JS("function(btn, map){ map.setZoom(9);}"))) %>%  ##leaem::addHomeButton is promising
-  leafem::addHomeButton(ext = raster::extent(table_overview_sf),
+  # leafem::addHomeButton(ext = raster::extent(filter(table_overview_sf, priority %ilike% 'High')),
+  #                       position = "topleft",
+  #                       group = 'High Priority Crossings') %>%
+    leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125000')),
                         position = "topleft", 
-                        group = 'Reset View') %>% 
+                        group = '125000') %>% 
+      leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125179')),
+                        position = "topleft", 
+                        group = '125179') %>% 
+        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125180')),
+                        position = "topleft",
+                        group = '125180') %>%
+        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125186')),
+                        position = "topleft",
+                        group = '125186') %>%
+        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125231')),
+                        position = "topleft",
+                        group = '125231') %>%
+        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125247')),
+                        position = "topleft",
+                        group = '125247') %>%
+        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125253')),
+                        position = "topleft",
+                        group = '125253') %>%
+        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '57687')), ##watch out here
+                        position = "topleft",
+                        group = '125345') %>%
+        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% 'CV1')),
+                        position = "topleft",
+                        group = 'CV1') %>%
   addLayersControl(
     baseGroups = c(
       "Esri.DeLorme",
