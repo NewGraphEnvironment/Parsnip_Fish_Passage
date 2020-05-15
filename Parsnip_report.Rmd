@@ -79,7 +79,7 @@ names_table <- tibble(old_names = names(table),
 
 ```{r loadpriorities}
 ##clean up the site_id column of our priorities so we can join to the overview table
-priorities <- drake::readd(priorities) %>% 
+priorities <- drake::readd(priorities_spreadsheet) %>% 
   tidyr::separate(site_id, into = c('site', 'location'), remove = F)
 
 ```
@@ -112,7 +112,7 @@ table_overview <- left_join(
 
 ##add the name of the road and the tenure holder from our pscis sheet
 table_overview <-  left_join(table_overview,
-                              select(drake::readd(pscis),
+                              select(drake::readd(PSCIS_submission),
                               pscis_crossing_id, road_name, road_tenure),
                               by = c('Site' = 'pscis_crossing_id')) %>% 
   # filter(priority %ilike% 'high') %>% 
@@ -123,7 +123,7 @@ table_overview <-  left_join(table_overview,
 ##add the modelled fish habitat from the fish habitat model output
 table_overview <- left_join(
   table_overview %>% mutate(site_integer = as.integer(Site)),
-  select(drake::readd(fish_habitat_info),
+  select(drake::readd(fish_habitat_model_outputs),
                      pscis_stream_crossing_id, uphab_gross_sub22, upstr_species),
          by =  c('site_integer' = 'pscis_stream_crossing_id'), 
   na_matches = "never") %>% ##nice little trick
@@ -261,7 +261,7 @@ Please note that data is subject to change and the reporting, maps and kml files
 ##add a culvert measurements output table with all the usual photos
 ##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
 
-loadd(tracks, photo_metadata, rds_ften_priority)
+loadd(tracks, photo_metadata, forest_tenure_road_lines)
 
 
 ##make colors for the priorities
@@ -286,7 +286,7 @@ map <- leaflet(height=500, width=780) %>%
   # setView(lng = -105.644, lat = 51.618, zoom = 3)
   addPolylines(data=tracks,  opacity=1, color = 'red',
                fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=rds_ften_priority,  opacity=1, color = '#ff7f00',
+  addPolylines(data=forest_tenure_road_lines,  opacity=1, color = '#ff7f00',
                fillOpacity = 0.75, weight=2) %>%
   addLegend(
     position = "topright",

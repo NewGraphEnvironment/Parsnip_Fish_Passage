@@ -1,6 +1,6 @@
 # The workflow plan data frame outlines what you are going to do.
 plan1 <- drake_plan(
-  data_raw =file_in("./data/parsnip_habitat_assessments.xls") %>% 
+  fish_data_submission =file_in("./data/parsnip_habitat_assessments.xls") %>% 
     excel_sheets() %>% 
     set_names() %>% 
     map(read_excel, 
@@ -8,17 +8,17 @@ plan1 <- drake_plan(
         .name_repair = janitor::make_clean_names) %>% 
     purrr::set_names(janitor::make_clean_names(names(.))) %>% 
     map(altools::at_trim_xlsheet2),  #https://github.com/NewGraphEnvironment/altools
-  site_data = data_raw %>% 
+  habitat_data = fish_data_submission %>% 
     purrr::pluck("step_4_stream_site_data"), 
-  loc_data = data_raw %>% 
+  site_location_data = fish_data_submission %>% 
     purrr::pluck("step_1_ref_and_loc_info") %>% 
     dplyr::filter(!is.na(site_number)), 
-  fish_data = data_raw %>% 
+  fish_sampling_data = fish_data_submission %>% 
     purrr::pluck("step_2_fish_coll_data"),
-  table = make_table(loc_dat = loc_data, site_dat = site_data),
-  priorities = read_excel(path = "./data/priorities.xlsx"),
-  pscis = import_pscis(),
-  fish_habitat_info = read.csv('./data/fish_habitat_info.csv'),
+  table = make_table(loc_dat = site_location_data, site_dat = habitat_data),
+  priorities_spreadsheet = read_excel(path = "./data/priorities.xlsx"),
+  PSCIS_submission = import_pscis(),
+  fish_habitat_model_outputs = read.csv('./data/fish_habitat_info.csv'),
   #this section for locational info
   tracks = st_read(file_in("./data/field_cleaned.gpx"), layer = "tracks") %>% ##we need this to make track of points
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
@@ -31,7 +31,7 @@ plan1 <- drake_plan(
   my_tracks = tracks_of_points %>% 
     map(points2line_trajectory),  ##convert our points to lines
   photo_metadata = readr::read_csv(file = 'data/photo_metadata.csv'),
-  rds_ften_priority = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
+  forest_tenure_road_lines = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
   ##now make the report
     report = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"),
