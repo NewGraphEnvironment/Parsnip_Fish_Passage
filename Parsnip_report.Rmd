@@ -289,7 +289,7 @@ map <- leaflet(height=500, width=780) %>%
   addPolylines(data=rds_ften_priority,  opacity=1, color = '#ff7f00',
                fillOpacity = 0.75, weight=2) %>%
   addLegend(
-    position = "bottomleft",
+    position = "topright",
     colors = c("red", "orange", "grey"),
     labels = c("High", "Moderate", "Low"), opacity = 1,
     title = "Fish Passage Priorities",
@@ -311,9 +311,9 @@ map <- leaflet(height=500, width=780) %>%
     weight = 2,
     opacity = 1.0
   ) %>% 
-  # leafem::addHomeButton(ext = raster::extent(filter(table_overview_sf, priority %ilike% 'High')),
-  #                       position = "topleft",
-  #                       group = 'High Priority Crossings') %>%
+  leafem::addHomeButton(ext = raster::extent(filter(table_overview_sf, priority %ilike% 'High')),
+                        position = "topleft",
+                        group = 'High Priority Crossings') %>%
     leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125000')),
                         position = "topleft", 
                         group = '125000') %>% 
