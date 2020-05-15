@@ -828,11 +828,13 @@ map
 
 
 ## Workflow Layout
-This project is in the early stages of active development, is incomplete, may contain errors and is expected to change substantially. It has been made available for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any questions or concerns.  
+This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially with much more detail yet to be added. This report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any feedback regarding any of the fish passage restoration candidate sites or if you have any questions regarding the project.  Thank you for taking the time to review.
 
 <br>
 
- * Code and data for the workflow is available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage).  This report is generated from scratch from a Rmarkdown document processing raw data from populated:
+ * Code and data for the workflow is available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage).  This report is generated from scratch from a Rmarkdown document processing raw data from:
+ 
+    + [Checklist for Habitat Confirmation](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/habitat-confirmation-projects) procedures developed by the provincial [Fish Passage Technical Working Group](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage) to guide biologists confirming fish habitat value at a stream crossing which has been identified as a potential high‐priority restoration site.
 
     + [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) 
 
