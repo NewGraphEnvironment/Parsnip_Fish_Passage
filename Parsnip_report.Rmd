@@ -2,7 +2,7 @@
 ```{r importdata, echo=FALSE}
 drake::loadd(tracks)
 drake::loadd(track_points)
-drake::loadd(c(loc_data, site_data))
+drake::loadd(c(site_location_data, habitat_data))
 
 # test <- pull_data(sheet = try)
 
