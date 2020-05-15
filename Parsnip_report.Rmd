@@ -61,7 +61,7 @@ plot <- drake::r_vis_drake_graph(main = 'Interactive Drake Workflow Graph Showin
 
 # Restoration Candidates {.tabset}
 
-## Overview
+
 
 ```{r}
 drake::loadd(table)
@@ -201,9 +201,6 @@ table_overview_prep <- table_overview %>%
          `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_integer, -Location, -'Zone (UTM)', -'Easting', -'Northing') %>% 
   arrange(Priority, Site)
   
-  
-
-
 # DT::datatable(
 #   table_overview_prep,
 #   caption = 'Table 1: Overview of Parsnip River Watershed Crossings Assessed with Habitat Confirmations.',
@@ -220,18 +217,7 @@ table_overview_prep <- table_overview %>%
 #   )))) %>% 
 #     formatStyle(columns = colnames(table_overview_prep), `font-size` = '10px')
 
-filter(table_overview_prep) %>%
-  gt::gt() %>% 
-  cols_width(
-    vars(Comments) ~ px(300),
-    vars(`Habitat Gain (km)`) ~ px(70),
-    everything() ~ px(60)
-  ) %>% 
-  tab_options(table.font.size = 11) %>% 
-  tab_footnote(
-    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
-    locations =  cells_column_labels(
-      columns = vars(`Habitat Gain (km)`)))
+
 
 
 # names(hab_table) <- pull(table_names, new_names)  
@@ -253,49 +239,6 @@ filter(table_overview_prep) %>%
 
 ```
 
-
-```{r loadhabitat}
-##make habitat table
-
-names_hab_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','avg_channel_width_m',
-         'avg_wetted_width_m', 'average_residual_pool_depth_m',
-         'average_bankfull_depth_m','average_gradient_percent',
-         'bed_material_dominant', 'bed_material_subdominant')
-
-
-table_hab <- table %>%
-  dplyr::select(all_of(names_hab_table)) 
-
-table_hab <- left_join(
-  table_hab, 
-  select(priorities,
-         site, location, length_surveyed = length, priority, comments),
-  by = c('site','location')
-)
-  # select(Site, Stream, Location:Northing, everything())
-
-```
-
-
-```{r makehabtable}
-new_names <-  c('alias_local_name', 'Site', 'Location', 
-                'Stream', 'Channel Width (m)', 'Wetted Width (m)',
-                'Pool depth (m)','Bankfull Depth (m)', 'Gradient (%)',
-                'Substrate (dominant)', 'Substrate (subdominant)', 'Length Surveyed (m)',
-                'Priority', 'Comments')
-
-
-table_hab_prep <- table_hab %>% 
-  purrr::set_names(., nm = new_names) %>% 
-   mutate(Location = case_when(Location == 'ds' ~ 'Downstream',
-                             TRUE ~ 'Upstream')) %>% 
-  select(-alias_local_name, -Stream)
-```
-
-
-
-
-
 ## Overview Map
 
 
@@ -310,7 +253,7 @@ Please note that data is subject to change and the reporting, maps and kml files
 
 <br>
 
-```{r eval=TRUE, out.width= '100%', fig.cap="Overview Map of Parsnip River Watershed fish passage restoration candidates. Field survey tracks are represented by red lines. High priority crossings are red circles, moderate priorities are orange circles and low priorities are grey. Forest tenure roads are orange. Details of sites provided in pop-up windows of crossings with photos currently provided for high priority sites."}
+```{r eval=TRUE, out.width= '100%', fig.cap="Overview Map of Parsnip River Watershed fish passage restoration candidates. Field survey tracks are represented by red lines. Forest tenure roads are orange. Details of sites provided in pop-up windows of crossings with photos currently provided for high priority sites."}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
@@ -410,6 +353,63 @@ map
 
 ```
 
+## Overview Table
+
+```{r}
+filter(table_overview_prep) %>%
+  gt::gt() %>% 
+  cols_width(
+    vars(Comments) ~ px(300),
+    vars(`Habitat Gain (km)`) ~ px(70),
+    everything() ~ px(60)
+  ) %>% 
+  tab_options(table.font.size = 11) %>% 
+  tab_footnote(
+    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    locations =  cells_column_labels(
+      columns = vars(`Habitat Gain (km)`)))
+```
+
+
+```{r loadhabitat}
+##make habitat table
+
+names_hab_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','avg_channel_width_m',
+         'avg_wetted_width_m', 'average_residual_pool_depth_m',
+         'average_bankfull_depth_m','average_gradient_percent',
+         'bed_material_dominant', 'bed_material_subdominant')
+
+
+table_hab <- table %>%
+  dplyr::select(all_of(names_hab_table)) 
+
+table_hab <- left_join(
+  table_hab, 
+  select(priorities,
+         site, location, length_surveyed = length, priority, comments),
+  by = c('site','location')
+)
+  # select(Site, Stream, Location:Northing, everything())
+
+```
+
+
+```{r makehabtable}
+new_names <-  c('alias_local_name', 'Site', 'Location', 
+                'Stream', 'Channel Width (m)', 'Wetted Width (m)',
+                'Pool depth (m)','Bankfull Depth (m)', 'Gradient (%)',
+                'Substrate (dominant)', 'Substrate (subdominant)', 'Length Surveyed (m)',
+                'Priority', 'Comments')
+
+
+table_hab_prep <- table_hab %>% 
+  purrr::set_names(., nm = new_names) %>% 
+   mutate(Location = case_when(Location == 'ds' ~ 'Downstream',
+                             TRUE ~ 'Upstream')) %>% 
+  select(-alias_local_name, -Stream)
+```
+
+
 
 ## High Priority Crossings {.tabset}
 
@@ -428,7 +428,7 @@ photo_metadata$url <- as.character(photo_metadata$url)
 
 
 ### Chuchinka-Arctic FSR {.tabset}
-
+Drone footage for habitat upstream of crossing 125000 is located [here at this link](https://www.youtube.com/watch?v=BT6cEmNK3f4) 
 
 ```{r site125000}
 #### Tributary to Parsnip River - PSCIS 125000 
