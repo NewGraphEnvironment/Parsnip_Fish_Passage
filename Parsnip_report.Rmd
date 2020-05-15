@@ -32,7 +32,8 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE,
 
 ```{r include = FALSE,  message=FALSE}
 
-plot <- drake::r_vis_drake_graph(main = 'Interactive Drake Workflow Graph Showing Project Structure and Dependencies')
+plot <- drake::r_vis_drake_graph(targets_only = TRUE, main = 'Interactive Workflow Diagram')
+
 ```
 
 
