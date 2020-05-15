@@ -124,6 +124,14 @@ make_photo_metadata <- function(meta){
            lon_map = case_when(crossing_id == '125231' & 
                                  filename == 'downstream2.JPG' ~
                                  lon_pscis,
+                               TRUE ~ lon_map),
+           lat_map = case_when(crossing_id == '125000' & ##not sure why the timestamp is wrong on this one.....
+                                 filename == 'us6.JPG' ~
+                                 lat_gps_linked,
+                               TRUE ~ lat_map),
+           lon_map = case_when(crossing_id == '125000' & 
+                                 filename == 'us6.JPG' ~
+                                 lon_gps_linked,
                                TRUE ~ lon_map))
     }
 
