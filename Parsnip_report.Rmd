@@ -343,13 +343,20 @@ map <- leaflet() %>%
     data=table_overview_sf,
     label = table_overview_sf$Site,
     popup = popupTable(select(table_overview_sf, Site, priority, Stream, road_name, comments)),
-    radius = 7,
+    radius = 9,
     fillColor = ~pal(priority),
     color= "#ffffff",
     stroke = TRUE, 
     fillOpacity = 1.0,
     weight = 2,
     opacity = 1.0
+  ) %>% 
+  # addLegend(pal = pal, values = ~table_overview_sf$priority, group = "circles", position = "bottomleft") %>%
+  addLegend(
+    position = "bottomleft",
+    colors = c("red", "orange", "grey"),
+    labels = c("High", "Moderate", "Low"), opacity = 1,
+    title = "Priorities",
   ) %>% 
   addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
                     popup = popupImage(photo_metadata$url, src = "remote"),
