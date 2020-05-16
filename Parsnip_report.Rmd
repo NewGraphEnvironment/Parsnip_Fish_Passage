@@ -240,17 +240,17 @@ table_overview_prep <- table_overview %>%
 
 ```
 
+
+
 ## Overview Map
 
 
 <br>
 
-**A zip file containing google earth .kml files with crossing locations as well as associated forest tenure roads and railway lines are included for download [HERE AT THIS LINK](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage/raw/master/data/parsnip_priorities.zip)**
-
-<br>
+This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially in the next few weeks with much more detail added. The report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any information regarding any fish passage restoration candidate sites in the Parsnip River wateshed or if you have any questions/feedback regarding the project.  
 
 
-Please note that data is subject to change and the reporting, maps and kml files will be updated as the report is completed.
+
 
 <br>
 
@@ -261,7 +261,18 @@ Please note that data is subject to change and the reporting, maps and kml files
 ##add a culvert measurements output table with all the usual photos
 ##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
 
-loadd(tracks, photo_metadata, forest_tenure_road_lines)
+loadd(tracks, forest_tenure_road_lines)
+
+#to do later - combine the culvert photos together into one to reduce the clicking.  For now we will just not show some
+photo_noshow <- c('upstream', 'downstream', 'inlet', 'inlet2', 'outlet2', 'barrel2')
+
+
+#remove photo metadata with no coordinates
+photo_metadata <- drake::readd(photo_metadata) %>% 
+  filter(!is.na(lat_map)) %>% 
+  mutate(base = tools::file_path_sans_ext(filename)) %>% 
+  # separate(filename, into = c('base', 'file_extension', sep = '.')) %>% 
+  filter(!base %in% photo_noshow)
 
 
 ##make colors for the priorities
@@ -277,7 +288,7 @@ pal <-
 map <- leaflet(height=500, width=780) %>%
   # leaflet() %>% 
   addTiles() %>%
-  addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
+  leafem::addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
   addProviderTiles(providers$"Esri.DeLorme") %>% 
   # addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
@@ -295,14 +306,17 @@ map <- leaflet(height=500, width=780) %>%
     title = "Fish Passage Priorities",
   ) %>% 
   addAwesomeMarkers(lng = photo_metadata$lon_map,lat = photo_metadata$lat_map,
-                    popup = popupImage(photo_metadata$url, src = "remote"),
+                    popup = leafpop::popupImage(photo_metadata$url, src = "remote"),
                     clusterOptions = markerClusterOptions(),
                     labelOptions = offset(c(0,0)),
                     label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
     addCircleMarkers(
     data=table_overview_sf,
     label = table_overview_sf$Site,
-    popup = popupTable(select(table_overview_sf, Site, priority, Stream, road_name, comments)),
+    popup = leafpop::popupTable(x = select((table_overview_sf %>% st_set_geometry(NULL)), 
+                                           Site, Priority = priority, Stream, Road = road_name, Comments = comments),
+                                feature.id = F,
+                                row.numbers = F), ##can't seem to drop the geometry column wi
     radius = 9,
     fillColor = ~pal(priority),
     color= "#ffffff",
@@ -353,6 +367,13 @@ map <- leaflet(height=500, width=780) %>%
 map
 
 ```
+
+<br>
+
+Although readers are encouraged to use the interactive maps available here on the webhost as they will be updated regularly, a zip file containing google earth .kml files with crossing locations as well as associated forest tenure roads and railway lines are included for download [HERE AT THIS LINK](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage/raw/master/data/parsnip_priorities.zip). Please note that data is subject to change and the reporting, maps and kml files will be updated as the report is completed.
+
+<br>
+
 
 ## Overview Table
 
@@ -871,13 +892,14 @@ map
 
 
 ## Workflow Layout
-This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially with much more detail yet to be added. This report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any feedback regarding any of the fish passage restoration candidate sites or if you have any questions regarding the project.  Thank you for taking the time to review.
+
+The field work procedures and preparation for this project are based on procedures developed by the provincial [Fish Passage Technical Working Group](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage)in the [Checklist for Habitat Confirmation](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/habitat-confirmation-projects).  The checklist was developed to guide biologists confirming fish habitat value at a stream crossings which have been identified as potential high‐priorities for fish passage restoration.
 
 <br>
 
- * Code and data for the workflow is available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage).  This report is generated from scratch from a Rmarkdown document processing raw data from:
+ * Code and data for the workflow is available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage).  This report is generated from a Rmarkdown document processing raw data from:
  
-    + [Checklist for Habitat Confirmation](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/habitat-confirmation-projects) procedures developed by the provincial [Fish Passage Technical Working Group](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage) to guide biologists confirming fish habitat value at a stream crossing which has been identified as a potential high‐priority restoration site.
+    + 
 
     + [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) 
 

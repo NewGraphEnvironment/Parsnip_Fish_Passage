@@ -132,7 +132,16 @@ make_photo_metadata <- function(meta){
            lon_map = case_when(crossing_id == '125000' & 
                                  filename == 'us6.JPG' ~
                                  lon_gps_linked,
-                               TRUE ~ lon_map))
+                               TRUE ~ lon_map),
+           lat_map = case_when(crossing_id == '125000' & ##not sure why the timestamp is wrong on this one.....
+                                 tools::file_path_sans_ext(filename) == 'aerial' ~
+                                 lat_pscis,
+                               TRUE ~ lat_map),
+           lon_map = case_when(crossing_id == '125000' & 
+                                 tools::file_path_sans_ext(filename) == 'aerial' ~
+                                 lon_pscis,
+                               TRUE ~ lon_map)
+           )
     }
 
 photo_metadata_processed <- photo_metadata_list %>% 
