@@ -84,7 +84,7 @@ make_photo_metadata <- function(meta){
     mutate(crossing_id = basename(crossing_id))
   ##probably makes sense to just give the photos the crossing lat, lons when the photo is named upstream, downstream, inlet, outlet, barrel, aerial
   ##get lat lons for pscis
-  pscis2 <- drake::readd(pscis) %>% 
+  pscis2 <- drake::readd(PSCIS_submission) %>% 
     filter(!is.na(easting)) %>% ##remove the ones with no info yet
     sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>% 
     st_transform(crs = 4326) %>% 

@@ -3,6 +3,8 @@
 drake::loadd(tracks)
 drake::loadd(track_points)
 drake::loadd(c(site_location_data, habitat_data))
+source('R/packages.R')
+source('R/functions.R')
 
 # test <- pull_data(sheet = try)
 
@@ -29,12 +31,6 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE,
 ##this is from our title if we want it to autogenerate "Fish Habitat confirmation - PSCIS Crossing `r my_site` - `r pull_data(sheet = loc_data, site = my_site)`"
 ```
 
-
-```{r include = FALSE,  message=FALSE}
-
-plot <- drake::r_vis_drake_graph(targets_only = TRUE, main = 'Interactive Workflow Diagram')
-
-```
 
 
 ```{r}
@@ -67,7 +63,7 @@ plot <- drake::r_vis_drake_graph(targets_only = TRUE, main = 'Interactive Workfl
 ```{r}
 drake::loadd(table)
 
-names_table <- tibble(old_names = names(table),
+names_table <- tibble::tibble(old_names = names(table),
                       new_names = c('alias_local_name', 'Site', 'Location', 'Zone (UTM)',
                                     'Easting', 'Northing',
                                     'Stream', 'Channel Width (m)', 'Wetted Width (m)',
@@ -247,7 +243,7 @@ table_overview_prep <- table_overview %>%
 
 <br>
 
-This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially in the next few weeks with much more detail added. The report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any information regarding any fish passage restoration candidate sites in the Parsnip River wateshed or if you have any questions/feedback regarding the project.  
+This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially in the next few weeks with much more detail added. The report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any information regarding any fish passage restoration candidate sites in the Parsnip River watershed or if you have any questions/feedback regarding the project.  
 
 
 
@@ -277,7 +273,7 @@ photo_metadata <- drake::readd(photo_metadata) %>%
 
 ##make colors for the priorities
 pal <- 
-   colorFactor(palette = c("red", "orange", "grey"), 
+   colorFactor(palette = c("red", "yellow", "grey"), 
                levels = c("High", "Moderate", "Low"))
 
 #https://stackoverflow.com/questions/61026700/bring-a-group-of-markers-to-front-in-leaflet
@@ -301,7 +297,7 @@ map <- leaflet(height=500, width=780) %>%
                fillOpacity = 0.75, weight=2) %>%
   addLegend(
     position = "topright",
-    colors = c("red", "orange", "grey"),
+    colors = c("red", "yellow", "grey"),
     labels = c("High", "Moderate", "Low"), opacity = 1,
     title = "Fish Passage Priorities",
   ) %>% 
@@ -387,7 +383,7 @@ filter(table_overview_prep) %>%
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
-    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
     locations =  cells_column_labels(
       columns = vars(`Habitat Gain (km)`)))
 ```
@@ -483,7 +479,7 @@ filter(table_overview_prep,
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
-    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
     locations =  cells_column_labels(
       columns = vars(`Habitat Gain (km)`)))
 
@@ -619,7 +615,7 @@ filter(table_overview_prep,
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
-    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
     locations =  cells_column_labels(
       columns = vars(`Habitat Gain (km)`)))
 
@@ -725,7 +721,7 @@ filter(table_overview_prep,
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
-    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
     locations =  cells_column_labels(
       columns = vars(`Habitat Gain (km)`)))
 
@@ -779,7 +775,7 @@ filter(table_overview_prep,
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
-    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
     locations =  cells_column_labels(
       columns = vars(`Habitat Gain (km)`)))
 
@@ -831,7 +827,7 @@ filter(table_overview_prep,
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
-    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
     locations =  cells_column_labels(
       columns = vars(`Habitat Gain (km)`)))
 
@@ -898,13 +894,10 @@ The field work procedures and preparation for this project are based on procedur
 <br>
 
  * Code and data for the workflow is available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage).  This report is generated from a Rmarkdown document processing raw data from:
- 
-    + 
 
     + [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) 
 
     + [pscis_assessment_template_v23.xls](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/assessment-projects)
-
 
     + Excel spreadsheet with priority level detailed for each of the crossings surveyed.
 
@@ -913,6 +906,13 @@ The field work procedures and preparation for this project are based on procedur
     + Photos and photo metadata.  When not available in metadata photos georeferenced by aligning photostamp time with GPS track times.
 
 <br>
+
+
+```{r include = FALSE,  message=FALSE}
+
+plot <- drake::r_vis_drake_graph(targets_only = TRUE, main = 'Interactive Workflow Diagram')
+
+```
 
 
 ```{r out.width = '100%'}
