@@ -124,10 +124,16 @@ table_overview <- left_join(
          by =  c('site_integer' = 'pscis_stream_crossing_id'), 
   na_matches = "never") %>% ##nice little trick
   mutate(uphab_gross_sub22 = round(uphab_gross_sub22/1000, 1),
-         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low')) %>% 
+         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low'),
+         uphab_gross_sub22 = case_when(Site == 'CV1' ~ 6.6,  ##special case - pulled from pscis_modelled_combined 16603266 
+                                       TRUE ~ uphab_gross_sub22)) %>% 
   arrange((site_integer), desc(Location)) %>% 
   select(Site,  Stream, road_name, Location, 'Zone (UTM)', 'Easting', 'Northing',
          road_tenure, upstr_species, uphab_gross_sub22, everything()) 
+
+
+# upstr_species = as.character(upstr_species), upstr_species = case_when(Site == 'CV1' ~ "(BT)",  ##special case - added manually
+#                                        TRUE ~ upstr_species)) 
 ```
 
 ```{r priorities_kml}
@@ -182,7 +188,7 @@ table_overview_prep <- table_overview %>%
   mutate(upstr_species = as.character(upstr_species),
          upstr_species = case_when(Site %like% '125000' ~ 'RB, CC',
                              Site %like% '57690' ~ 'RB',
-                             Site %like% 'CV1' ~ 'BT',
+                             Site %like% 'CV1' ~ 'RB, (BT)',
                              Site %like% '125345' ~ '(RB), CC',
                              TRUE ~ upstr_species),
          road_name = case_when(Site %like% 'CV1' ~ 'CN Railway',
@@ -427,6 +433,22 @@ table_hab_prep <- table_hab %>%
   select(-alias_local_name, -Stream)
 ```
 
+```{r tablescuverts}
+# table_culvert <- drake::readd(PSCIS_submission) %>% 
+#   select(Site = pscis_crossing_id, 'Diameter (m)' = diameter_or_span_meters, 'Length (m)' = length_or_width_meters,
+#          Embedded = average_depth_embededdment_meters, Backwatered = percentage_backwatered,
+#          'Fill Depth (m)' = fill_depth_meters, 'Outlet Drop (m)' = outlet_drop_meters,
+#          'Outlet Pool Depth (m)' = outlet_pool_depth_0_01m, 'Stream Width Ratio' = stream_width_ratio, 
+#          'Score' = final_score, 'Barrier Result' = barrier_result) %>% 
+#   mutate(site_numeric = as.numeric(Site)) %>% 
+#   mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), as.numeric) %>% 
+#   mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), round, 1) %>% 
+#   mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), as.character) %>% 
+#   mutate_all(~replace_na(.,"no")) %>% 
+#   dplyr::arrange(desc(site_numeric)) 
+#   select(-site_integer)
+
+```
 
 
 ## High Priority Crossings {.tabset}
