@@ -162,11 +162,11 @@ kml_layer(railway_kml, colour = '#000000', labels = subdivision1_name)  ##I don'
 kml_close("data/priorities_railway.kml")
 
 ##now we will zip up the kml files in the data folder and rename with kmz
-files_to_zip <- paste0("data/", list.files(path = "data/", pattern = "\\.kml$"))
+files_to_zip <- paste0("data/", list.files(path = "data/", pattern = "\\.kml$"))  ##this used to includes the planning file which we don't want to do so watch out
 zip::zipr("data/parsnip_priorities.zip", files = files_to_zip)  ##it does not work to zip to kmz!!
 
-
-
+##this is how I zipped the planning file
+# zip::zipr("data/planning_high_mod_culverts.zip", files = 'data/planning_high_mod_culverts.kml') 
 
 ##make the geopackage
 st_write(rds_dra,     "./data/parsnip.gpkg", "rds_dra", update = TRUE)
