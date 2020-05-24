@@ -1,0 +1,138 @@
+---
+title: "Historic PSCIS photos, details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments."
+output:
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
+  bookdown::word_document2:
+    reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template_landscape.docx
+    bibliography: references.bib
+    toc: yes
+    fig_caption: yes
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r setup, include=FALSE, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
+# https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
+### this one ! https://www.bibtex.com/e/entry-types/
+source('R/packages.R')
+source('R/functions.R')
+
+#establish connection with database 
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv, 
+                  dbname = 'postgis',
+                  host = 'localhost', 
+                  port = '5432',
+                  user = 'postgres', 
+                  password = 'postgres')
+
+knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, connection = "conn")
+options(knitr.table.format = "html")
+
+```
+
+
+```{r}
+# test <- pull_data(sheet = loc_data, site = my_site)
+
+my_site <- '57681'
+my_site2 <- '125353'
+```
+
+```{r}
+#bring in the planning work
+##bring in your work
+
+query <- "SELECT mw.*, p.stream_crossing_id as psc_stream_crossing_id, p.utm_zone, p.utm_easting, p.utm_northing FROM working.my_pscis_20190709 mw LEFT OUTER JOIN whse_fish.pscis_assessment_svw p on p.stream_crossing_id = mw.stream_crossing_id;"
+
+my_planning_data <- sf::st_read(conn, query = query) %>% 
+  filter(watershed_group_code == 'PARS',
+         !is.na(my_priority))
+
+my_site_comments <- my_planning_data %>% 
+  filter(psc_stream_crossing_id %in% c(my_site, my_site2))
+
+my_map_id <- my_planning_data %>% 
+  filter(stream_crossing_id == my_site) %>% 
+  pull(dbm_mof_50k_grid_map_tile) %>% 
+  sub("(.{4})(.*)", "\\1.\\2", .) ##this last bit inserts a period after the first 4 characters
+
+
+my_map_url <- paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/PARS_CRKD_CARP_', my_map_id, '.pdf')
+
+##need a table of the info used to prioritize habitat info
+planning_table  <- my_planning_data %>% 
+  st_set_geometry(NULL) %>% 
+  # filter(my_priority == "high" & 
+  #        watershed_group_code %like% 'PARS') %>% 
+  arrange(stream_crossing_id) %>% 
+  mutate(my_stream_name = case_when(is.na(my_stream_name) ~ stream_name,
+                                    TRUE ~ my_stream_name),
+         my_priority = stringr::str_to_title(my_priority),
+         road_name = case_when(is.na(road_name) ~ my_road_name,
+                               TRUE ~ road_name)) %>% 
+  transmute(Site = stream_crossing_id, 
+            stream_word = my_stream_name,
+            Stream = paste0("[", my_stream_name, "](", image_view_url, ")"),
+            `Map 50k` = dbm_mof_50k_grid_map_tile, 
+            Road = road_name,
+            `UTM (10N)` = paste0(round(utm_easting,0), " ", round(utm_northing,0)),
+            `Habitat Gain (km)` = round(uphab_gross_sub22/1000,1),
+            `Lake / Wetland (ha)` = round((upstr_alake_gross_obs + upstr_alake_gross_inf + upstr_awet_gross_all),1),
+            `Stream Width (m)` = round(downstream_channel_width,1), 
+            `Fish Upstream`= case_when(!is.na(upstr_species) ~ 'Yes', TRUE ~ 'No'), 
+            `Habitat Value` = paste0(substr(habitat_value_code, 1, 1), tolower(substr(habitat_value_code, 2, nchar(habitat_value_code)))), 
+            `Rank` = my_priority,
+            Comments = my_text) %>% 
+    mutate_all(~replace_na(.,"-")) %>% 
+  mutate(Comments = stringr::str_replace_all(Comments, 'Marlim 2013', 'Gollner et al. (2013)'),
+         `Habitat Value` = case_when(`Habitat Value` == 'NANA' ~ '-',
+                                     TRUE ~ `Habitat Value`))
+
+test <- my_planning_data %>% filter(my_priority == 'high' | my_priority == 'High')
+```
+
+
+```{r table-plan-html, eval = identical(knitr::is_html_output(), TRUE) }
+select(planning_table,
+                    -stream_word) %>% 
+  knitr::kable() %>% 
+  kableExtra::column_spec(column = 12, width_min = '2in') %>% 
+  kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
+  kableExtra::scroll_box(width = "100%", height = "500px")
+
+##caption = 'Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.'
+```
+
+
+
+```{r table-plan-word, eval = identical(knitr::is_html_output(), FALSE) }
+library(flextable)
+##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
+fit_to_page <- function(ft, pgwidth = 9.44){
+
+  ft_out <- ft %>% autofit()
+
+  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+  return(ft_out)
+}
+
+
+table <- flextable::flextable(select(planning_table,
+                                     -Stream) %>% rename(Stream = stream_word)) %>%
+  flextable::my_theme_booktabs(fontsize = 8, left_just_cols = 2) %>%
+  # flextable::autofit() %>%
+  fit_to_page() %>%  
+  flextable::width( j = 1:11, width = 0.658) %>%
+  flextable::width(., j = 12, width = 2.2) %>%
+  flextable::set_caption('Historic PSCIS details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.')
+table
+```
+
+<br>
+
+
+

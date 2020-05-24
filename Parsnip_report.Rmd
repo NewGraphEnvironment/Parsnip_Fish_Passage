@@ -249,7 +249,7 @@ table_overview_prep <- table_overview %>%
 
 <br>
 
-This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially in the next few weeks with much more detail added. The report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any information regarding any fish passage restoration candidate sites in the Parsnip River watershed or if you have any questions/feedback regarding the project.  
+This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially in the next few weeks with much more detail added. The report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any information regarding any fish passage restoration candidate sites in the Parsnip River watershed or if you have any questions/feedback regarding the project. A draft version of other report components are located <a href="Parsnip_report_intro_methods.html">here</a> and will be updated regularly.
 
 
 
@@ -908,14 +908,16 @@ map <- leaflet() %>%
 map
 ```
 
+```{r}
+##we can link to other html files like this <a href="./Parsnip_report_crossing_appendices2.html">Planning Table</a>
+```
+
 
 ## Workflow Layout
 
 The field work procedures and preparation for this project are based on procedures developed by the provincial [Fish Passage Technical Working Group](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage)in the [Checklist for Habitat Confirmation](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/habitat-confirmation-projects).  The checklist was developed to guide biologists confirming fish habitat value at a stream crossings which have been identified as potential high‐priorities for fish passage restoration.
 
 <br>
-
-<a href="./Parsnip_report_crossing_appendices2.html">Planning Table</a>
 
  * Code and data for the workflow is available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage).  This report is generated from a Rmarkdown document processing raw data from:
 

@@ -12,7 +12,8 @@ plan1 <- drake_plan(
     purrr::pluck("step_4_stream_site_data"), 
   site_location_data = fish_data_submission %>% 
     purrr::pluck("step_1_ref_and_loc_info") %>% 
-    dplyr::filter(!is.na(site_number)), 
+    dplyr::filter(!is.na(site_number))%>% 
+    mutate(survey_date = janitor::excel_numeric_to_date(as.numeric(survey_date))), 
   fish_sampling_data = fish_data_submission %>% 
     purrr::pluck("step_2_fish_coll_data"),
   table = make_table(loc_dat = site_location_data, site_dat = habitat_data),
@@ -36,6 +37,16 @@ plan1 <- drake_plan(
     report = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"),
     output_file = file_out("./docs/index.html"),
+    quiet = TRUE
+  ),
+  report2 = rmarkdown::render(
+    knitr_in("Parsnip_report_intro_methods.Rmd"),
+    output_file = file_out("./docs/Parsnip_report_intro_methods.html"),
+    quiet = TRUE
+  ),
+  report3 = rmarkdown::render(
+    knitr_in("Parsnip_report_planning_summary.Rmd"),
+    output_file = file_out("./docs/Parsnip_report_planning_summary.html"),
     quiet = TRUE
   )
 )
