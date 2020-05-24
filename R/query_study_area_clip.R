@@ -46,7 +46,7 @@ dbGetQuery(conn,
 dbGetQuery(conn,
            "SELECT table_name 
            FROM information_schema.tables 
-           WHERE table_schema='whse_basemapping'")
+           WHERE table_schema='working'")
 
 ##list column names in a table
 dbGetQuery(conn,
@@ -64,7 +64,7 @@ dbGetQuery(conn,"SELECT DISTINCT(watershed_group_name)
            FROM whse_basemapping.fwa_watershed_groups_poly")
 
 ##this is using dbplyr
-test <- tbl(conn, in_schema("whse_basemapping", "fwa_watershed_groups_poly")) 
+# test <- tbl(conn, dbplyr::in_schema("whse_basemapping", "fwa_watershed_groups_poly")) 
 
 ##here is the info on the fish habitat etc
 fish_habitat_info <- dbGetQuery(conn,
