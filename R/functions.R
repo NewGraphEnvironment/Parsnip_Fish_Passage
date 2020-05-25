@@ -68,3 +68,52 @@ import_pscis <- function(workbook_name = 'pscis_phase2.xls'){
   filter(!is.na(date))
 }
 
+
+##----------------------------make a planning table-------------------------------
+make_table_planning <- function(){
+#establish connection with database 
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv, 
+                  dbname = 'postgis',
+                  host = 'localhost', 
+                  port = '5432',
+                  user = 'postgres', 
+                  password = 'postgres')
+query <- "SELECT mw.*, p.stream_crossing_id as psc_stream_crossing_id, p.utm_zone, p.utm_easting, p.utm_northing FROM working.my_pscis_20190709 mw LEFT OUTER JOIN whse_fish.pscis_assessment_svw p on p.stream_crossing_id = mw.stream_crossing_id;"
+my_planning_data <- sf::st_read(conn, query = query) %>% 
+  filter(watershed_group_code == 'PARS',
+         !is.na(my_priority))
+dbDisconnect(conn = conn)
+table_planning  <- my_planning_data %>% 
+  sf::st_set_geometry(NULL) %>% 
+  # filter(my_priority == "high" & 
+  #        watershed_group_code %like% 'PARS') %>% 
+  arrange(stream_crossing_id) %>% 
+  mutate(my_stream_name = case_when(is.na(my_stream_name) ~ stream_name,
+                                    TRUE ~ my_stream_name),
+         my_priority = stringr::str_to_title(my_priority),
+         road_name = case_when(is.na(road_name) ~ my_road_name,
+                               TRUE ~ road_name)) %>% 
+  transmute(Site = stream_crossing_id, 
+            stream_word = my_stream_name,
+            Stream = paste0("[", my_stream_name, "](", image_view_url, ")"),
+            
+            map_linked = paste0("[", dbm_mof_50k_grid_map_tile, "](", paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/PARS_CRKD_CARP_', sub("(.{4})(.*)", "\\1.\\2", dbm_mof_50k_grid_map_tile), '.pdf'), ")"), 
+            `Map 50k` = dbm_mof_50k_grid_map_tile, 
+            Road = road_name,
+            `UTM (10N)` = paste0(round(utm_easting,0), " ", round(utm_northing,0)),
+            `Habitat Gain (km)` = round(uphab_gross_sub22/1000,1),
+            `Lake / Wetland (ha)` = round((upstr_alake_gross_obs + upstr_alake_gross_inf + upstr_awet_gross_all),1),
+            `Stream Width (m)` = round(downstream_channel_width,1), 
+            `Fish Upstream`= case_when(!is.na(upstr_species) ~ 'Yes', TRUE ~ 'No'), 
+            `Habitat Value` = paste0(substr(habitat_value_code, 1, 1), tolower(substr(habitat_value_code, 2, nchar(habitat_value_code)))), 
+            `Rank` = my_priority,
+            Comments = my_text) %>% 
+  mutate_all(~replace_na(.,"-")) %>% 
+  mutate(Comments = stringr::str_replace_all(Comments, 'Marlim 2013', 'Gollner et al. (2013)'),
+         `Habitat Value` = case_when(`Habitat Value` == 'NANA' ~ '-',
+                                     TRUE ~ `Habitat Value`))
+
+table_planning
+}
+

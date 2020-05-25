@@ -33,6 +33,8 @@ plan1 <- drake_plan(
     map(points2line_trajectory),  ##convert our points to lines
   photo_metadata = readr::read_csv(file = 'data/photo_metadata.csv'),
   forest_tenure_road_lines = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
+  fish_habitat_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
+  table_planning = make_table_planning(),
   ##now make the report
     report = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"),

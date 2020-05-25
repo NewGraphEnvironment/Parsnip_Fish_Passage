@@ -256,7 +256,7 @@ This interactive report is in the early stages of development, is incomplete and
 
 <br>
 
-```{r eval=TRUE, out.width= '100%', fig.cap="Overview Map of Parsnip River Watershed fish passage restoration candidates. Field survey tracks are represented by red lines. Forest tenure roads are orange. Details of sites provided in pop-up windows of crossings with photos currently provided for high priority sites."}
+```{r eval=TRUE, out.width= '100%', fig.cap="Overview Map of Parsnip River Watershed fish passage restoration candidates. Field survey tracks are represented by pink lines. Forest tenure roads are orange lines. Details of sites provided in pop-up windows of crossings with photos currently provided for high priority sites."}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
@@ -264,6 +264,8 @@ This interactive report is in the early stages of development, is incomplete and
 ##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
 
 loadd(tracks, forest_tenure_road_lines)
+
+
 
 #to do later - combine the culvert photos together into one to reduce the clicking.  For now we will just not show some
 photo_noshow <- c('upstream', 'downstream', 'inlet', 'inlet2', 'outlet2', 'barrel2')
@@ -297,10 +299,13 @@ map <- leaflet(height=500, width=780) %>%
   
   # addMeasure() %>% 
   # setView(lng = -105.644, lat = 51.618, zoom = 3)
-  addPolylines(data=tracks,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
+  
+  addPolylines(data=drake::readd(fish_habitat_model_lines),  opacity=1, color = 'blue',
+               fillOpacity = 0.75, weight=2) %>% 
   addPolylines(data=forest_tenure_road_lines,  opacity=1, color = '#ff7f00',
                fillOpacity = 0.75, weight=2) %>%
+  addPolylines(data=tracks,  opacity=0.75, color = '#e216c4',
+               fillOpacity = 0.75, weight=5) %>%
   addLegend(
     position = "topright",
     colors = c("red", "yellow", "grey"),
