@@ -1,5 +1,5 @@
 ---
-title: "Historic PSCIS photos, details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments."
+title: "Historic PSCIS photos, PSCIS details, planning maps, Fish Habitat Model outputs and prioritization rank/comments for crossings ranked for follow up with habitat confirmation assessments."
 output:
   bookdown::html_document2:
     number_sections: no
@@ -77,6 +77,8 @@ planning_table  <- my_planning_data %>%
   transmute(Site = stream_crossing_id, 
             stream_word = my_stream_name,
             Stream = paste0("[", my_stream_name, "](", image_view_url, ")"),
+            
+            map_linked = paste0("[", dbm_mof_50k_grid_map_tile, "](", paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/PARS_CRKD_CARP_', sub("(.{4})(.*)", "\\1.\\2", dbm_mof_50k_grid_map_tile), '.pdf'), ")"), 
             `Map 50k` = dbm_mof_50k_grid_map_tile, 
             Road = road_name,
             `UTM (10N)` = paste0(round(utm_easting,0), " ", round(utm_northing,0)),
@@ -98,7 +100,8 @@ test <- my_planning_data %>% filter(my_priority == 'high' | my_priority == 'High
 
 ```{r table-plan-html, eval = identical(knitr::is_html_output(), TRUE) }
 select(planning_table,
-                    -stream_word) %>% 
+                    -stream_word, -`Map 50k`) %>% 
+  rename(`Map 50k` = map_linked) %>% 
   knitr::kable() %>% 
   kableExtra::column_spec(column = 12, width_min = '2in') %>% 
   kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
@@ -122,7 +125,7 @@ fit_to_page <- function(ft, pgwidth = 9.44){
 
 
 table <- flextable::flextable(select(planning_table,
-                                     -Stream) %>% rename(Stream = stream_word)) %>%
+                                     -Stream, -map_linked) %>% rename(Stream = stream_word)) %>%
   flextable::my_theme_booktabs(fontsize = 8, left_just_cols = 2) %>%
   # flextable::autofit() %>%
   fit_to_page() %>%  
