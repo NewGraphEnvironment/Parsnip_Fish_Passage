@@ -249,7 +249,11 @@ table_overview_prep <- table_overview %>%
 
 <br>
 
-This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially in the next few weeks with much more detail added. The report has been made available at this time for stakeholder engagement and to facilitate discussion regarding potential fish passage restoration candidates.  Please contact al@newgraphenvironment.com (2507771518) with any information regarding any fish passage restoration candidate sites in the Parsnip River watershed or if you have any questions/feedback regarding the project. Draft versions of other report components are located <a href="Parsnip_report_intro_methods.html">HERE</a> and will be updated regularly.
+This interactive report is in the early stages of development, is incomplete and may contain errors.  It is updated regularly and will change substantially in the next few weeks with much more detail yet to be added. The report has been made available at this time for stakeholder engagement to facilitate discussion regarding procurement of an engineering design for replacement of one of the passage restoration candidate culverts. Draft versions of other report components are located <a href="Parsnip_report_intro_methods.html">HERE</a> and will be updated regularly.
+
+<br>
+
+Please contact al@newgraphenvironment.com (2507771518) with feedback and any questions regarding the project. 
 
 
 
