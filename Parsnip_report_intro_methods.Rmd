@@ -29,7 +29,9 @@ conn <- dbConnect(drv,
                   user = 'postgres', 
                   password = 'postgres')
 
-knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, connection = "conn")
+knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, connection = "conn",
+                      fig.align="center", fig.width = 5.118, fig.height = 3.409,
+                      fig.path = ('fig/'))
 
 ```
 
@@ -40,12 +42,12 @@ knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, conn
 ```
 # {.tabset}
 
-## Introduction
-The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats [@swalesRoleOffChannelPonds1989; @Bramblett_2002].  Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues [@tech9_access]. In addition, open migration corridors are essential for adapting to the impacts of climate change such as rising water temperatures and changing flow regimes [@seligerRiverConnectivityHabitat2018]. There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat. 
+## Introduction {.tabset}
+The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats [@swalesRoleOffChannelPonds1989; @Bramblett_2002].  Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues [@tech9_access]. In addition, open migration corridors are essential for adapting to the impacts of climate change such as rising water temperatures and changing flow regimes [@seligerRiverConnectivityHabitat2018]. There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat [@gollnerPrinceGeorgeTimber2013 ;@hooftPrinceGeorgeForest]. 
 
 <br>
 
-## Background {.tabset}
+### Background 
 As a result of high-level direction from the provincial government of British Columbia, a Fish Passage Strategic Approach protocol has been developed for British Columbia to ensure that the greatest opportunities for restoration of fish passage are pursued.  A Fish Passage Technical Working Group has been formed to coordinate the protocol and data is continuously amalgamated within the Provincial Stream Crossing Inventory System (PSCIS) which has been built to house all culvert related data.  Historically, British Columbia Timber Sales has administered most of the fish passage assessment, design and remediation contracts in the province with the majority of funding typically provided by the Land Based Investment Strategy (LBIS). The strategic approach protocol for fish passage restoration involves a four-phase process as described in [@fptwg_strategic_approach]:
 
  * Phase 1: Fish Passage Assessment – Fish stream crossings within watersheds with high fish values are assessed to determine barrier status of structures and document a general assessment of adjacent habitat quality and quantity.
@@ -130,21 +132,57 @@ fish_table <- fish_species_watershed %>%
 
 ```
 
-### Study Area
-The Parsnip River watershed is located within the south-eastern portion of the 108,000 km^2^ traditional territory of the Tse'khene from the [McLeod Lake Indian Band](https://www.mlib.ca/about/History).  The Tse'khene *"People of the Rocks"* are a south westerly extension of the Athabascan speaking people of northern Canada.  They were a nomadic hunting people who's language belongs to the Beaver-Sarcee-Tse'khene branch of Athapaskan.  
+### Study Area 
+The Parsnip River watershed is located within the south-eastern portion of the 108,000 km^2^ traditional territory of the Tse'khene from the [McLeod Lake Indian Band](https://www.mlib.ca/about/History).  The Tse'khene *"People of the Rocks"* are a south westerly extension of the Athabascan speaking people of northern Canada.  They were a nomadic hunting people who's language belongs to the Beaver-Sarcee-Tse'khene branch of Athapaskan [@HistoryWhoWe]. 
 
 <br>
 
-The continental divide separates watersheds flowing north into the Arctic Ocean via the Mackenzie River and south and west into the Pacific Ocean via the Fraser River. The Parsnip River is a 6th order stream with a watershed that drains an area of `r round(watershed_raw$area/100, 0)` km^2^. The mainstem of the river flows within the Rocky Mountain Trench in a north direction into Williston Reservoir starting from the continental divide adjacent to Arctic Lakes. Major tributaries include the Misinchinka, Colbourne, Reynolds, Anzac, Table, Hominka and Missinka sub-basins which drain the western slopes of the Hart Ranges of the Rocky Mountains.
+The continental divide separates watersheds flowing north into the Arctic Ocean via the Mackenzie River and south and west into the Pacific Ocean via the Fraser River. The Parsnip River is a 6th order stream with a watershed that drains an area of `r round(watershed_raw$area/100, 0)` km^2^. The mainstem of the river flows within the Rocky Mountain Trench in a north direction into Williston Reservoir starting from the continental divide adjacent to Arctic Lakes. Major tributaries include the Misinchinka, Colbourne, Reynolds, Anzac, Table, Hominka and Missinka sub-basins which drain the western slopes of the Hart Ranges of the Rocky Mountains.  The Parsnip River has a mean annual discharge of `r round(fasstr::calc_longterm_mean(station_number = "07EE007")$LTMAD,1)` m^3^/s with flow patterns typical of high elevation watersheds on the west side of the northern Rocky Mountains which receive large amounts of precipitation as snow leading to peak levels of discharge during snowmelt, typically from May to July (Figures \@ref(fig:hydrology2-print) - \@ref(fig:hydrosummaryplot)). 
 
 <br>
 
-Construction of the 183 m high and 2134 m long W.A.C. Bennett Dam was completed in 1967 at Hudson's Hope, BC, creating Williston Reservoir [@hirst_1991].  Filling of the 375 km^2^ reservoir was complete in 1972 and flooded a substantial portion of the Parsnip River and major tributary valleys forming what is now known as the Peace and Parsnip reaches. The replacement of riverine habitat with an inundated reservoir environment resulted in profound changes to the ecology, resource use and human settlement patterns in these systems [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling]. Prior to the filling of the reservoir, the Pack River, into which McLeod Lake flows, was a major tributary to the Parsnip River.  It now enters the Williston Reservoir directly as the historic location of the confluence of the two rivers is within the reservoir's footprint.
+Construction of the 183 m high and 2134 m long W.A.C. Bennett Dam was completed in 1967 at Hudson's Hope, BC, creating Williston Reservoir [@hirst_1991].  Filling of the 375 km^2^ reservoir was complete in 1972 and flooded a substantial portion of the Parsnip River and major tributary valleys forming what is now known as the Peace and Parsnip reaches. The replacement of riverine habitat with an inundated reservoir environment resulted in profound changes to the ecology, resource use and human settlement patterns in these systems [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling; @pearceTSEKHENEFIRST2019]. Prior to the filling of the reservoir, the Pack River, into which McLeod Lake flows, was a major tributary to the Parsnip River.  It now enters the Williston Reservoir directly as the historic location of the confluence of the two rivers lies within the reservoir's footprint.
 
 <br>
+
+```{r hydrology1, fig.dim = c(6.5,4.32), include= FALSE, echo=FALSE, comment=NA, message = FALSE}
+
+
+hydatr::hydat_load(source = "C://Users//allan//AppData//Local//tidyhydat//tidyhydat") # loads the database (you'll need to call this one each time you load the package)
+# 
+# hydrograph <- plot_daily_stats(station_number = "07EE007",
+#                                start_year = 0,
+#                                end_year = 9999,
+#                                log_discharge = TRUE,
+#                                ignore_missing = TRUE)
+(drake::readd(hydrograph))
+```
+
+
+```{r hydrology2-print, fig.cap=caption}
+knitr::include_graphics("fig/hydrology1-1.png")
+
+##get the figure caption ready for the plot in the report
+
+tidyhat_info <- search_stn_number("07EE007")
+hydatr_info <- as.data.frame(hydat_station_info(tidyhat_info$STATION_NUMBER))
+hydatr_info <- mutate(hydatr_info, title = paste0(stringr::str_to_title(STATION_NAME),
+                                                  " (Station #",STATION_NUMBER," - Lat " ,round(LATITUDE,2)," Lon ",round(LONGITUDE,2), "). Available daily discharge data from ", 
+                                                  FIRST_YEAR, " to ",LAST_YEAR, " plotted with tidyhydat (Albers 2017) and fasstr (Goetz and Schwarz 2020)."))
+
+caption <- hydatr_info$title
+rm(tidyhat_info, hydatr_info)
+```
+
+<br>
+
+```{r hydrosummaryplot, fig.dim = c(6.5,4.32), fig.cap="Summary discharge statistics (annual maximum, minimum, mean and standard deviation) for Parsnip River at hyrometric station #07EE007.  Solid line is long term mean."}
+##fasstr::plot_data_screening2 is a custom version of plot_data_screening 
+fasstr::plot_data_screening3(station_number = "07EE007")[["Data_Screening"]]
+```
 
 ### Fisheries {.tabset}
-Fish species recorded in the Parsnip River watershed are detailed in Table \@ref(tab:table-fish) [@data_fish_obs]. In addition to flooding related to the formation of the Williston Reservoir, transmission lines, gas pipelines, rail, road networks, forestry, elevated water temperatures, interrupted connectivity, invasion from non-native species and insect infestations affecting forested areas pose threats to fisheries values in the Parsnip River watershed [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling; @bull_trout_synthesis; @bt_cosewic].  
+Fish species recorded in the Parsnip River watershed are detailed in Table \@ref(tab:table-fish) [@data_fish_obs]. In addition to flooding related to the formation of the Williston Reservoir, transmission lines, gas pipelines, rail, road networks, forestry, elevated water temperatures, interrupted connectivity, invasion from non-native species and insect infestations affecting forested areas pose threats to fisheries values in the Parsnip River watershed [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling; @bull_trout_synthesis; @bt_cosewic]. @pearceTSEKHENEFIRST2019 reports that Tse'khene elders participating in information gathering on Kokanee, Bull Trout and Arctic Grayling have a holistic, integrative perspective of the environment and consider individual fish species as components of a complex web of environmental relationships.
 
 <br>
 
@@ -176,13 +214,13 @@ In 2018, sub-basins of the Anzac River watershed, Homininka River, Missinki Rive
 
 <br>
 
-Tse'khene Elders from from the McLeod Lake Indian Band report that Bull trout size and abundance has decreased in all rivers and tributaries from the reservoir with more injured and diseased fish captured in recent history than was common in the past (Pearce et. al 2019). 
+Tse'khene Elders from from the McLeod Lake Indian Band report that sa'ba (Bull Trout) size and abundance has decreased in all rivers and tributaries from the reservoir with more injured and diseased fish captured in recent history than was common in the past [@pearceTSEKHENEFIRST2019]. 
 
 <br>
 
 
 #### Arctic Grayling
-A detailed review of Arctic Grayling life history can be referenced in @stamfordFWCPArcticGrayling. Since impoundment of the Williston Reservoir, it appears that physical habitat and ecological changes have been the most significant factors limiting Arctic Grayling productivity [@shrimptonj.m.GeneticAnalysisArctic2012; @hagenTrendAbundanceArctic2018]. Although these changes are not well understood they have likely resulted in the inundation of key low gradient juvenile rearing and overwintering habitats, isolation of previously connected populations and increases in predator abundance (Bull Trout).  Tse'khene Elders from the McLeod Lake Indian Band report that Arctic Grayling numbers have declined dramatically since the flooding of the reservoir and that few arctic grayling have been caught in the territory in the past 30 years (Pearce et. al 2019).
+A detailed review of Arctic Grayling life history can be referenced in @stamfordFWCPArcticGrayling. Since impoundment of the Williston Reservoir, it appears that physical habitat and ecological changes have been the most significant factors limiting Arctic Grayling productivity [@shrimptonj.m.GeneticAnalysisArctic2012; @hagenTrendAbundanceArctic2018]. Although these changes are not well understood they have likely resulted in the inundation of key low gradient juvenile rearing and overwintering habitats, isolation of previously connected populations and increases in predator abundance (Bull Trout).  Tse'khene Elders from the McLeod Lake Indian Band report that Arctic Grayling numbers have declined dramatically since the flooding of the reservoir and that few dusk'ihje (Arctic Grayling) have been caught in the territory in the past 30 years [@pearceTSEKHENEFIRST2019].
 
 <br>
 
@@ -192,7 +230,7 @@ Migration of mature adult Arctic Grayling occurs in the spring with arrival at k
 
 
 ## Goals and Objectives
-The overall goal of our project was to build capacity, awareness and momentum for fish passage restoration in the Parsnip Watershed. To realize this goal we created a short list of high priority culverts for fish passage restoration in the Parsnip River watershed through a data analysis exercise, scoping for First Nations input, fish passage assessments [@fish_passage_assessments] and habitat confirmation assessments [@confirmation_checklist].  
+The overall goal of our project was to build capacity, awareness and momentum for fish passage restoration in the Parsnip Watershed. To realize this goal we created a short list of high priority culverts for fish passage restoration in the Parsnip River watershed through a data analysis exercise, scoping for First Nations input, fish passage assessments [@fish_passage_assessments], habitat confirmation assessments [@confirmation_checklist] and procurement of design specifications for a prioritized crossing.  
   
 <br>
 

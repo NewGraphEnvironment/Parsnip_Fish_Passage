@@ -27,7 +27,11 @@ pacman::p_load(
   rpostgis, ##not sure if we need this
   plotKML,
   sp,
-  zip, leafpop
+  zip, 
+  leafpop,
+  tidyhydat,
+  fasstr,
+  hydatr
   )
 #pacman::p_load(mapview)
 
