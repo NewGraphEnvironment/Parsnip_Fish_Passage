@@ -31,7 +31,8 @@ pacman::p_load(
   leafpop,
   tidyhydat,
   fasstr,
-  hydatr
+  hydatr,
+  flextable
   )
 #pacman::p_load(mapview)
 

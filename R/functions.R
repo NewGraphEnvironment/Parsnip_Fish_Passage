@@ -117,3 +117,11 @@ table_planning  <- my_planning_data %>%
 table_planning
 }
 
+##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
+fit_to_page <- function(ft, pgwidth = 9.44){
+  
+  ft_out <- ft %>% autofit()
+  
+  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+  return(ft_out)
+}

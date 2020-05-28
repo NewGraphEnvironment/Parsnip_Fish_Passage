@@ -182,11 +182,17 @@ fasstr::plot_data_screening3(station_number = "07EE007")[["Data_Screening"]]
 ```
 
 ### Fisheries {.tabset}
-Fish species recorded in the Parsnip River watershed are detailed in Table \@ref(tab:table-fish) [@data_fish_obs]. In addition to flooding related to the formation of the Williston Reservoir, transmission lines, gas pipelines, rail, road networks, forestry, elevated water temperatures, interrupted connectivity, invasion from non-native species and insect infestations affecting forested areas pose threats to fisheries values in the Parsnip River watershed [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling; @bull_trout_synthesis; @bt_cosewic]. @pearceTSEKHENEFIRST2019 reports that Tse'khene elders participating in information gathering on Kokanee, Bull Trout and Arctic Grayling have a holistic, integrative perspective of the environment and consider individual fish species as components of a complex web of environmental relationships.
+Fish species recorded in the Parsnip River watershed are detailed in Table \@ref(tab:table-fish) [@data_fish_obs]. In addition to flooding related to the formation of the Williston Reservoir, transmission lines, gas pipelines, rail, road networks, forestry, elevated water temperatures, interrupted connectivity, invasion from non-native species and insect infestations affecting forested areas pose threats to fisheries values in the Parsnip River watershed [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling; @bull_trout_synthesis; @bt_cosewic]. 
 
 <br>
 
 ```{r table-fish}
+##@pearceTSEKHENEFIRST2019 reports that Tse'khene elders participating in information gathering on Kokanee, Bull Trout and Arctic Grayling have a holistic, integrative perspective of the environment and consider individual fish species as components of a complex web of environmental relationships.
+
+# Tse'khene Elders from the McLeod Lake Indian Band report that sa'ba (Bull Trout) size and abundance has decreased in all rivers and tributaries from the reservoir with more injured and diseased fish captured in recent history than was common in the past [@pearceTSEKHENEFIRST2019]. 
+
+# Tse'khene Elders from the McLeod Lake Indian Band report that Arctic Grayling numbers have declined dramatically since the flooding of the reservoir and that few dusk'ihje (Arctic Grayling) have been caught in the territory in the past 30 years [@pearceTSEKHENEFIRST2019].
+
 
 # eval = identical(knitr::is_html_output(), FALSE) ##this is put in header of chunk if we don't want it to render to html
 
@@ -214,13 +220,9 @@ In 2018, sub-basins of the Anzac River watershed, Homininka River, Missinki Rive
 
 <br>
 
-Tse'khene Elders from from the McLeod Lake Indian Band report that sa'ba (Bull Trout) size and abundance has decreased in all rivers and tributaries from the reservoir with more injured and diseased fish captured in recent history than was common in the past [@pearceTSEKHENEFIRST2019]. 
-
-<br>
-
 
 #### Arctic Grayling
-A detailed review of Arctic Grayling life history can be referenced in @stamfordFWCPArcticGrayling. Since impoundment of the Williston Reservoir, it appears that physical habitat and ecological changes have been the most significant factors limiting Arctic Grayling productivity [@shrimptonj.m.GeneticAnalysisArctic2012; @hagenTrendAbundanceArctic2018]. Although these changes are not well understood they have likely resulted in the inundation of key low gradient juvenile rearing and overwintering habitats, isolation of previously connected populations and increases in predator abundance (Bull Trout).  Tse'khene Elders from the McLeod Lake Indian Band report that Arctic Grayling numbers have declined dramatically since the flooding of the reservoir and that few dusk'ihje (Arctic Grayling) have been caught in the territory in the past 30 years [@pearceTSEKHENEFIRST2019].
+A detailed review of Arctic Grayling life history can be referenced in @stamfordFWCPArcticGrayling. Since impoundment of the Williston Reservoir, it appears that physical habitat and ecological changes have been the most significant factors limiting Arctic Grayling productivity. Although these changes are not well understood they have likely resulted in the inundation of key low gradient juvenile rearing and overwintering habitats, isolation of previously connected populations and increases in abundance of predators such as Bull Trout [@shrimptonj.m.GeneticAnalysisArctic2012; @hagenTrendAbundanceArctic2018].  
 
 <br>
 
