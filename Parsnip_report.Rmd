@@ -272,7 +272,8 @@ loadd(tracks, forest_tenure_road_lines)
 
 
 #to do later - combine the culvert photos together into one to reduce the clicking.  For now we will just not show some
-photo_noshow <- c('upstream', 'downstream', 'inlet', 'inlet2', 'outlet2', 'barrel2')
+photo_noshow <- c('upstream', 'downstream', 'inlet', 'inlet2', 
+                  'outlet2', 'barrel2', 'barrel_2', 'outlet_2')
 
 
 #remove photo metadata with no coordinates
