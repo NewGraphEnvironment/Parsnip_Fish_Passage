@@ -92,7 +92,8 @@ make_photo_metadata <- function(meta){
            lat_pscis = st_coordinates(.)[,2]) %>% 
     select(-geometry) 
   
-  crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'outlet2', 'outlet3', 'barrel', 'barrel2', 'road')
+  crossing_photos <- c('downstream', 'upstream', 'inlet', 'outlet', 'outlet2', 
+                       'outlet3', 'barrel', 'barrel2', 'road', 'barrel_2', 'outlet_2')
   
   meta_final_list <- left_join(
     meta_joined_to_tracks,
