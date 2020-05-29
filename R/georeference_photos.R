@@ -2,7 +2,7 @@
 
 ##need to add the gpslat long columns if they do not exist - hence the tibble::add_column
 # https://stackoverflow.com/questions/45857787/adding-column-if-it-does-not-exist
-
+{
 make_photo_metadata_list <- function(input_file){
   cols <- c(gpslatitude = NA_real_, gpslongitude = NA_real_, imagedescription = NA)
   exifr::read_exif(input_file,recursive=T) %>% 
@@ -147,7 +147,7 @@ make_photo_metadata <- function(meta){
 photo_metadata_processed <- photo_metadata_list %>% 
   map(make_photo_metadata) %>% 
   bind_rows()
-
+}
 ##write to a csv
 write.csv(photo_metadata_processed, file = 'data/photo_metadata.csv', row.names = F) ##moved this up a level
 
