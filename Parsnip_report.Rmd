@@ -75,8 +75,8 @@ names_table <- tibble::tibble(old_names = names(table),
 
 ```{r loadpriorities}
 ##clean up the site_id column of our priorities so we can join to the overview table
-priorities <- drake::readd(priorities_spreadsheet) %>% 
-  tidyr::separate(site_id, into = c('site', 'location'), remove = F)
+priorities <- drake::readd(priorities_spreadsheet) 
+  # tidyr::separate(site_id, into = c('site', 'location'), remove = F) #move to plan
 
 ```
 

@@ -1,13 +1,13 @@
 # The workflow plan data frame outlines what you are going to do.
 plan1 <- drake_plan(
-  fish_data_submission =file_in("./data/parsnip_habitat_assessments.xls") %>% 
-    excel_sheets() %>% 
-    set_names() %>% 
-    map(read_excel, 
+  fish_data_submission = drake::file_in("./data/parsnip_habitat_assessments.xls") %>% 
+    readxl::excel_sheets() %>% 
+    purrr::set_names() %>% 
+    purrr::map(read_excel, 
         path = "./data/parsnip_habitat_assessments.xls", 
         .name_repair = janitor::make_clean_names) %>% 
     purrr::set_names(janitor::make_clean_names(names(.))) %>% 
-    map(altools::at_trim_xlsheet2),  #https://github.com/NewGraphEnvironment/altools
+    purrr::map(at_trim_xlsheet2),  #moved to functions from https://github.com/NewGraphEnvironment/altools to reduce dependencies
   habitat_data = fish_data_submission %>% 
     purrr::pluck("step_4_stream_site_data"), 
   site_location_data = fish_data_submission %>% 
@@ -17,7 +17,8 @@ plan1 <- drake_plan(
   fish_sampling_data = fish_data_submission %>% 
     purrr::pluck("step_2_fish_coll_data"),
   table = make_table(loc_dat = site_location_data, site_dat = habitat_data),
-  priorities_spreadsheet = read_excel(path = "./data/priorities.xlsx"),
+  priorities_spreadsheet = readxl::read_excel(path = "./data/priorities.xlsx") %>% 
+    tidyr::separate(site_id, into = c('site', 'location'), remove = F),
   PSCIS_submission = import_pscis(),
   fish_habitat_model_outputs = read.csv('./data/fish_habitat_info.csv'),
   #this section for locational info

@@ -57,12 +57,22 @@ make_table <- function(loc_dat, site_dat){
     mutate(gazetted_names = stringr::str_replace_all(gazetted_names, 'Unnamed tributary', 'Trib')) 
 }
 
+##function to trim up sheet and get names (was previously source from altools package)
+at_trim_xlsheet2 <- function(df, column_last = ncol(df)) {
+  df %>%
+    dplyr::select(1:column_last) %>% ##get rid of the extra columns.  should be more abstract
+    janitor::row_to_names(which.max(complete.cases(.))) %>%
+    janitor::clean_names() %>%
+    janitor::remove_empty(., which = "rows")
+}
+
+
 ##import pscis info
 import_pscis <- function(workbook_name = 'pscis_phase2.xls'){
   read_excel(path = paste0("./data/", workbook_name), 
                     sheet = 'PSCIS Assessment Worksheet') %>% 
   # purrr::set_names(janitor::make_clean_names(names(.))) %>% 
-  altools::at_trim_xlsheet2() %>% 
+  at_trim_xlsheet2() %>% ##recently added function above and pulled the altools package as it is a week link
   rename(date = date_of_assessment_yyyy_mm_dd) %>% 
   mutate(date = excel_numeric_to_date(as.numeric(date))) %>% 
   filter(!is.na(date))
