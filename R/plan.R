@@ -16,11 +16,12 @@ plan1 <- drake_plan(
     mutate(survey_date = janitor::excel_numeric_to_date(as.numeric(survey_date))), 
   fish_sampling_data = fish_data_submission %>% 
     purrr::pluck("step_2_fish_coll_data"),
-  table = make_table(loc_dat = site_location_data, site_dat = habitat_data),
+  table_habitat = make_table_habitat(loc_dat = site_location_data, site_dat = habitat_data), 
+  table_overview = make_table_overview(priorities_spreadsheet = priorities_spreadsheet,  PSCIS_submission = PSCIS_submission),
   priorities_spreadsheet = readxl::read_excel(path = "./data/priorities.xlsx") %>% 
     tidyr::separate(site_id, into = c('site', 'location'), remove = F),
   PSCIS_submission = import_pscis(),
-  fish_habitat_model_outputs = read.csv('./data/fish_habitat_info.csv'),
+  # fish_habitat_model_outputs = read.csv('./data/fish_habitat_info.csv'),
   #this section for locational info
   tracks = st_read(file_in("./data/field_cleaned.gpx"), layer = "tracks") %>% ##we need this to make track of points
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
@@ -43,7 +44,7 @@ plan1 <- drake_plan(
                                  ignore_missing = TRUE),
   ##now make the report
     report = rmarkdown::render(
-    knitr_in("Parsnip_report.Rmd"),
+    knitr_in("Parsnip_report.Rmd"), ##JUST CHANGED FOR A SEC
     output_file = file_out("./docs/index.html"),
     quiet = TRUE
   ),

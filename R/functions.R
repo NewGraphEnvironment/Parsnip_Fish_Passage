@@ -38,7 +38,7 @@ paste0(pull_data(sheet, site, column = 'utm_zone'),
 }
 
 ##make table from hab assessment data
-make_table <- function(loc_dat, site_dat){
+make_table_habitat <- function(loc_dat, site_dat){
   left_join(
     loc_dat %>%
     select(alias_local_name, 'zone' = utm_zone,
@@ -68,11 +68,11 @@ at_trim_xlsheet2 <- function(df, column_last = ncol(df)) {
 
 
 ##import pscis info
-import_pscis <- function(workbook_name = 'pscis_phase2.xls'){
+import_pscis <- function(workbook_name = 'pscis_phase2.xlsm'){
   read_excel(path = paste0("./data/", workbook_name), 
                     sheet = 'PSCIS Assessment Worksheet') %>% 
   # purrr::set_names(janitor::make_clean_names(names(.))) %>% 
-  at_trim_xlsheet2() %>% ##recently added function above and pulled the altools package as it is a week link
+  at_trim_xlsheet2() %>% ##recently added function above and pulled the altools package as it was a week link
   rename(date = date_of_assessment_yyyy_mm_dd) %>% 
   mutate(date = excel_numeric_to_date(as.numeric(date))) %>% 
   filter(!is.na(date))
@@ -123,9 +123,89 @@ table_planning  <- my_planning_data %>%
   mutate(Comments = stringr::str_replace_all(Comments, 'Marlim 2013', 'Gollner et al. (2013)'),
          `Habitat Value` = case_when(`Habitat Value` == 'NANA' ~ '-',
                                      TRUE ~ `Habitat Value`))
-
 table_planning
 }
+
+##--------------------------make the overview table-------------------------
+make_table_overview <- function(priorities_spreadsheet, PSCIS_submission){
+  #establish connection with database
+  drv <- dbDriver("PostgreSQL")
+  conn <- dbConnect(drv,
+                    dbname = 'postgis',
+                    host = 'localhost',
+                    port = '5432',
+                    user = 'postgres',
+                    password = 'postgres')
+  ##make the priorities a list
+  priorities_pscis <- priorities_spreadsheet %>% 
+    dplyr::mutate(site_int = as.integer(site)) %>% 
+    dplyr::distinct(site_int) %>% 
+    dplyr::filter(!is.na(site_int)) %>% 
+    dplyr::pull(site_int) 
+  
+  priorities_modelled <- priorities_spreadsheet %>% 
+    dplyr::distinct(model_crossing_id) %>% 
+    dplyr::filter(!is.na(model_crossing_id)) %>% ##need CV1 modelled crossing name
+    dplyr::pull(model_crossing_id) 
+  
+  sql <- glue::glue_sql(
+    "
+                                Select fh.pscis_stream_crossing_id, fh.model_crossing_id, fh.blue_line_key, 
+                                fh.downstream_route_measure, fh.wscode, fh.localcode,
+                                fh.uphab_gross_sub22, fh.upstr_species,  fh.dbm_mof_50k_grid_map_tile, 
+                                fh.upstr_alake_gross_obs, fh.upstr_alake_gross_inf, fh.upstr_awet_gross_all 
+                                FROM fish_passage.pscis_model_combined fh
+                                WHERE fh.pscis_stream_crossing_id IN
+                                ({priorities_pscis*}) OR
+                                fh.model_crossing_id IN
+                                ({priorities_modelled*})
+                                ",
+    .con = conn
+  )
+  query <- DBI::dbSendQuery(conn, sql)
+  fish_habitat_info <- DBI::dbFetch(query)
+  
+  table_overview <- left_join(
+    select(priorities_spreadsheet,
+           site, model_crossing_id, location, length_surveyed = length, priority, comments), ##just moved the hab_value from here to pscis
+    select(PSCIS_submission,
+           pscis_crossing_id, utm_zone, easting, northing, stream_name, road_name, road_tenure, hab_value = habitat_value),
+    by = c('site' = 'pscis_crossing_id')) %>% 
+    mutate(site_int = as.integer(site))
+  
+  ##add the habitat info for the pscis crossings
+  table_overview2 <- left_join(
+    table_overview,
+    select(fish_habitat_info, -model_crossing_id),
+    by = c('site_int' = 'pscis_stream_crossing_id'),
+    na_matches = "never"
+  ) %>% 
+    filter(!is.na(site_int))
+  
+  ##get the habitat info for the modelled crossings that don't have a pscis id
+  table_modelled <- left_join(
+    filter(table_overview,
+           is.na(site_int)),
+    fish_habitat_info,
+    by = c('model_crossing_id')
+  ) %>% 
+    select(-pscis_stream_crossing_id)
+  
+  ##join the hab data to the modelled crossing
+  table_overview <- bind_rows(table_overview2,
+                              table_modelled) %>% 
+    mutate(uphab_gross_sub22 = round(uphab_gross_sub22/1000, 1),
+           priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low'), 
+           location = case_when(location == 'ds' ~ 'Downstream',
+                                TRUE ~ 'Upstream'),
+           stream_name = stringr::str_replace_all(stream_name, 'Unnamed tributary', 'Trib'),
+           stream_name = stringr::str_replace_all(stream_name, 'tributary', 'Trib')) %>% 
+    arrange((site_int), desc(location))
+  
+  dbDisconnect(conn = conn)
+  return(table_overview)
+}
+
 
 ##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
 fit_to_page <- function(ft, pgwidth = 9.44){

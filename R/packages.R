@@ -2,7 +2,7 @@
 # install.packages("pacman")  ##unhash and save before the first time you run the script
 
 
-pacman::p_load(altools)  ##unhash and save before the first time you run the script
+# pacman::p_load(altools)  ##no longer need
 pacman::p_load(drake)
 pacman::p_load(tidyverse)
 pacman::p_load(tibble)
@@ -21,7 +21,6 @@ pacman::p_load(DT) ##not useing currently - too finicky
 pacman::p_load(
   lubridate,
   exifr,
-  leafpop,
   tools,
   gt,
   rpostgis, ##not sure if we need this
@@ -32,7 +31,9 @@ pacman::p_load(
   tidyhydat,
   fasstr,
   hydatr,
-  flextable
+  flextable,
+  glue,
+  DBI
   )
 #pacman::p_load(mapview)
 

@@ -1,0 +1,119 @@
+---
+title: "Habitat Confirmation Report."
+output:
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
+  bookdown::word_document2:
+    reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template_landscape.docx
+    bibliography: references.bib
+    toc: yes
+    fig_caption: yes
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r setup, include=FALSE, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
+# https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
+### this one ! https://www.bibtex.com/e/entry-types/
+source('R/packages.R')
+source('R/functions.R')
+# 
+#establish connection with database
+drv <- dbDriver("PostgreSQL")
+conn <- dbConnect(drv,
+                  dbname = 'postgis',
+                  host = 'localhost',
+                  port = '5432',
+                  user = 'postgres',
+                  password = 'postgres')
+
+knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, connection = "conn")
+options(knitr.table.format = "html")
+
+```
+
+
+```{r}
+# test <- pull_data(sheet = loc_data, site = my_site)
+
+my_site <- '57681'
+my_site2 <- '125353'
+
+
+```
+
+```{r load-planning-data}
+query <- "SELECT mw.*, p.stream_crossing_id as psc_stream_crossing_id, p.utm_zone, p.utm_easting, p.utm_northing FROM working.my_pscis_20190709 mw LEFT OUTER JOIN whse_fish.pscis_assessment_svw p on p.stream_crossing_id = mw.stream_crossing_id;"
+my_planning_data <- sf::st_read(conn, query = query) %>% 
+  filter(watershed_group_code == 'PARS',
+         !is.na(my_priority))
+```
+
+```{r pull-info}
+lake <- my_planning_data %>% filter(stream_crossing_id == my_site) %>% mutate(lake = round(upstr_alake_gross_obs + upstr_alake_gross_inf),1) %>% pull(lake)
+wet <- my_planning_data %>% filter(stream_crossing_id == my_site) %>% mutate(wet = round(upstr_awet_gross_all),1) %>% pull(wet)
+stream <- my_planning_data %>% filter(stream_crossing_id == my_site) %>% mutate(stream = round(uphab_gross_sub22/1000,1)) %>% pull(stream)
+date <- pull_data(sheet = drake::readd(site_location_data), site = my_site, column = 'survey_date') %>% format(., "%B %d, %Y")
+mapsheet <- drake::readd(table_planning) %>% filter(Site == my_site) %>% pull(map_linked)
+my_road <- drake::readd(PSCIS_submission) %>% filter(pscis_crossing_id == my_site) %>% pull(road_name)
+
+##this is a switch for word vs. html
+switch_word = identical(knitr::is_html_output(), FALSE)
+
+loadd(PSCIS_submission)
+```
+
+
+<br>
+
+In the spring and summer of 2019, New Graph Environment (in collaboration with the Society for Ecosytem Restoration Northern BC, Hillcrest Geographics and the McLeod Lake Indian Band) conducted a literature and database review for the Parsnip River watershed to identify candidates for Fish Habitat Confirmation Assessments related to fish passage restoration planning.  Crossings identified as known or potential barriers to fish passage in the Provincial Stream Crossing Inventory Database were analyzed within the context of the British Columbia Fish Habitat Model [@fish_habitat_model] and background fisheries information to identify crossings with potentially high fisheries value and large amounts of potential habitat upstream and prioritize these for further assessment. Prioritization rankings were assigned based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, at the crossing; and recommendations of past fish passage assessments [@gollnerPrinceGeorgeTimber2013].
+
+<br>
+
+Following office review, stream crossings `r my_site` and `r my_site2` were rated as a high priorities for habitat confirmation due to the potential gain of upstream wetland (`r wet` ha), lake (`r lake` ha) and instream habitat (`r stream` km) and because it was ranked as a high priority for follow up in @gollnerPrinceGeorgeTimber2013 (Table \@ref(tab:tableplan1)). The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map `r mapsheet`.  The habitat confirmation was completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” [@confirmation_checklist]. The main objective of the field surveys was to confirm that upstream habitat quantity and quality was sufficient to justify remediation of the crossings to provide fish passage, and to determine if any obstructions exist below the crossing. Structure replacement can be justified if there is a large quantity of high value habitat upstream of crossing barriers provided there are no fish migration barriers immediately downstream or upstream of the crossings.
+
+
+```{r tableplan1, eval= FALSE}
+##this should be going just in an appendix as it has errors from old pscis info.  lets just stuff in appendix and call it done.
+
+##eval = knitr::is_html_output()
+if(knitr::is_html_output() == TRUE){
+select(drake::readd(table_planning),
+                    -stream_word, -`Map 50k`) %>% 
+  filter(Site == my_site) %>% 
+  rename(`Map 50k` = map_linked) %>% 
+  knitr::kable(caption = 'Historic PSCIS photos, PSCIS details, planning maps, Fish Habitat Model outputs and prioritization rank/comments for crossings ranked for follow up with habitat confirmation assessments.') %>% 
+  kableExtra::column_spec(column = 12, width_min = '2in') %>% 
+  kableExtra::kable_styling(c("condensed"), full_width = T) 
+  # kableExtra::scroll_box(width = "100%", height = "500px")
+  } else 
+    {
+    select(drake::readd(table_planning),
+                                     -Stream, -map_linked) %>% 
+  rename(Stream = stream_word) %>%
+  filter(Site == my_site) %>% 
+  flextable::flextable() %>%
+  flextable::my_theme_booktabs(fontsize = 8, left_just_cols = 2) %>%
+  # flextable::autofit() %>%
+  fit_to_page() %>%  
+  flextable::width( j = 1:11, width = 0.658) %>%
+  flextable::width(., j = 12, width = 2.2) %>%
+  flextable::set_caption('Historic PSCIS details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.')
+  }
+  
+##caption = 'Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.'
+```
+
+
+<br>
+
+crossing `r my_site` is located on the  and `r my_site2` are located on theed forestry service road (ID:R02156; UTM: 10U 641828 5786280, Attachment 4 – Map 4). This section of road is currently maintained by West Fraser Mills (WFM), and is accessed for forestry and recreation. Crossing 57158 is ~ 1.6 km upstream from the confluence of the stream with Molybdenite Creek.
+
+```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
+dbDisconnect(conn = conn)
+
+# rmarkdown::render(input = 'Parsnip_report_crossing_appendices.Rmd', output_file = 'test.html')
+```
+

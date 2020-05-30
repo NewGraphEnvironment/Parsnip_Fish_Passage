@@ -32,123 +32,21 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE,
 ```
 
 
-
-```{r}
-# test <- pull_data(sheet = loc_data, site = my_site)
-
-```
-
-
-```{r}
-##need to get basic information
-#road name
-#tenure holder
-#order
-#watershed area
-#mainstem length
-#name stream flows into
-#distance from the downstream confluence to the crossing
-#fish species known in the stream
-#fish species known in downstream system
-#amount of habitat upstream of the crossing
-#table of the type of habitat upstream
-#table of habitat characteristics upstream and downstream
-
-```
-
 # Restoration Candidates {.tabset}
 
-
-
-```{r}
-drake::loadd(table)
-
-names_table <- tibble::tibble(old_names = names(table),
-                      new_names = c('alias_local_name', 'Site', 'Location', 'Zone (UTM)',
-                                    'Easting', 'Northing',
-                                    'Stream', 'Channel Width (m)', 'Wetted Width (m)',
-                                    'Pool depth (m)','Bankfull Depth (m)', 'Gradient (%)',
-                                    'Substrate (dom)', 'Substrate (subdom)', 'Feature',
-                                    'utm_zone', 'utm_easting', 'utm_northing'))
-```
-
-
-```{r loadpriorities}
-##clean up the site_id column of our priorities so we can join to the overview table
-priorities <- drake::readd(priorities_spreadsheet) 
-  # tidyr::separate(site_id, into = c('site', 'location'), remove = F) #move to plan
-
-```
-
-
-
-```{r loadoverview}
-
-names_overview_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','zone', 
-                          'easting', 'northing')
-
-
-table_overview <- table %>%
-  dplyr::select(all_of(names_overview_table)) %>%  
-  purrr::set_names(., nm = dplyr::pull(
-  left_join(as_tibble_col(names_overview_table, column_name = 'old_names'),
-               names_table, by = 'old_names'),
-            new_names)) %>% 
-  select(-alias_local_name) 
-
-
-
-table_overview <- left_join(
-  table_overview, 
-  select(priorities,
-         site, location, length_surveyed = length, hab_value, priority, comments),
-  by = c('Site' = 'site','Location' = 'location')
-) %>%
-  select(Site, Stream, Location:Northing, everything())
-
-##add the name of the road and the tenure holder from our pscis sheet
-table_overview <-  left_join(table_overview,
-                              select(drake::readd(PSCIS_submission),
-                              pscis_crossing_id, road_name, road_tenure),
-                              by = c('Site' = 'pscis_crossing_id')) %>% 
-  # filter(priority %ilike% 'high') %>% 
-  # select(Site, Stream, Location, road_name, road_tenure, everything()) %>% 
-  mutate(Location = case_when(Location == 'ds' ~ 'Downstream',
-                             TRUE ~ 'Upstream'))
-
-##add the modelled fish habitat from the fish habitat model output
-table_overview <- left_join(
-  table_overview %>% mutate(site_integer = as.integer(Site)),
-  select(drake::readd(fish_habitat_model_outputs),
-                     pscis_stream_crossing_id, uphab_gross_sub22, upstr_species),
-         by =  c('site_integer' = 'pscis_stream_crossing_id'), 
-  na_matches = "never") %>% ##nice little trick
-  mutate(uphab_gross_sub22 = round(uphab_gross_sub22/1000, 1),
-         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low'),
-         uphab_gross_sub22 = case_when(Site == 'CV1' ~ 6.6,  ##special case - pulled from pscis_modelled_combined 16603266 
-                                       TRUE ~ uphab_gross_sub22)) %>% 
-  arrange((site_integer), desc(Location)) %>% 
-  select(Site,  Stream, road_name, Location, 'Zone (UTM)', 'Easting', 'Northing',
-         road_tenure, upstr_species, uphab_gross_sub22, everything()) 
-
-
-# upstr_species = as.character(upstr_species), upstr_species = case_when(Site == 'CV1' ~ "(BT)",  ##special case - added manually
-#                                        TRUE ~ upstr_species)) 
-```
 
 ```{r priorities_kml}
 ##here is the kml of the crossings for people to download
 ##this is one of several kml to be zipped to kmz by the make_kml_geopackage file.
 ##put this here to line up with the report overview table
-
-table_overview_kml <- table_overview %>% 
-  mutate_at(vars(Easting:Northing), as.numeric) %>% 
-  filter(Location %ilike% 'upstream') %>% 
-  select(-site_integer, -Location) %>% 
-  mutate(label = paste0(priority, ' priority', '-', Site))
+table_overview_kml <- drake::readd(table_overview) %>% ##drake::readd(table_overview)
+  mutate_at(vars(easting:northing), as.numeric) %>% 
+  filter(location %ilike% 'upstream') %>% 
+  select(-site_int, -location) %>% 
+  mutate(label = paste0(priority, ' priority', '-', site))
 
 ##make a kml
-sp::coordinates(table_overview_kml) <- ~ Easting + Northing
+sp::coordinates(table_overview_kml) <- ~ easting + northing
 sp::proj4string(table_overview_kml) <- sp::CRS("+init=epsg:32610")
 table_overview_kml <- reproject(table_overview_kml)
 
@@ -165,80 +63,19 @@ shape = "http://maps.google.com/mapfiles/kml/pal2/icon18.png"
 
 
 ##also save it in the geopackage so we need as sf
-table_overview_sf <- table_overview %>% 
-  sf::st_as_sf(coords = c("Easting", "Northing"), crs = 26910) %>% 
-  mutate(Easting = st_coordinates(.)[,1],
-         Northing = st_coordinates(.)[,2]) %>% 
-  select(Site,  Stream, road_name, 'Zone (UTM)', 'Easting', 'Northing',
-         road_tenure, upstr_species, uphab_gross_sub22, everything(), -site_integer) %>% 
-  filter(Location %ilike% 'upstream') %>% 
+table_overview_sf <- drake::readd(table_overview) %>% 
+  sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>% 
+  mutate(easting = st_coordinates(.)[,1],
+         northing = st_coordinates(.)[,2]) %>% 
+  select(site,  stream_name, road_name, 'utm_zone', 'easting', 'northing',
+         road_tenure, upstr_species, uphab_gross_sub22, everything(), -site_int) %>% 
+  filter(location %ilike% 'upstream') %>% 
   st_transform(crs = 4326)
   
 
 ##write to the geopackage
 # st_write(table_overview_sf, "data/parsnip.gpkg", "priorities", update = TRUE)
 
-
-```
-
-```{r}
-
-table_overview_prep <- table_overview %>% 
-  filter(Location == 'Upstream' ) %>% 
-  mutate(upstr_species = as.character(upstr_species),
-         upstr_species = case_when(Site %like% '125000' ~ 'RB, CC',
-                             Site %like% '57690' ~ 'RB',
-                             Site %like% 'CV1' ~ 'RB, (BT)',
-                             Site %like% '125345' ~ '(RB), CC',
-                             TRUE ~ upstr_species),
-         road_name = case_when(Site %like% 'CV1' ~ 'CN Railway',
-                          Site %like% '57681' ~ 'CN Railway',
-                             TRUE ~ road_name),
-         `UTM (10N)` = paste0(Easting, " ", Northing),
-         # road_tenure = str_to_title(road_tenure),
-         road_tenure = str_replace_all(road_tenure, 'Dmpg', 'FLNRORD'),
-         upstr_species = str_replace_all(upstr_species, ',', ', '),
-         priority = fct_relevel(priority, levels = 'High', 'Moderate', 'Low')) %>% ##can remove once tested
-  
-  select(Site, Stream, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
-         `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_integer, -Location, -'Zone (UTM)', -'Easting', -'Northing') %>% 
-  arrange(Priority, Site)
-  
-# DT::datatable(
-#   table_overview_prep,
-#   caption = 'Table 1: Overview of Parsnip River Watershed Crossings Assessed with Habitat Confirmations.',
-#   rownames = FALSE,
-#     options = list(columnDefs = list(list(
-#     targets = ncol(table_overview_prep)-1, 
-#     render = JS(
-#       "function(data, type, row, meta) {",
-#       "return type === 'display' && data.length > 20 ?",
-#       "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
-#       "}") 
-#     
-#       
-#   )))) %>% 
-#     formatStyle(columns = colnames(table_overview_prep), `font-size` = '10px')
-
-
-
-
-# names(hab_table) <- pull(table_names, new_names)  
-
-# ##make the hab table for the memo
-# table_memo <- table %>% 
-#   select(-utm_zone, -utm_easting, -utm_northing)
-
-
-  # filter(local_name == paste0(my_site, '_us')) %>% 
-  # t() %>% 
-  # as_tibble()
-#   filter(local_name %ilike% my_site) %>% 
-
-# local_name, 
-#          avg_channel_width_m, 
-#          avg_wetted_width_m,
-#          )
 
 ```
 
@@ -324,11 +161,11 @@ map <- leaflet(height=500, width=780) %>%
                     label = paste0(photo_metadata$crossing_id, '_', photo_metadata$filename)) %>%
     addCircleMarkers(
     data=table_overview_sf,
-    label = table_overview_sf$Site,
+    label = table_overview_sf$site,
     popup = leafpop::popupTable(x = select((table_overview_sf %>% st_set_geometry(NULL)), 
-                                           Site, Priority = priority, Stream, Road = road_name, Comments = comments),
+                                           Site = site, Priority = priority, Stream = stream_name, Road = road_name, Comments = comments),
                                 feature.id = F,
-                                row.numbers = F), ##can't seem to drop the geometry column wi
+                                row.numbers = F), 
     radius = 9,
     fillColor = ~pal(priority),
     color= "#ffffff",
@@ -390,6 +227,44 @@ Although readers are encouraged to use the interactive maps available here on th
 
 ## Overview Table
 
+
+```{r}
+table_overview_prep <- drake::readd(table_overview) %>% 
+  filter(location == 'Upstream' ) %>% 
+  mutate(upstr_species = as.character(upstr_species),
+         upstr_species = case_when(site %like% '125000' ~ 'RB, CC', ##add species - could be scripted I guess
+                                   site %like% '57690' ~ 'RB',
+                                   site %like% 'CV1' ~ 'RB, (BT)',
+                                   site %like% '125345' ~ '(RB), CC',
+                                   TRUE ~ upstr_species),
+         `UTM (10N)` = paste0(easting, " ", northing),
+         # road_tenure = str_to_title(road_tenure),
+         road_tenure = str_replace_all(road_tenure, 'DMPG', 'FLNRORD'),
+         upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
+  arrange(site_int) %>% 
+  select(Site = site, Stream = stream_name, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
+         `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_int, -location, -'easting', -'northing') 
+  # arrange(Priority, Site)
+  
+# DT::datatable(
+#   table_overview_prep,
+#   caption = 'Table 1: Overview of Parsnip River Watershed Crossings Assessed with Habitat Confirmations.',
+#   rownames = FALSE,
+#     options = list(columnDefs = list(list(
+#     targets = ncol(table_overview_prep)-1, 
+#     render = JS(
+#       "function(data, type, row, meta) {",
+#       "return type === 'display' && data.length > 20 ?",
+#       "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
+#       "}") 
+#     
+#       
+#   )))) %>% 
+#     formatStyle(columns = colnames(table_overview_prep), `font-size` = '10px')
+
+```
+
+
 ```{r}
 filter(table_overview_prep) %>%
   gt::gt() %>% 
@@ -406,24 +281,28 @@ filter(table_overview_prep) %>%
 ```
 
 
-```{r loadhabitat}
-##make habitat table
 
+```{r loadhabitat}
+
+## Habitat Table
+##make habitat table
 names_hab_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','avg_channel_width_m',
          'avg_wetted_width_m', 'average_residual_pool_depth_m',
          'average_bankfull_depth_m','average_gradient_percent',
          'bed_material_dominant', 'bed_material_subdominant')
 
 
-table_hab <- table %>%
+table_hab <- drake::readd(table_habitat) %>%
   dplyr::select(all_of(names_hab_table)) 
 
 table_hab <- left_join(
-  table_hab, 
-  select(priorities,
+  table_hab,
+  select(drake::readd(priorities_spreadsheet),
          site, location, length_surveyed = length, priority, comments),
   by = c('site','location')
 )
+
+
   # select(Site, Stream, Location:Northing, everything())
 
 ```
@@ -444,7 +323,23 @@ table_hab_prep <- table_hab %>%
   select(-alias_local_name, -Stream)
 ```
 
-```{r tablescuverts}
+
+```{r eval=FALSE}
+##not including now as is maybe too much info.  Probably better to have the info in the overview table
+table_hab_prep %>%
+  gt::gt() %>% 
+  tab_header(title="Habitat Summary") %>% 
+  cols_width(
+    vars(Comments) ~ px(250),
+    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+    vars(Location) ~ px(66),
+    everything() ~ px(50)
+  ) %>% 
+  tab_options(table.font.size = 11) 
+```
+
+
+```{r tableculverts}
 # table_culvert <- drake::readd(PSCIS_submission) %>% 
 #   select(Site = pscis_crossing_id, 'Diameter (m)' = diameter_or_span_meters, 'Length (m)' = length_or_width_meters,
 #          Embedded = average_depth_embededdment_meters, Backwatered = percentage_backwatered,
@@ -464,20 +359,6 @@ table_hab_prep <- table_hab %>%
 
 ## High Priority Crossings {.tabset}
 
-
-```{r loadmapdata}
-loadd(photo_metadata, my_tracks, tracks_of_points)
-```
-
-
-```{r}
-# remove photos with no coordinates
-photo_metadata <- photo_metadata[!is.na(photo_metadata$lat_map),]
-
-photo_metadata$url <- as.character(photo_metadata$url)
-```
-
-
 ### Chuchinka-Arctic FSR {.tabset}
 Drone footage for habitat upstream of crossing 125000 is located [here at this link](https://www.youtube.com/watch?v=BT6cEmNK3f4) 
 
@@ -485,17 +366,6 @@ Drone footage for habitat upstream of crossing 125000 is located [here at this l
 #### Tributary to Parsnip River - PSCIS 125000 
 my_site <- '125000'
 ```
-
-
-```{r}
-photo_metadata_site <- photo_metadata %>% 
-  filter(crossing_id == my_site)
-
-
-# This is a start on a semi-automated write-up for each of the crossings built from our source files.  
-# PSCIS crossing `r my_site` is located on "link to source" rd, UTM:`r pull_utm(sheet = loc_data, site = my_site)`.
-```
-
 
 <br>
 
@@ -579,61 +449,7 @@ filter(table_hab_prep, Site == my_site) %>%
 
 
 
-
-```{r eval=FALSE, out.width= '100%'}
-##--------lets map it-----------------------------------------------------------------------
-##time to set the watershed code here
-##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
-##add a culvert measurements output table with all the usual photos
-##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
-
-
-map <- leaflet() %>%
-  leaflet(height=500, width=780) %>% 
-  addTiles() %>%
-    addMouseCoordinates(proj4 = 26911) %>% ##can't seem to get it to render utms yet
-
-  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
-  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
-  # addMeasure() %>% 
-    # setView(lng = -105.644, lat = 51.618, zoom = 3) 
-  addPolylines(data=my_tracks$`125000_us_track1`,  opacity=1, color = 'red',
-                   fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125000_ds_track`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addAwesomeMarkers(lng = photo_metadata_site$lon_map,lat = photo_metadata_site$lat_map,
-             popup = popupImage(photo_metadata_site$url, src = "remote"),
-clusterOptions = markerClusterOptions(),
-label = paste0(photo_metadata_site$crossing_id, '_', photo_metadata_site$filename)) %>%
-  addLayersControl(
-    baseGroups = c("ESRI Aerial", "Topo"),
-    # overlayGroups = c(my_tracks$`125000_ds_track`),
-    options = layersControlOptions(collapsed = F)) %>% 
-  
-    addMiniMap(tiles = providers$"Esri.WorldTopoMap",
-             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
-map
-```
-
-<br>
-
 ### Chuchinka-Missinka FSR  {.tabset}
-
-
-
-```{r}
-##this is doing nothing right now
-# my_site <- '125179'
-#### Tributary to Missinka River - PSCIS 125179
-```
-
-
-```{r}
-photo_metadata_site <- photo_metadata %>% 
-  filter(crossing_id %in% c('125179', '125180', '125186'))
-```
-
-<br>
 
 ```{r}
 filter(table_overview_prep,
@@ -656,7 +472,7 @@ filter(table_overview_prep,
 
 <br>
 
-```{r}
+```{r }
 filter(table_hab_prep, 
        Site %in% c('125179', '125180', '125186')) %>%
   gt::gt() %>% 
@@ -674,71 +490,7 @@ filter(table_hab_prep,
 <br>
 
 
-
-```{r eval=FALSE, out.width= '100%'}
-#### Map
-##--------lets map it-----------------------------------------------------------------------
-##time to set the watershed code here
-##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
-##add a culvert measurements output table with all the usual photos
-##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
-
-
-map <- leaflet() %>%
-  leaflet(height=500, width=780) %>% 
-  addTiles() %>%
-  addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
-  
-  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
-  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
-  # addMeasure() %>% 
-  # setView(lng = -105.644, lat = 51.618, zoom = 3)
-  addPolylines(data=my_tracks$`125179_us_track`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125179_ds_track`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125180_ds`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125180_us`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125186_ds`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125186_us2`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addAwesomeMarkers(lng = photo_metadata_site$lon_map,lat = photo_metadata_site$lat_map,
-                    popup = popupImage(photo_metadata_site$url, src = "remote"),
-                    clusterOptions = markerClusterOptions(),
-                    label = paste0(photo_metadata_site$crossing_id, '_', photo_metadata_site$filename)) %>%
-  addLayersControl(
-    baseGroups = c("ESRI Aerial", "Topo"),
-    # overlayGroups = c(my_tracks$`125000_ds_track`),
-    options = layersControlOptions(collapsed = F)) %>% 
-  
-  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
-             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
-map
-```
-
-
-
-<br>
-
 ### Chuchinka-Table FSR {.tabset}
-
-
-```{r}
-##this is doing nothing right now
-# my_site <- '125179'
-#### Tributary to Missinka River - PSCIS 125179
-```
-
-
-```{r eval = FALSE}
-photo_metadata_site <- photo_metadata %>% 
-  filter(crossing_id %in% c('125247', '125253', '125231', 'CV1'))
-```
-
-<br>
 
 ```{r}
 filter(table_overview_prep,
@@ -762,7 +514,7 @@ filter(table_overview_prep,
 
 <br>
 
-```{r}
+```{r }
 filter(table_hab_prep, 
        Site %in% c('125231', '125247', '125253', 'CV1')) %>%
   mutate_all(~replace_na(.,"-")) %>% 
@@ -789,11 +541,6 @@ my_site <- '125345'
 
 ```
 
-```{r eval=FALSE}
-photo_metadata_site <- photo_metadata %>% 
-  filter(crossing_id == my_site)
-```
-
 
 ```{r}
 filter(table_overview_prep,
@@ -815,7 +562,7 @@ filter(table_overview_prep,
 ```
 
 
-```{r}
+```{r }
 filter(table_hab_prep, Site == my_site) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
@@ -830,99 +577,6 @@ filter(table_hab_prep, Site == my_site) %>%
 ```
 
 <br>
-
-
-
-
-```{r site125186, eval=FALSE}
-my_site <- '125186'
-#### Tributary to Missinka River - PSCIS 	125186
-```
-
-
-```{r eval=FALSE}
-photo_metadata_site <- photo_metadata %>% 
-  filter(crossing_id == my_site)
-```
-
-<br>
-
-```{r eval=FALSE}
-filter(table_overview_prep,
-         Site == my_site) %>%
-  select(-Comments) %>% 
-  gt::gt() %>% 
-  tab_header(title="Overview") %>%
-  cols_width(
-    # vars(Comments) ~ px(300),
-    vars(`Habitat Gain (km)`) ~ px(70),
-    everything() ~ px(60)
-  ) %>% 
-  tab_options(table.font.size = 11) %>% 
-  tab_footnote(
-    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
-    locations =  cells_column_labels(
-      columns = vars(`Habitat Gain (km)`)))
-
-```
-
-<br>
-
-```{r eval=FALSE}
-filter(table_hab_prep, Site == my_site) %>%
-  gt::gt() %>% 
-  tab_header(title="Habitat Summary") %>% 
-  cols_width(
-    vars(Comments) ~ px(250),
-    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
-    vars(Location) ~ px(60),
-    everything() ~ px(50)
-  ) %>% 
-  tab_options(table.font.size = 11) 
-
-```
-
-<br>
-
-```{r eval=FALSE, out.width= '100%'}
-##--------lets map it-----------------------------------------------------------------------
-##time to set the watershed code here
-##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
-##add a culvert measurements output table with all the usual photos
-##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
-
-
-map <- leaflet() %>%
-  # leaflet(height=500, width=500) %>% 
-  addTiles() %>%
-  addMouseCoordinates(proj4 = 26910) %>% ##can't seem to get it to render utms yet
-  
-  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
-  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>%
-  # addMeasure() %>% 
-  # setView(lng = -105.644, lat = 51.618, zoom = 3)
-  addPolylines(data=my_tracks$`125186_ds`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addPolylines(data=my_tracks$`125186_us2`,  opacity=1, color = 'red',
-               fillOpacity = 0.75, weight=2) %>%
-  addAwesomeMarkers(lng = photo_metadata_site$lon_map,lat = photo_metadata_site$lat_map,
-                    popup = popupImage(photo_metadata_site$url, src = "remote"),
-                    clusterOptions = markerClusterOptions(),
-                    label = photo_metadata_site$filename) %>%
-  addLayersControl(
-    baseGroups = c("ESRI Aerial", "Topo"),
-    # overlayGroups = c(my_tracks$`125000_ds_track`),
-    options = layersControlOptions(collapsed = F)) %>% 
-  
-  addMiniMap(tiles = providers$"Esri.WorldTopoMap",
-             zoomLevelOffset = -6)    # setView(lng = -105.644, lat = 51.618, zoom = 3) ##this becomes the latest and greatest pscis crossing utm
-map
-```
-
-```{r}
-##we can link to other html files like this <a href="./Parsnip_report_crossing_appendices2.html">Planning Table</a>
-```
-
 
 ## Workflow Layout
 

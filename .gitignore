@@ -8,3 +8,5 @@ docs/stable_website_backup
 *.gpkg-shm
 *.gpkg-wal
 fig
+temp.R
+drafts
