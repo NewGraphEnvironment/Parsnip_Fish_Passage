@@ -242,6 +242,7 @@ table_overview_prep <- drake::readd(table_overview) %>%
          road_tenure = str_replace_all(road_tenure, 'DMPG', 'FLNRORD'),
          upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
   arrange(site_int) %>% 
+  mutate_all(~replace_na(.,"-")) %>% 
   select(Site = site, Stream = stream_name, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
          `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_int, -location, -'easting', -'northing') 
   # arrange(Priority, Site)
@@ -275,7 +276,7 @@ filter(table_overview_prep) %>%
   ) %>% 
   tab_options(table.font.size = 11) %>% 
   tab_footnote(
-    footnote = 'Habitat gain modeled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
+    footnote = 'Habitat gain modelled based on Fish Habitat Model with 22% gradient threshold for "fish habitat".',
     locations =  cells_column_labels(
       columns = vars(`Habitat Gain (km)`)))
 ```
@@ -580,7 +581,7 @@ filter(table_hab_prep, Site == my_site) %>%
 
 ## Workflow Layout
 
-The field work procedures and preparation for this project are based on procedures developed by the provincial [Fish Passage Technical Working Group](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage)in the [Checklist for Habitat Confirmation](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/habitat-confirmation-projects).  The checklist was developed to guide biologists confirming fish habitat value at a stream crossings which have been identified as potential high‐priorities for fish passage restoration.
+The field work procedures and preparation for this project are based on procedures developed by the provincial [Fish Passage Technical Working Group](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage) in the [Checklist for Habitat Confirmation](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/habitat-confirmation-projects).  The checklist was developed to guide biologists confirming fish habitat value at a stream crossings which have been identified as potential high‐priorities for fish passage restoration.
 
 <br>
 
