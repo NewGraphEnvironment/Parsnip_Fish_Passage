@@ -346,22 +346,6 @@ Habitat confirmations were completed in accordance with procedures outlined in t
 ```
 
 
-```{r tablehabvalue, eval= FALSE}
-
-tablehabvalue <- tibble::tibble(`Habitat Value` = c('High', 'Medium', 'Low'),
-                                       `Fish Habitat Criteria` = c(
-                                         'The presence of high value spawning or rearing habitat (e.g., locations with abundance of suitably sized gravels, deep pools, undercut banks, or stable debris) which are critical to the fish population.', 
-                                         'Important migration corridor. Presence of suitable spawning habitat. Habitat with moderate rearing potential for the fish species present.', 'No suitable spawning habitat, and habitat with low rearing potential (e.g., locations without deep pools, undercut banks, or stable debris, and with little or no suitably sized spawning gravels for the fish species present).'
-                                         )
-                                )
-table <- flextable::flextable(tablehabvalue) %>%
-  flextable::my_theme_booktabs(left_just_cols = 2, fontsize = 12) %>%
-  flextable::autofit() %>%
-  flextable::set_caption('Habitat value criteria (BC Ministry of Environment 2011).')
-table
-```
-
-
 
 ```{r tablethreshaverage, eval= FALSE}
 #threshold and average gradient table

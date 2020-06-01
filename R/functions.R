@@ -37,7 +37,35 @@ paste0(pull_data(sheet, site, column = 'utm_zone'),
       pull_data(sheet, site, column = 'utm_northing'))
 }
 
-##make table from hab assessment data
+##set the default page size for flextable
+##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
+##landscape width is 9.44 - portrait old is 6.49
+fit_to_page <- function(ft, pgwidth = 6.75){
+  
+  ft_out <- ft %>% autofit()
+  
+  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+  return(ft_out)
+}
+
+
+my_flextable <- function(df, left_just_col = 2, ...){
+  flextable::autofit(flextable::flextable(
+    df,
+    defaults = list(fontname = 'tahoma'))) %>% 
+    flextable::my_theme_booktabs(left_just_cols = left_just_col, ...) %>% 
+    fit_to_page()
+  }
+
+my_flextable_landscape <- function(df, left_just_col = 2, ...){
+  flextable::autofit(flextable::flextable(
+    df,
+    defaults = list(fontname = 'tahoma'))) %>%
+    flextable::my_theme_booktabs(left_just_cols = left_just_col) %>% 
+    fit_to_page(pgwidth = 9) 
+}
+
+##-----------make table from hab assessment data
 make_table_habitat <- function(loc_dat, site_dat){
   left_join(
     loc_dat %>%
@@ -55,6 +83,125 @@ make_table_habitat <- function(loc_dat, site_dat){
   by = c('alias_local_name' = 'local_name')) %>%
   tidyr::separate(alias_local_name, into = c('site', 'location'), remove = F) %>% 
     mutate(gazetted_names = stringr::str_replace_all(gazetted_names, 'Unnamed tributary', 'Trib')) 
+}
+
+
+## -------make table habitat_report
+
+make_table_habitat_report <- function(table_habitat_raw, PSCIS_submission, priorities_spreadsheet){
+  
+  names_hab_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','avg_channel_width_m',
+                       'avg_wetted_width_m', 'average_residual_pool_depth_m',
+                       'average_gradient_percent')
+  
+  table_habitat_report <- table_habitat_raw %>%
+    dplyr::select(all_of(names_hab_table)) %>% 
+    mutate_at(vars(avg_channel_width_m:average_residual_pool_depth_m), round, 1)
+  
+  table_habitat_report <- left_join(
+    table_habitat_report,
+    select(PSCIS_submission,
+           pscis_crossing_id, habitat_value),
+    by = c('site' = 'pscis_crossing_id'))
+  
+  table_habitat_report <- left_join(
+    table_habitat_report,
+    select(priorities_spreadsheet,
+           site, location, length, comments),
+    by = c('site','location')
+  )
+  
+  new_names <-  c('alias_local_name', 'Site', 'Location',
+                  'Stream', 'Channel Width (m)', 'Wetted Width (m)',
+                  'Pool depth (m)', 'Gradient (%)', 'Habitat Value', 
+                  'Length Surveyed (m)','Comments')
+  
+  table_habitat_report <- table_habitat_report %>%
+    purrr::set_names(., nm = new_names) %>% 
+    mutate(Location = case_when(Location == 'ds' ~ 'Downstream',
+                                TRUE ~ 'Upstream'),
+           site_sort = as.numeric(Site)) %>%
+    arrange(site_sort) %>% 
+    mutate_all(~replace_na(.,"-")) %>% 
+    select(Site, Location, `Length Surveyed (m)`, everything(), -alias_local_name, -Stream, -site_sort)
+  return(table_habitat_report)
+}
+
+
+tablehabvalue <- tibble::tibble(`Habitat Value` = c('High', 'Medium', 'Low'),
+                                `Fish Habitat Criteria` = c(
+                                  'The presence of high value spawning or rearing habitat (e.g., locations with abundance of suitably sized gravels, deep pools, undercut banks, or stable debris) which are critical to the fish population.', 
+                                  'Important migration corridor. Presence of suitable spawning habitat. Habitat with moderate rearing potential for the fish species present.', 'No suitable spawning habitat, and habitat with low rearing potential (e.g., locations without deep pools, undercut banks, or stable debris, and with little or no suitably sized spawning gravels for the fish species present).'
+                                )
+)
+
+
+table_habitat_value_flextable <- function(){
+  my_flextable(tablehabvalue) %>%
+    flextable::width(j = 1, width = 1) %>%
+    # align(j = 2, align = 'left', part = "all") %>%
+    flextable::set_caption('Habitat value criteria (Fish Passage Technical Working Group, 2011).')
+}
+
+
+table_habitat_flextable <- function(df = table_habitat_report, site = my_site) {
+  df %>% 
+    filter(Site == site) %>%
+    select(-Comments) %>% 
+    my_flextable(fontsize = 8) %>%
+    flextable::width(j = c(1,3:5), width = 0.8) %>%
+    flextable::width(j = 2, width = 0.8) %>%
+    # flextable::width(., j = 9, width = 2.2) %>%
+    flextable::set_caption('Summary of habitat details')
+}
+
+table_habitat_html <- function(df = table_habitat_report, site = my_site){
+  df %>% 
+    filter(Site == my_site) %>% 
+    select(-Comments) %>% 
+    knitr::kable(caption = 'Summary of habitat details') %>% 
+    kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
+    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
+}
+
+table_culvert_flextable <- function(df = table_culvert, site = my_site){
+  df %>% 
+    filter(Site == site) %>%
+    select(-Score) %>% 
+    my_flextable(fontsize = 8) %>%
+    flextable::width( j = c(1,8,9), width = 0.658) %>%
+    flextable::width( j = c(4), width = 0.75) %>%
+    flextable::width( j = c(5), width = 0.88) %>%
+    # flextable::width(., j = 9, width = 2.2) %>%
+    flextable::set_caption('Summary of culvert fish passage assessment.')
+}
+
+table_culvert_html <- function(df = table_culvert, site = my_site){
+  df %>% 
+    filter(Site == my_site) %>% 
+    select(-Score) %>% 
+    knitr::kable(caption = 'Summary of culvert fish passage assessment.') %>% 
+    kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
+    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
+}
+
+table_overview_flextable <- function(df = table_overview_report, site = my_site){
+  df %>% 
+    select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>%
+    filter(Site == my_site) %>%
+    my_flextable(fontsize = 8) %>% 
+    flextable::width(j = c(1,7), width = 0.658) %>%
+    flextable::set_caption('Overview of stream crossing.')
+}
+
+table_overview_html <- function(df = table_overview_report, site = my_site){
+  table_overview_report %>% 
+    select(-`Habitat Gain (km)`, -`Habitat Value`) %>% 
+    filter(Site == my_site) %>% 
+    knitr::kable(caption = 'Overview of stream crossing.') %>% 
+    kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
+    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
+  # kableExtra::scroll_box(width = "100%", height = "500px")
 }
 
 ##function to trim up sheet and get names (was previously source from altools package)
@@ -207,11 +354,51 @@ make_table_overview <- function(priorities_spreadsheet, PSCIS_submission){
 }
 
 
-##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
-fit_to_page <- function(ft, pgwidth = 9.44){
-  
-  ft_out <- ft %>% autofit()
-  
-  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
-  return(ft_out)
+##--------------------------------table overview
+make_table_overview_report <- function(table_overview_raw){
+  table_overview_raw %>% 
+  filter(location == 'Upstream' ) %>% 
+  mutate(upstr_species = as.character(upstr_species),
+         upstr_species = case_when(site %like% '125000' ~ 'RB, CC', ##add species - could be scripted I guess
+                                   site %like% '57690' ~ 'RB',
+                                   site %like% 'CV1' ~ 'RB, (BT)',
+                                   site %like% '125345' ~ '(RB), CC',
+                                   TRUE ~ upstr_species),
+         `UTM (10N)` = paste0(easting, " ", northing),
+         # road_tenure = str_to_title(road_tenure),
+         road_tenure = str_replace_all(road_tenure, 'DMPG', 'FLNRORD'),
+         upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
+  arrange(site_int) %>% 
+  mutate_all(~replace_na(.,"-")) %>% 
+  select(Site = site, Stream = stream_name, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
+         `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, 
+         Priority = priority, Comments = comments, -site_int, -location, -'easting', -'northing')
 }
+
+
+#----------------------table culverts
+make_table_culvert <- function(PSCIS_submission){
+  PSCIS_submission %>%
+  select(Site = pscis_crossing_id, 'Diameter (m)' = diameter_or_span_meters, 'Length (m)' = length_or_width_meters,
+         Embedded = average_depth_embededdment_meters, Backwatered = percentage_backwatered,
+         'Fill Depth (m)' = fill_depth_meters, 'Outlet Drop (m)' = outlet_drop_meters,
+         'Outlet Pool Depth (m)' = outlet_pool_depth_0_01m, 'Stream Width Ratio' = stream_width_ratio,
+         'Score' = final_score, 'Barrier Result' = barrier_result) %>%
+  mutate(site_sort = as.numeric(Site)) %>%
+  mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), as.numeric) %>%
+  mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), round, 1) %>%
+  mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), as.character) %>%
+  dplyr::arrange(site_sort) %>%  
+  mutate_all(~replace_na(.,"no")) %>% 
+  select(-site_sort)
+}
+
+
+
+
+
+
+
+
+
+

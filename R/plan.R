@@ -16,8 +16,15 @@ plan1 <- drake_plan(
     mutate(survey_date = janitor::excel_numeric_to_date(as.numeric(survey_date))), 
   fish_sampling_data = fish_data_submission %>% 
     purrr::pluck("step_2_fish_coll_data"),
-  table_habitat = make_table_habitat(loc_dat = site_location_data, site_dat = habitat_data), 
-  table_overview = make_table_overview(priorities_spreadsheet = priorities_spreadsheet,  PSCIS_submission = PSCIS_submission),
+  table_habitat_raw = make_table_habitat(loc_dat = site_location_data, site_dat = habitat_data),
+  table_habitat_report = make_table_habitat_report(table_habitat_raw = table_habitat_raw, 
+                                                   PSCIS_submission = PSCIS_submission, 
+                                                   priorities_spreadsheet = priorities_spreadsheet),
+  table_overview_raw = make_table_overview(
+    priorities_spreadsheet = priorities_spreadsheet,
+    PSCIS_submission = PSCIS_submission),
+  table_overview_report = make_table_overview_report(table_overview_raw = table_overview_raw),
+  table_culvert = make_table_culvert(PSCIS_submission = PSCIS_submission),
   priorities_spreadsheet = readxl::read_excel(path = "./data/priorities.xlsx") %>% 
     tidyr::separate(site_id, into = c('site', 'location'), remove = F),
   PSCIS_submission = import_pscis(),

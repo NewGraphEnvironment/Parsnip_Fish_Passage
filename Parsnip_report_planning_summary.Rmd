@@ -38,22 +38,22 @@ select(drake::readd(table_planning),
 
 
 ```{r table-plan-word, eval = identical(knitr::is_html_output(), FALSE) }
-library(flextable)
-##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
-fit_to_page <- function(ft, pgwidth = 9.44){
-
-  ft_out <- ft %>% autofit()
-
-  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
-  return(ft_out)
-}
+# library(flextable)  ##put this in the functions file
+# ##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
+# fit_to_page <- function(ft, pgwidth = 9.44){
+# 
+#   ft_out <- ft %>% autofit()
+# 
+#   ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+#   return(ft_out)
+# }
 
 
 table <- flextable::flextable(select(drake::readd(table_planning),
                                      -Stream, -map_linked) %>% rename(Stream = stream_word)) %>%
   flextable::my_theme_booktabs(fontsize = 8, left_just_cols = 2) %>%
   # flextable::autofit() %>%
-  fit_to_page() %>%  
+  fit_to_page(pgwidth = 9.44) %>%  ##spec'd the width here instead of the fuction....
   flextable::width( j = 1:11, width = 0.658) %>%
   flextable::width(., j = 12, width = 2.2) %>%
   flextable::set_caption('Historic PSCIS details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.')

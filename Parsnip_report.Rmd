@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  word_document: default
+---
 
 ```{r importdata, echo=FALSE}
 drake::loadd(tracks)
@@ -27,6 +32,8 @@ date: "`r format(Sys.time(), '%B %Y')`"
 knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, 
                       fig.align="center", fig.width = 5.118, fig.height = 3.409,
                       fig.path = ('fig/'))
+source('R/packages.R')
+source('R/Functions.R')
 
 ##this is from our title if we want it to autogenerate "Fish Habitat confirmation - PSCIS Crossing `r my_site` - `r pull_data(sheet = loc_data, site = my_site)`"
 ```
@@ -39,7 +46,7 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE,
 ##here is the kml of the crossings for people to download
 ##this is one of several kml to be zipped to kmz by the make_kml_geopackage file.
 ##put this here to line up with the report overview table
-table_overview_kml <- drake::readd(table_overview) %>% ##drake::readd(table_overview)
+table_overview_kml <- drake::readd(table_overview_raw) %>% ##drake::readd(table_overview)
   mutate_at(vars(easting:northing), as.numeric) %>% 
   filter(location %ilike% 'upstream') %>% 
   select(-site_int, -location) %>% 
@@ -63,7 +70,7 @@ shape = "http://maps.google.com/mapfiles/kml/pal2/icon18.png"
 
 
 ##also save it in the geopackage so we need as sf
-table_overview_sf <- drake::readd(table_overview) %>% 
+table_overview_sf <- drake::readd(table_overview_raw) %>% 
   sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>% 
   mutate(easting = st_coordinates(.)[,1],
          northing = st_coordinates(.)[,2]) %>% 
@@ -74,7 +81,7 @@ table_overview_sf <- drake::readd(table_overview) %>%
   
 
 ##write to the geopackage
-# st_write(table_overview_sf, "data/parsnip.gpkg", "priorities", update = TRUE)
+# sf::st_write(table_overview_sf, "data/parsnip.gpkg", "priorities", delete_layer = T)
 
 
 ```
@@ -227,47 +234,12 @@ Although readers are encouraged to use the interactive maps available here on th
 
 ## Overview Table
 
-
-```{r}
-table_overview_prep <- drake::readd(table_overview) %>% 
-  filter(location == 'Upstream' ) %>% 
-  mutate(upstr_species = as.character(upstr_species),
-         upstr_species = case_when(site %like% '125000' ~ 'RB, CC', ##add species - could be scripted I guess
-                                   site %like% '57690' ~ 'RB',
-                                   site %like% 'CV1' ~ 'RB, (BT)',
-                                   site %like% '125345' ~ '(RB), CC',
-                                   TRUE ~ upstr_species),
-         `UTM (10N)` = paste0(easting, " ", northing),
-         # road_tenure = str_to_title(road_tenure),
-         road_tenure = str_replace_all(road_tenure, 'DMPG', 'FLNRORD'),
-         upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
-  arrange(site_int) %>% 
-  mutate_all(~replace_na(.,"-")) %>% 
-  select(Site = site, Stream = stream_name, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
-         `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, Priority = priority, Comments = comments, -site_int, -location, -'easting', -'northing') 
-  # arrange(Priority, Site)
-  
-# DT::datatable(
-#   table_overview_prep,
-#   caption = 'Table 1: Overview of Parsnip River Watershed Crossings Assessed with Habitat Confirmations.',
-#   rownames = FALSE,
-#     options = list(columnDefs = list(list(
-#     targets = ncol(table_overview_prep)-1, 
-#     render = JS(
-#       "function(data, type, row, meta) {",
-#       "return type === 'display' && data.length > 20 ?",
-#       "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
-#       "}") 
-#     
-#       
-#   )))) %>% 
-#     formatStyle(columns = colnames(table_overview_prep), `font-size` = '10px')
-
+```{r loadtableoverviewreport}
+drake::loadd(table_overview_report)
 ```
 
-
 ```{r}
-filter(table_overview_prep) %>%
+filter(table_overview_report) %>%
   gt::gt() %>% 
   cols_width(
     vars(Comments) ~ px(300),
@@ -293,11 +265,11 @@ names_hab_table <- c('alias_local_name', 'site', 'location', 'gazetted_names','a
          'bed_material_dominant', 'bed_material_subdominant')
 
 
-table_hab <- drake::readd(table_habitat) %>%
+table_habitat_report <- drake::readd(table_habitat_raw) %>%
   dplyr::select(all_of(names_hab_table)) 
 
-table_hab <- left_join(
-  table_hab,
+table_habitat_report <- left_join(
+  table_habitat_report,
   select(drake::readd(priorities_spreadsheet),
          site, location, length_surveyed = length, priority, comments),
   by = c('site','location')
@@ -309,7 +281,7 @@ table_hab <- left_join(
 ```
 
 
-```{r makehabtable}
+```{r makehabtable, eval=F}
 new_names <-  c('alias_local_name', 'Site', 'Location', 
                 'Stream', 'Channel Width (m)', 'Wetted Width (m)',
                 'Pool depth (m)','Bankfull Depth (m)', 'Gradient (%)',
@@ -340,24 +312,6 @@ table_hab_prep %>%
 ```
 
 
-```{r tableculverts}
-# table_culvert <- drake::readd(PSCIS_submission) %>% 
-#   select(Site = pscis_crossing_id, 'Diameter (m)' = diameter_or_span_meters, 'Length (m)' = length_or_width_meters,
-#          Embedded = average_depth_embededdment_meters, Backwatered = percentage_backwatered,
-#          'Fill Depth (m)' = fill_depth_meters, 'Outlet Drop (m)' = outlet_drop_meters,
-#          'Outlet Pool Depth (m)' = outlet_pool_depth_0_01m, 'Stream Width Ratio' = stream_width_ratio, 
-#          'Score' = final_score, 'Barrier Result' = barrier_result) %>% 
-#   mutate(site_numeric = as.numeric(Site)) %>% 
-#   mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), as.numeric) %>% 
-#   mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), round, 1) %>% 
-#   mutate_at(vars(`Diameter (m)`:`Stream Width Ratio`), as.character) %>% 
-#   mutate_all(~replace_na(.,"no")) %>% 
-#   dplyr::arrange(desc(site_numeric)) 
-#   select(-site_integer)
-
-```
-
-
 ## High Priority Crossings {.tabset}
 
 ### Chuchinka-Arctic FSR {.tabset}
@@ -371,7 +325,7 @@ my_site <- '125000'
 <br>
 
 ```{r}
-filter(table_overview_prep,
+filter(table_overview_report,
          Site == my_site) %>%
   select(-Comments) %>% 
   gt::gt() %>% 
@@ -405,7 +359,7 @@ filter(table_overview_prep,
 
 <br>
 
-```{r}
+```{r eval=F}
 filter(table_hab_prep, Site == my_site) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
@@ -416,34 +370,6 @@ filter(table_hab_prep, Site == my_site) %>%
     everything() ~ px(50)
   ) %>% 
   tab_options(table.font.size = 11) 
-
-
-# DT::datatable(
-#   table_hab_prep,
-#   caption = 'Table 2: Summary of Habitat for Parsnip River Watershed Habitat Confirmations.',
-#   rownames = FALSE,
-#     options = list(columnDefs = list(list(
-#     targets = ncol(table_hab_prep)-1, 
-#     render = JS(
-#       "function(data, type, row, meta) {",
-#       "return type === 'display' && data.length > 20 ?",
-#       "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
-#       "}")
-#   ))))
-# 
-# DT::datatable(
-#   filter(table_hab_prep,
-#          Site == my_site),
-#   caption = paste0('Summary of Habitat for PSCIS Crossing #', my_site, '.'),
-#   rownames = FALSE,
-#     options = list(columnDefs = list(list(
-#     targets = ncol(table_hab_prep)-1, 
-#     render = JS(
-#       "function(data, type, row, meta) {",
-#       "return type === 'display' && data.length > 20 ?",
-#       "'<span title=\"' + data + '\">' + data.substr(0, 20) + '...</span>' : data;",
-#       "}")
-#   ))))
 ```
 
 <br>
@@ -453,7 +379,7 @@ filter(table_hab_prep, Site == my_site) %>%
 ### Chuchinka-Missinka FSR  {.tabset}
 
 ```{r}
-filter(table_overview_prep,
+filter(table_overview_report,
          Site %in% c('125179', '125180', '125186')) %>%
   select(-Comments) %>% 
   gt::gt() %>% 
@@ -473,7 +399,7 @@ filter(table_overview_prep,
 
 <br>
 
-```{r }
+```{r eval=F}
 filter(table_hab_prep, 
        Site %in% c('125179', '125180', '125186')) %>%
   gt::gt() %>% 
@@ -494,7 +420,7 @@ filter(table_hab_prep,
 ### Chuchinka-Table FSR {.tabset}
 
 ```{r}
-filter(table_overview_prep,
+filter(table_overview_report,
          Site %in% c('125231','125247', '125253', 'CV1')) %>%
   mutate_all(~replace_na(.,"-")) %>% 
   select(-Comments) %>% 
@@ -515,7 +441,7 @@ filter(table_overview_prep,
 
 <br>
 
-```{r }
+```{reval=F}
 filter(table_hab_prep, 
        Site %in% c('125231', '125247', '125253', 'CV1')) %>%
   mutate_all(~replace_na(.,"-")) %>% 
@@ -544,7 +470,7 @@ my_site <- '125345'
 
 
 ```{r}
-filter(table_overview_prep,
+filter(table_overview_report,
          Site == my_site) %>%
   select(-Comments) %>% 
   gt::gt() %>% 
@@ -563,7 +489,7 @@ filter(table_overview_prep,
 ```
 
 
-```{r }
+```{r eval = F}
 filter(table_hab_prep, Site == my_site) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
@@ -602,7 +528,9 @@ The field work procedures and preparation for this project are based on procedur
 
 ```{r include = FALSE,  message=FALSE}
 
-plot <- drake::r_vis_drake_graph(targets_only = TRUE, main = 'Interactive Workflow Diagram')
+plot <- drake::r_vis_drake_graph(targets_only = TRUE, 
+                                 main = 'Interactive Workflow Diagram', 
+                                 build_times = FALSE)
 
 ```
 
