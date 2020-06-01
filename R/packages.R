@@ -3,6 +3,7 @@
 
 
 # pacman::p_load(altools)  ##no longer need
+library(pacman)
 pacman::p_load(drake)
 pacman::p_load(tidyverse)
 pacman::p_load(tibble)
@@ -23,7 +24,7 @@ pacman::p_load(
   exifr,
   tools,
   gt,
-  rpostgis, ##not sure if we need this
+  rpostgis, ##don't think we need this
   plotKML,
   sp,
   zip, 
@@ -33,7 +34,9 @@ pacman::p_load(
   hydatr,
   flextable,
   glue,
-  DBI
+  DBI,
+  kableExtra,
+  officer
   )
 #pacman::p_load(mapview)
 
