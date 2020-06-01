@@ -57,13 +57,13 @@ my_flextable <- function(df, left_just_col = 2, ...){
     fit_to_page()
   }
 
-my_flextable_landscape <- function(df, left_just_col = 2, ...){
-  flextable::autofit(flextable::flextable(
-    df,
-    defaults = list(fontname = 'tahoma'))) %>%
-    flextable::my_theme_booktabs(left_just_cols = left_just_col) %>% 
-    fit_to_page(pgwidth = 9) 
-}
+# my_flextable_landscape <- function(df, left_just_col = 2, ...){  ##not useing this function at this point
+#   flextable::autofit(flextable::flextable(
+#     df,
+#     defaults = list(fontname = 'tahoma'))) %>%
+#     flextable::my_theme_booktabs(left_just_cols = left_just_col) %>% 
+#     fit_to_page(pgwidth = 9) 
+# }
 
 ##-----------make table from hab assessment data
 make_table_habitat <- function(loc_dat, site_dat){
@@ -136,19 +136,19 @@ tablehabvalue <- tibble::tibble(`Habitat Value` = c('High', 'Medium', 'Low'),
 )
 
 
-table_habitat_value_flextable <- function(){
-  my_flextable(tablehabvalue) %>%
+table_habitat_value_flextable <- function(...){
+  my_flextable(tablehabvalue, ...) %>%
     flextable::width(j = 1, width = 1) %>%
     # align(j = 2, align = 'left', part = "all") %>%
     flextable::set_caption('Habitat value criteria (Fish Passage Technical Working Group, 2011).')
 }
 
 
-table_habitat_flextable <- function(df = table_habitat_report, site = my_site) {
+table_habitat_flextable <- function(df = table_habitat_report, site = my_site, ...) {
   df %>% 
     filter(Site == site) %>%
     select(-Comments) %>% 
-    my_flextable(fontsize = 8) %>%
+    my_flextable(fontsize = 8, ...) %>%
     flextable::width(j = c(1,3:5), width = 0.8) %>%
     flextable::width(j = 2, width = 0.8) %>%
     # flextable::width(., j = 9, width = 2.2) %>%
@@ -393,6 +393,20 @@ make_table_culvert <- function(PSCIS_submission){
   select(-site_sort)
 }
 
+make_fish_sampling_data <- function(fish_data_submission, site_location_data){
+  a <- dplyr::left_join(fish_data_submission %>% 
+                          purrr::pluck("step_2_fish_coll_data"),
+                        dplyr::select(site_location_data,
+                                      alias_local_name, utm_zone, utm_easting, utm_northing),
+                        by = c('local_name' = 'alias_local_name')
+  )
+  b <- left_join(test,
+                 fish_data_submission %>% 
+                   purrr::pluck('species_by_group') %>% 
+                   select(common_name, species_code),
+                 by = c('species' = 'common_name'))
+  return(b)
+}
 
 
 

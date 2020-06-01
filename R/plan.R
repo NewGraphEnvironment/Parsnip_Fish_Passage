@@ -9,13 +9,13 @@ plan1 <- drake_plan(
     purrr::set_names(janitor::make_clean_names(names(.))) %>% 
     purrr::map(at_trim_xlsheet2),  #moved to functions from https://github.com/NewGraphEnvironment/altools to reduce dependencies
   habitat_data = fish_data_submission %>% 
-    purrr::pluck("step_4_stream_site_data"), 
+    purrr::pluck("step_4_stream_site_data") %>% 
+    tidyr::separate(local_name, into = c('site', 'location'), remove = F), 
   site_location_data = fish_data_submission %>% 
     purrr::pluck("step_1_ref_and_loc_info") %>% 
     dplyr::filter(!is.na(site_number))%>% 
     mutate(survey_date = janitor::excel_numeric_to_date(as.numeric(survey_date))), 
-  fish_sampling_data = fish_data_submission %>% 
-    purrr::pluck("step_2_fish_coll_data"),
+  fish_sampling_data = make_fish_sampling_data(fish_data_submission = fish_data_submission, site_location_data = site_location_data),
   table_habitat_raw = make_table_habitat(loc_dat = site_location_data, site_dat = habitat_data),
   table_habitat_report = make_table_habitat_report(table_habitat_raw = table_habitat_raw, 
                                                    PSCIS_submission = PSCIS_submission, 
