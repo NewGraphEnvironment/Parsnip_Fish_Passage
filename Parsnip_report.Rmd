@@ -299,16 +299,29 @@ table_hab_prep <- table_hab %>%
 
 ```{r eval=FALSE}
 ##not including now as is maybe too much info.  Probably better to have the info in the overview table
-table_hab_prep %>%
+drake::readd(table_habitat_report) %>% 
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
   cols_width(
     vars(Comments) ~ px(250),
-    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+    # vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
     vars(Location) ~ px(66),
     everything() ~ px(50)
   ) %>% 
   tab_options(table.font.size = 11) 
+
+
+
+# table_hab_prep %>%
+#   gt::gt() %>% 
+#   tab_header(title="Habitat Summary") %>% 
+#   cols_width(
+#     vars(Comments) ~ px(250),
+#     # vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+#     vars(Location) ~ px(66),
+#     everything() ~ px(50)
+#   ) %>% 
+#   tab_options(table.font.size = 11) 
 ```
 
 
@@ -359,17 +372,31 @@ filter(table_overview_report,
 
 <br>
 
-```{r eval=F}
-filter(table_hab_prep, Site == my_site) %>%
+```{r eval=T}
+drake::readd(table_habitat_report) %>% 
+  filter(Site == my_site) %>% 
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
   cols_width(
     vars(Comments) ~ px(250),
-    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+    # vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
     vars(Location) ~ px(66),
     everything() ~ px(50)
   ) %>% 
   tab_options(table.font.size = 11) 
+
+
+
+# filter(table_hab_prep, Site == my_site) %>%
+#   gt::gt() %>% 
+#   tab_header(title="Habitat Summary") %>% 
+#   cols_width(
+#     vars(Comments) ~ px(250),
+#     vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+#     vars(Location) ~ px(66),
+#     everything() ~ px(50)
+#   ) %>% 
+#   tab_options(table.font.size = 11) 
 ```
 
 <br>
@@ -399,14 +426,14 @@ filter(table_overview_report,
 
 <br>
 
-```{r eval=F}
-filter(table_hab_prep, 
+```{r eval=T}
+filter(drake::readd(table_habitat_report), 
        Site %in% c('125179', '125180', '125186')) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
   cols_width(
     vars(Comments) ~ px(250),
-    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+    # vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
     vars(Location) ~ px(66),
     everything() ~ px(50)
   ) %>% 
@@ -441,15 +468,15 @@ filter(table_overview_report,
 
 <br>
 
-```{reval=F}
-filter(table_hab_prep, 
+```{r eval=T}
+filter(drake::readd(table_habitat_report), 
        Site %in% c('125231', '125247', '125253', 'CV1')) %>%
   mutate_all(~replace_na(.,"-")) %>% 
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
   cols_width(
     vars(Comments) ~ px(250),
-    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+    # vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
     vars(Location) ~ px(60),
     everything() ~ px(50)
   ) %>% 
@@ -488,14 +515,16 @@ filter(table_overview_report,
 
 ```
 
+<br>
 
-```{r eval = F}
-filter(table_hab_prep, Site == my_site) %>%
+```{r eval = T}
+filter(drake::readd(table_habitat_report), 
+       Site == my_site) %>%
   gt::gt() %>% 
   tab_header(title="Habitat Summary") %>% 
   cols_width(
     vars(Comments) ~ px(250),
-    vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
+    # vars(`Substrate (dominant)`,`Substrate (subdominant)`) ~ px(75),
     vars(Location) ~ px(60),
     everything() ~ px(50)
   ) %>% 
@@ -530,7 +559,7 @@ The field work procedures and preparation for this project are based on procedur
 
 plot <- drake::r_vis_drake_graph(targets_only = TRUE, 
                                  main = 'Interactive Workflow Diagram', 
-                                 build_times = FALSE)
+                                 build_times = "none")
 
 ```
 
