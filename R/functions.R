@@ -196,7 +196,7 @@ table_overview_flextable <- function(df = table_overview_report, site = my_site)
 
 table_overview_html <- function(df = table_overview_report, site = my_site){
   table_overview_report %>% 
-    select(-`Habitat Gain (km)`, -`Habitat Value`) %>% 
+    select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
     filter(Site == my_site) %>% 
     knitr::kable(caption = 'Overview of stream crossing.') %>% 
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
@@ -259,9 +259,10 @@ table_planning  <- my_planning_data %>%
             `Map 50k` = dbm_mof_50k_grid_map_tile, 
             Road = road_name,
             `UTM (10N)` = paste0(round(utm_easting,0), " ", round(utm_northing,0)),
-            `Habitat Gain (km)` = round(uphab_gross_sub22/1000,1),
-            `Lake / Wetland (ha)` = round((upstr_alake_gross_obs + upstr_alake_gross_inf + upstr_awet_gross_all),1),
-            `Stream Width (m)` = round(downstream_channel_width,1), 
+            `Instream (km)` = round(uphab_gross_sub22/1000,1),
+            `Lake (ha)` = round(upstr_alake_gross_obs + upstr_alake_gross_inf + upstr_awet_gross_all,1),
+            `Wetland (ha)` = round(upstr_awet_gross_all,1),
+            `Channel Width (m)` = round(downstream_channel_width,1), 
             `Fish Upstream`= case_when(!is.na(upstr_species) ~ 'Yes', TRUE ~ 'No'), 
             `Habitat Value` = paste0(substr(habitat_value_code, 1, 1), tolower(substr(habitat_value_code, 2, nchar(habitat_value_code)))), 
             `Rank` = my_priority,
@@ -272,6 +273,29 @@ table_planning  <- my_planning_data %>%
                                      TRUE ~ `Habitat Value`))
 table_planning
 }
+
+table_planning_html <- function(df = table_planning){
+  df %>% 
+    filter(Site == my_site) %>% 
+    select(-stream_word, -`Map 50k`, -Site, -Stream, -Road, -`UTM (10N)`) %>% 
+    rename(`Map 50k` = map_linked) %>% 
+    knitr::kable(caption = 'Planning map, PSCIS details, Fish Habitat Model outputs and prioritization rank/comments for crossings ranked for follow up with habitat confirmation assessments.') %>% 
+    kableExtra::column_spec(column = 9, width_min = '2in') %>% 
+    kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
+    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
+}
+
+table_planning_flextable <- function(df = table_planning, site = my_site){
+  df %>% 
+    filter(Site == my_site) %>% 
+    select(-Stream, -stream_word, -map_linked,  -Road) %>% 
+    my_flextable(fontsize = 8) %>% 
+    flextable::width(j = c(1,2,10), width = 0.55) %>%
+    flextable::width(j = c(6,8), width = 0.69) %>% 
+    flextable::set_caption('Historic PSCIS details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.')
+}
+
+
 
 ##--------------------------make the overview table-------------------------
 make_table_overview <- function(priorities_spreadsheet, PSCIS_submission){

@@ -28,7 +28,7 @@ select(drake::readd(table_planning),
                     -stream_word, -`Map 50k`) %>% 
   rename(`Map 50k` = map_linked) %>% 
   knitr::kable() %>% 
-  kableExtra::column_spec(column = 12, width_min = '2in') %>% 
+  kableExtra::column_spec(column = 13, width_min = '2in') %>% 
   kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
   kableExtra::scroll_box(width = "100%", height = "500px")
 
@@ -55,7 +55,7 @@ table <- flextable::flextable(select(drake::readd(table_planning),
   # flextable::autofit() %>%
   fit_to_page(pgwidth = 9.44) %>%  ##spec'd the width here instead of the fuction....
   flextable::width( j = 1:11, width = 0.658) %>%
-  flextable::width(., j = 12, width = 2.2) %>%
+  flextable::width(., j = 13, width = 2.2) %>% ##watch out.  messed with this number
   flextable::set_caption('Historic PSCIS details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.')
 table
 ```

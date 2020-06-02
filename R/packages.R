@@ -36,7 +36,10 @@ pacman::p_load(
   glue,
   DBI,
   kableExtra,
-  officer
+  officer,
+  jpeg,
+  png,
+  grid
   )
 #pacman::p_load(mapview)
 
