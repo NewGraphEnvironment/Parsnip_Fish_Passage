@@ -127,13 +127,20 @@ make_table_habitat_report <- function(table_habitat_raw, PSCIS_submission, prior
   return(table_habitat_report)
 }
 
-
+##this is just an object.
 tablehabvalue <- tibble::tibble(`Habitat Value` = c('High', 'Medium', 'Low'),
                                 `Fish Habitat Criteria` = c(
                                   'The presence of high value spawning or rearing habitat (e.g., locations with abundance of suitably sized gravels, deep pools, undercut banks, or stable debris) which are critical to the fish population.', 
                                   'Important migration corridor. Presence of suitable spawning habitat. Habitat with moderate rearing potential for the fish species present.', 'No suitable spawning habitat, and habitat with low rearing potential (e.g., locations without deep pools, undercut banks, or stable debris, and with little or no suitably sized spawning gravels for the fish species present).'
                                 )
 )
+
+table_habitat_value_html <- function(...){
+  knitr::kable(tablehabvalue,
+               caption = 'Habitat value criteria (Fish Passage Technical Working Group, 2011).') %>% 
+    kableExtra::column_spec(column = 1, width_min = '1.5in') %>% 
+    kableExtra::kable_styling(c("condensed"), full_width = T) 
+}
 
 
 table_habitat_value_flextable <- function(...){
@@ -225,53 +232,38 @@ import_pscis <- function(workbook_name = 'pscis_phase2.xlsm'){
   filter(!is.na(date))
 }
 
-
-##----------------------------make a planning table-------------------------------
-make_table_planning <- function(){
-#establish connection with database 
-drv <- dbDriver("PostgreSQL")
-conn <- dbConnect(drv, 
-                  dbname = 'postgis',
-                  host = 'localhost', 
-                  port = '5432',
-                  user = 'postgres', 
-                  password = 'postgres')
-query <- "SELECT mw.*, p.stream_crossing_id as psc_stream_crossing_id, p.utm_zone, p.utm_easting, p.utm_northing FROM working.my_pscis_20190709 mw LEFT OUTER JOIN whse_fish.pscis_assessment_svw p on p.stream_crossing_id = mw.stream_crossing_id;"
-my_planning_data <- sf::st_read(conn, query = query) %>% 
-  filter(watershed_group_code == 'PARS',
-         !is.na(my_priority))
-dbDisconnect(conn = conn)
-table_planning  <- my_planning_data %>% 
-  sf::st_set_geometry(NULL) %>% 
-  # filter(my_priority == "high" & 
-  #        watershed_group_code %like% 'PARS') %>% 
-  arrange(stream_crossing_id) %>% 
-  mutate(my_stream_name = case_when(is.na(my_stream_name) ~ stream_name,
-                                    TRUE ~ my_stream_name),
-         my_priority = stringr::str_to_title(my_priority),
-         road_name = case_when(is.na(road_name) ~ my_road_name,
-                               TRUE ~ road_name)) %>% 
-  transmute(Site = stream_crossing_id, 
-            stream_word = my_stream_name,
-            Stream = paste0("[", my_stream_name, "](", image_view_url, ")"),
-            
-            map_linked = paste0("[", dbm_mof_50k_grid_map_tile, "](", paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/PARS_CRKD_CARP_', sub("(.{4})(.*)", "\\1.\\2", dbm_mof_50k_grid_map_tile), '.pdf'), ")"), 
-            `Map 50k` = dbm_mof_50k_grid_map_tile, 
-            Road = road_name,
-            `UTM (10N)` = paste0(round(utm_easting,0), " ", round(utm_northing,0)),
-            `Instream (km)` = round(uphab_gross_sub22/1000,1),
-            `Lake (ha)` = round(upstr_alake_gross_obs + upstr_alake_gross_inf + upstr_awet_gross_all,1),
-            `Wetland (ha)` = round(upstr_awet_gross_all,1),
-            `Channel Width (m)` = round(downstream_channel_width,1), 
-            `Fish Upstream`= case_when(!is.na(upstr_species) ~ 'Yes', TRUE ~ 'No'), 
-            `Habitat Value` = paste0(substr(habitat_value_code, 1, 1), tolower(substr(habitat_value_code, 2, nchar(habitat_value_code)))), 
-            `Rank` = my_priority,
-            Comments = my_text) %>% 
-  mutate_all(~replace_na(.,"-")) %>% 
-  mutate(Comments = stringr::str_replace_all(Comments, 'Marlim 2013', 'Gollner et al. (2013)'),
-         `Habitat Value` = case_when(`Habitat Value` == 'NANA' ~ '-',
-                                     TRUE ~ `Habitat Value`))
-table_planning
+make_table_planning <- function(planning_data){
+  table_planning  <- planning_data %>% 
+    sf::st_set_geometry(NULL) %>% 
+    # filter(my_priority == "high" & 
+    #        watershed_group_code %like% 'PARS') %>% 
+    arrange(stream_crossing_id) %>% 
+    mutate(my_stream_name = case_when(is.na(my_stream_name) ~ stream_name,
+                                      TRUE ~ my_stream_name),
+           my_priority = stringr::str_to_title(my_priority),
+           road_name = case_when(is.na(road_name) ~ my_road_name,
+                                 TRUE ~ road_name)) %>% 
+    transmute(Site = stream_crossing_id, 
+              stream_word = my_stream_name,
+              Stream = paste0("[", my_stream_name, "](", image_view_url, ")"),
+              
+              map_linked = paste0("[", dbm_mof_50k_grid_map_tile, "](", paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/PARS_CRKD_CARP_', sub("(.{4})(.*)", "\\1.\\2", dbm_mof_50k_grid_map_tile), '.pdf'), ")"), 
+              `Map 50k` = dbm_mof_50k_grid_map_tile, 
+              Road = road_name,
+              `UTM (10N)` = paste0(round(utm_easting,0), " ", round(utm_northing,0)),
+              `Instream (km)` = round(uphab_gross_sub22/1000,1),
+              `Lake (ha)` = round(upstr_alake_gross_obs + upstr_alake_gross_inf + upstr_awet_gross_all,1),
+              `Wetland (ha)` = round(upstr_awet_gross_all,1),
+              `Channel Width (m)` = round(downstream_channel_width,1), 
+              `Fish Upstream`= case_when(!is.na(upstr_species) ~ 'Yes', TRUE ~ 'No'), 
+              `Habitat Value` = paste0(substr(habitat_value_code, 1, 1), tolower(substr(habitat_value_code, 2, nchar(habitat_value_code)))), 
+              `Rank` = my_priority,
+              Comments = my_text) %>% 
+    mutate_all(~replace_na(.,"-")) %>% 
+    mutate(Comments = stringr::str_replace_all(Comments, 'Marlim 2013', 'Gollner et al. (2013)'),
+           `Habitat Value` = case_when(`Habitat Value` == 'NANA' ~ '-',
+                                       TRUE ~ `Habitat Value`))
+  table_planning
 }
 
 table_planning_html <- function(df = table_planning){
@@ -298,6 +290,7 @@ table_planning_flextable <- function(df = table_planning, site = my_site){
 
 
 ##--------------------------make the overview table-------------------------
+##should break the get_fish_habitat-info out of this function as it is used elsewhere.
 make_table_overview <- function(priorities_spreadsheet, PSCIS_submission){
   #establish connection with database
   drv <- dbDriver("PostgreSQL")
@@ -378,6 +371,23 @@ make_table_overview <- function(priorities_spreadsheet, PSCIS_submission){
 }
 
 
+##get the planning data
+get_planning_data <- function(){
+  drv <- dbDriver("PostgreSQL")
+  conn <- dbConnect(drv,
+                    dbname = 'postgis',
+                    host = 'localhost',
+                    port = '5432',
+                    user = 'postgres',
+                    password = 'postgres')
+query <- "SELECT mw.*, p.stream_crossing_id as psc_stream_crossing_id, p.utm_zone, p.utm_easting, p.utm_northing FROM working.my_pscis_20190709 mw LEFT OUTER JOIN whse_fish.pscis_assessment_svw p on p.stream_crossing_id = mw.stream_crossing_id;"
+planning_data <- sf::st_read(conn, query = query) %>% 
+  filter(watershed_group_code == 'PARS',
+         !is.na(my_priority))
+dbDisconnect(conn = conn)
+return(planning_data)
+}
+
 ##--------------------------------table overview
 make_table_overview_report <- function(table_overview_raw){
   table_overview_raw %>% 
@@ -436,7 +446,7 @@ make_fish_sampling_data <- function(fish_data_submission, site_location_data){
 
 ##--------------------------get fish hab info------------------------
 ##might be safer to just grab entire watershed, save as csv then go from there
-get_fish_hab_info <- function(priorities_spreadsheet, PSCIS_submission){
+get_fish_habitat_info <- function(priorities_spreadsheet){
   #establish connection with database
   drv <- dbDriver("PostgreSQL")
   conn <- dbConnect(drv,
@@ -459,48 +469,7 @@ get_fish_hab_info <- function(priorities_spreadsheet, PSCIS_submission){
   
   sql <- glue::glue_sql(
     "
-                                Select fh.pscis_stream_crossing_id, fh.model_crossing_id, fh.blue_line_key, 
-                                fh.downstream_route_measure, fh.wscode, fh.localcode,
-                                fh.uphab_gross_sub22, fh.upstr_species,  fh.dbm_mof_50k_grid_map_tile, 
-                                fh.upstr_alake_gross_obs, fh.upstr_alake_gross_inf, fh.upstr_awet_gross_all 
-                                FROM fish_passage.pscis_model_combined fh
-                                WHERE fh.pscis_stream_crossing_id IN
-                                ({priorities_pscis*}) OR
-                                fh.model_crossing_id IN
-                                ({priorities_modelled*})
-                                ",
-    .con = conn
-  )
-  query <- DBI::dbSendQuery(conn, sql)
-  fish_habitat_info <- DBI::dbFetch(query)
-  return(fish_habitat_info)
-}
-
-##--------------------------get watershed info-------------------------
-get_watershed <- function(priorities_spreadsheet, PSCIS_submission){
-  #establish connection with database
-  drv <- dbDriver("PostgreSQL")
-  conn <- dbConnect(drv,
-                    dbname = 'postgis',
-                    host = 'localhost',
-                    port = '5432',
-                    user = 'postgres',
-                    password = 'postgres')
-  ##make the priorities a list
-  priorities_pscis <- priorities_spreadsheet %>% 
-    dplyr::mutate(site_int = as.integer(site)) %>% 
-    dplyr::distinct(site_int) %>% 
-    dplyr::filter(!is.na(site_int)) %>% 
-    dplyr::pull(site_int) 
-  
-  priorities_modelled <- priorities_spreadsheet %>% 
-    dplyr::distinct(model_crossing_id) %>% 
-    dplyr::filter(!is.na(model_crossing_id)) %>% ##need CV1 modelled crossing name
-    dplyr::pull(model_crossing_id) 
-  
-  sql <- glue::glue_sql(
-    "
-                                Select fh.pscis_stream_crossing_id, fh.model_crossing_id, fh.blue_line_key, 
+                                Select fh.pscis_model_combined_id, fh.pscis_stream_crossing_id, fh.model_crossing_id, fh.blue_line_key, 
                                 fh.downstream_route_measure, fh.wscode, fh.localcode,
                                 fh.uphab_gross_sub22, fh.upstr_species,  fh.dbm_mof_50k_grid_map_tile, 
                                 fh.upstr_alake_gross_obs, fh.upstr_alake_gross_inf, fh.upstr_awet_gross_all 
@@ -514,18 +483,20 @@ get_watershed <- function(priorities_spreadsheet, PSCIS_submission){
   )
   query <- DBI::dbSendQuery(conn, sql)
   fish_habitat_info <- DBI::dbFetch(query) %>% 
-    mutate(name = case_when(!is.na(pscis_stream_crossing_id) ~ pscis_stream_crossing_id, 
+    mutate(stream_crossing_id_either = case_when(!is.na(pscis_stream_crossing_id) ~ pscis_stream_crossing_id, 
                             TRUE ~ model_crossing_id),
-           downstream_route_measure = as.integer(downstream_route_measure))
-  wshed <- mapply(fwapgr::fwa_watershed, blue_line_key = fish_habitat_info$blue_line_key, 
-                  downstream_route_measure = fish_habitat_info$downstream_route_measure) %>% 
-    purrr::set_names(nm = fish_habitat_info$name)
-  return(wshed)
+           downstream_route_measure_int = as.integer(downstream_route_measure))
+  dbDisconnect(conn = conn)
+  return(fish_habitat_info)
 }
 
 
+get_watershed <- function(fish_habitat_info){
+  mapply(fwapgr::fwa_watershed, blue_line_key = fish_habitat_info$blue_line_key,
+         downstream_route_measure = fish_habitat_info$downstream_route_measure_int) %>%
+    purrr::set_names(nm = fish_habitat_info$stream_crossing_id_either) 
+    # dplyr::bind_rows(.id = 'crossing_id')
 
-
-
+}
 
 

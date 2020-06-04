@@ -30,6 +30,8 @@ plan1 <- drake_plan(
   PSCIS_submission = import_pscis(),
   # fish_habitat_model_outputs = read.csv('./data/fish_habitat_info.csv'),
   #this section for locational info
+  planning_data = get_planning_data(),
+  fish_habitat_model_outputs = get_fish_habitat_info(priorities_spreadsheet = priorities_spreadsheet),
   tracks = st_read(file_in("./data/field_cleaned.gpx"), layer = "tracks") %>% ##we need this to make track of points
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
   track_points = read_sf(file_in("./data/field_cleaned.gpx"), layer = "track_points") %>% 
@@ -43,8 +45,8 @@ plan1 <- drake_plan(
   photo_metadata = readr::read_csv(file = 'data/photo_metadata.csv'),
   forest_tenure_road_lines = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
-  table_planning = make_table_planning(),
-  watersheds = get_watershed(priorities_spreadsheet = priorities_spreadsheet, PSCIS_submission = PSCIS_submission),
+  table_planning = make_table_planning(planning_data),
+  crossing_watersheds = get_watershed(fish_habitat_info = fish_habitat_model_outputs),
   hydrograph = plot_daily_stats(station_number = "07EE007",
                                  start_year = 0,
                                  end_year = 9999,

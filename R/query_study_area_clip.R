@@ -171,7 +171,6 @@ st_write(rds_ften,     "./data/parsnip.gpkg", "rds_ften", update = TRUE)
 st_layers("./data/parsnip.gpkg")
 
 
-
 # #this gives us the fish habitat for the Parsnip zone - parsnip (166), parsnip arm (164), carp(22) and nation (152) watersheds...
 dl <- dbGetQuery(conn,
                  "
