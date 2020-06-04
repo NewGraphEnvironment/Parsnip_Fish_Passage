@@ -73,10 +73,10 @@ physio <-  sf::st_read(conn,
 
 ```{r fishspecies}
 ##find the gnis id
-watersheds <- dbGetQuery(conn,
-                         "SELECT y.* 
-                         FROM whse_basemapping.fwa_named_watersheds_poly y
-                         WHERE (y.gnis_name LIKE 'Parsnip River') ")
+# watersheds <- dbGetQuery(conn,
+#                          "SELECT y.* 
+#                          FROM whse_basemapping.fwa_named_watersheds_poly y
+#                          WHERE (y.gnis_name LIKE 'Parsnip River') ")
 
 
 fish_species_watershed <- sf::st_read(conn,
@@ -90,36 +90,36 @@ fish_species_watershed <- sf::st_read(conn,
                            GROUP BY x.species_code,x.species_name,nws.gnis_name,nws.gnis_id,x.observation_date,nws.fwa_watershed_code 
                            ORDER BY nws.gnis_name,nws.fwa_watershed_code,x.species_code")
 
-fish_species_lookup <- dbGetQuery(conn,
-                                  "Select * from whse_fish.species_codes_lookup")
+# fish_species_lookup <- dbGetQuery(conn,
+#                                   "Select * from whse_fish.species_codes_lookup")
 
-fish_species_watershed <- merge (fish_species_watershed, 
-                                fish_species_lookup[,c("SPECIES_CODE","SCIENTIFIC_NAME")],
-                                by.x = c("species_code"), by.y = c("SPECIES_CODE"), 
-                                all.x = TRUE)
+fish_species_lookup <- drake::readd(fish_data_submission) %>% 
+                   purrr::pluck('species_by_group') %>% 
+                   select(common_name, species_code, scientific_name)
+
+
+# fish_species_watershed <- merge (fish_species_watershed,
+#                                 fish_species_lookup[,c("SPECIES_CODE","SCIENTIFIC_NAME")],
+#                                 by.x = c("species_code"), by.y = c("SPECIES_CODE"),
+#                                 all.x = TRUE)
+
+fish_species_watershed <- left_join(fish_species_watershed,
+                                    fish_species_lookup,
+                                    by = "species_code")
 
 ##we need to remove Family: from the SCIENTIFIC_NAME column to facilitate a nice sort/lookup
 ##we could look at adding it after in brackets maybe
-fish_species_watershed$scientific_name <- gsub("Family: ", "", fish_species_watershed$SCIENTIFIC_NAME)
+# fish_species_watershed$scientific_name <- gsub("Family: ", "", fish_species_watershed$scientific_name)
 
 ##select rows that have no scientific name 
 no_scientific <- fish_species_watershed[is.na(fish_species_watershed$scientific_name),]
 
-# look at fish species lookup to see if fish are there when there is no sci name
-# fish_species_lookup <- fish_species_lookup %>%
-# arrange(COMMON_NAME)
-
-# lets get rid of the generic rb/ct and bt/dv and mussles and occurences with no scientific name
-fish_species_watershed <- filter(fish_species_watershed, 
-                                 species_code != 'BT/DV', species_code != 'RB/CT', 
-                                 species_code != 'ANODON', species_code != 'TR',
-                                 species_code != 'SLV', !is.na(scientific_name)) 
 
 
 #use pipes to group 
 fish_table <- fish_species_watershed %>%
   dplyr::group_by(scientific_name, species_name,gnis_name,species_code) %>%
-  dplyr::summarise (count = n()) %>%
+  dplyr::summarise(count = n()) %>%
   dplyr::arrange(gnis_name) %>% ##ditch the rare occurance which look like errors
   dplyr::filter(count > 1 & 
            species_name != 'Dolly Varden' &
@@ -127,7 +127,10 @@ fish_table <- fish_species_watershed %>%
            !stringr::str_detect(species_name, "General")) %>%
   ungroup() %>% 
   select('Scientific Name' = scientific_name, 'Species Name' = species_name,
-         'Species Code' = species_code)
+         'Species Code' = species_code) %>% 
+  mutate_all(~replace_na(.,"-")) %>% 
+  mutate_all(~stringr::str_replace_all(.,"NA", "-"))
+  
 
 
 ```
