@@ -1,0 +1,34 @@
+alias_local_name,site,location,zone,easting,northing,gazetted_names,avg_channel_width_m,avg_wetted_width_m,average_residual_pool_depth_m,average_bankfull_depth_m,average_gradient_percent,bed_material_dominant,bed_material_subdominant,feature_type,utm_zone,utm_easting,utm_northing
+57696_ds,57696,ds,10,563667,6037630,Trib to Wichcika Creek,4.26,3.1,0.42,0.3,11,cobbles,boulders,rock outcrop,10,564094,6037945
+57696_us,57696,us,10,564171,6037942,Trib to Wichcika Creek,3.8,3.34,0.43,0.35,14.000000000000002,cobbles,boulders,cascade or Chute,10,564408,6038489
+125175_us,125175,us,10,571772,6051998,Trib to Missinka River,2.47,2.03,NA,0.25,9,gravels,cobbles,NA,NA,NA,NA
+125175_ds,125175,ds,10,571487,6051852,Trib to Missinka River,2.79,2.4,0.29,0.27,4,gravels,fines,NA,NA,NA,NA
+125179_us,125179,us,10,570308,6052835,Trib to Missinka River,3.84,2.5,0.39,0.3,9,cobbles,gravels,NA,NA,NA,NA
+125179_ds,125179,ds,10,569998,6052686,Trib to Missinka River,2.79,2.44,0.74,0.43,6,cobbles,gravels,NA,NA,NA,NA
+125403_us,125403,us,10,520140,6084908,Trib to Parsnip River,2.08,1.91,0.48,0.2,1,gravels,fines,beaver dam,10,520059,6084723
+125403_ds,125403,ds,10,520223,6084881,Trib to Parsnip River,2.25,2.1,0.43,0.2,2,fines,gravels,NA,NA,NA,NA
+57695_ds,57695,ds,10,563196,6038338,Trib to Wichcika Creek,4.18,3.28,0.39,0.27,9,cobbles,gravels,NA,NA,NA,NA
+57695_us,57695,us,10,563257,6038803,Trib to Wichcika Creek,4.43,3.4,0.38,0.25,11,cobbles,boulders,NA,NA,NA,NA
+57690_us,57690,us,10,555027,6046138,Trib to Wichcika Creek,5.64,NA,0.54,0.4,8,cobbles,boulders,falls,10,554477,6046229
+57690_ds,57690,ds,10,555252,6046038,Trib to Wichcika Creek,4.22,3.7,0.3,0.4,2,cobbles,gravels,NA,NA,NA,NA
+125000_us,125000,us,10,577534,6038205,Trib to Parsnip River,4.4,3.35,0.38,0.37,4,gravels,fines,beaver dam,10,577830,6038053
+125000_ds,125000,ds,10,577330,6038336,Trib to Parsnip River,4.5,3.83,NA,0.7,1,gravels,fines,beaver dam,10,577330,6038336
+125128_us,125128,us,10,583454,6051827,Trib to Missinka River,11.33,11.33,NA,NA,1,fines,fines,beaver dam,10,583540,6051851
+125128_ds,125128,ds,10,583390,6051798,Trib to Missinka River,2.11,1.97,NA,0.27,5,cobbles,large rock/bedrock,cascade or Chute,10,583422,6051814
+125231_ds,125231,ds,10,549707,6064992,Trib to Table River,3.12,2.5,0.35,0.27,5,gravels,cobbles,NA,NA,NA,NA
+125231_us,125231,us,10,549976,6065139,Trib to Table River,4,3.48,0.37,0.35,6,gravels,cobbles,NA,NA,NA,NA
+125247_us,125247,us,10,542959,6062815,Trib to Parsnip River,3.8,3.46,0.45,0.3,3,gravels,fines,beaver dam,10,542656,6063446
+125247_ds,125247,ds,10,543049,6062633,Trib to Parsnip River,3.54,2.89,0.45,0.48,2,gravels,fines,NA,NA,NA,NA
+CV1_ds,CV1,ds,10,547525,6063831,Trib to Table River,4.23,3.83,0.38,0.3,2,gravels,fines,beaver dam,10,547419,6063849
+CV1_us,CV1,us,10,547303,6063955,Trib to Table River,3.78,3.52,0.29,0.2,4,gravels,cobbles,NA,NA,NA,NA
+125253_ds,125253,ds,10,537612,6064559,Trib to Parsnip River,4,3.5,0.5,0.25,2,fines,gravels,NA,NA,NA,NA
+125253_us,125253,us,10,537735,6064732,Trib to Parsnip River,4.17,3.32,0.46,0.32,3,gravels,fines,NA,NA,NA,NA
+125345_us,125345,us,10,522573,6083673,Trib to Parsnip River,4.72,3.9,0.45,0.4,3,gravels,fines,beaver dam,10,522713,6083744
+125345_ds,125345,ds,10,522578,6083463,Trib to Parsnip River,4.16,3.34,0.48,0.6,3,cobbles,gravels,NA,NA,NA,NA
+57681_us,57681,us,10,533218,6067620,Trib to Parsnip River,4.48,2.86,0.4,0.3,1,gravels,fines,NA,NA,NA,NA
+125180_us,125180,us,10,569649,6053047,Trib to Missinka River,4.33,3.15,0.46,0.33,6,cobbles,boulders,NA,NA,NA,NA
+125180_ds,125180,ds,10,569692,6052690,Trib to Missinka River,3.88,2.75,0.45,0.4,5,gravels,cobbles,NA,NA,NA,NA
+125186_us,125186,us,10,565417,6052678,Trib to Missinka River,3.33,2.73,0.43,0.33,8,cobbles,gravels,NA,NA,NA,NA
+125186_ds,125186,ds,10,565424,6052383,Trib to Missinka River,3.75,2.67,0.35,0.3,3,gravels,cobbles,NA,NA,NA,NA
+125098_us,125098,us,10,582902,6035080,Trib to Parsnip River,1.95,1.62,0.1,0.1,3,gravels,fines,NA,NA,NA,NA
+125098_ds,125098,ds,10,583025,6034993,Trib to Parsnip River,1.67,1.12,0.2,0.15,4,gravels,fines,NA,NA,NA,NA
