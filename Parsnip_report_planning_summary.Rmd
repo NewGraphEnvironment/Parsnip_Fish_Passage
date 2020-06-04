@@ -13,7 +13,7 @@ bibliography: references.bib
 csl: apa.csl
 ---
 
-```{r setup, include=FALSE, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
@@ -23,21 +23,22 @@ csl: apa.csl
 ```
 
 
-```{r table-plan-html, eval = identical(knitr::is_html_output(), TRUE) }
+```{r table-plan-html, echo =FALSE, eval = identical(knitr::is_html_output(), TRUE) }
 select(drake::readd(table_planning),
-                    -stream_word, -`Map 50k`) %>% 
-  rename(`Map 50k` = map_linked) %>% 
-  knitr::kable() %>% 
-  kableExtra::column_spec(column = 13, width_min = '2in') %>% 
-  kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
+                    -stream_word, -`Map 50k`) %>%
+  rename(`Map 50k` = map_linked) %>%
+  knitr::kable() %>%
+  kableExtra::column_spec(column = 13, width_min = '2in') %>%
+  kableExtra::kable_styling(c("condensed"), full_width = T) %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
+
 
 ##caption = 'Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.'
 ```
 
 
 
-```{r table-plan-word, eval = identical(knitr::is_html_output(), FALSE) }
+```{r table-plan-word, echo =FALSE, eval = identical(knitr::is_html_output(), FALSE) }
 # library(flextable)  ##put this in the functions file
 # ##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
 # fit_to_page <- function(ft, pgwidth = 9.44){
