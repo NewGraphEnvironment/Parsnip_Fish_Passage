@@ -41,7 +41,6 @@ pacman::p_load(
   png,
   grid
   )
-pacman::p_load_gh("poissonconsulting
-/fwapgr")
+pacman::p_load_gh("poissonconsulting/fwapgr")
 #pacman::p_load(mapview)
 
