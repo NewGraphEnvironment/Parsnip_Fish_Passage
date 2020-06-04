@@ -44,6 +44,7 @@ plan1 <- drake_plan(
   forest_tenure_road_lines = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
   table_planning = make_table_planning(),
+  watersheds = get_watershed(priorities_spreadsheet = priorities_spreadsheet, PSCIS_submission = PSCIS_submission),
   hydrograph = plot_daily_stats(station_number = "07EE007",
                                  start_year = 0,
                                  end_year = 9999,

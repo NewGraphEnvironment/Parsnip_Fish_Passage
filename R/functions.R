@@ -424,7 +424,7 @@ make_fish_sampling_data <- function(fish_data_submission, site_location_data){
                                       alias_local_name, utm_zone, utm_easting, utm_northing),
                         by = c('local_name' = 'alias_local_name')
   )
-  b <- left_join(test,
+  b <- left_join(a,
                  fish_data_submission %>% 
                    purrr::pluck('species_by_group') %>% 
                    select(common_name, species_code),
@@ -433,6 +433,95 @@ make_fish_sampling_data <- function(fish_data_submission, site_location_data){
 }
 
 
+
+##--------------------------get fish hab info------------------------
+##might be safer to just grab entire watershed, save as csv then go from there
+get_fish_hab_info <- function(priorities_spreadsheet, PSCIS_submission){
+  #establish connection with database
+  drv <- dbDriver("PostgreSQL")
+  conn <- dbConnect(drv,
+                    dbname = 'postgis',
+                    host = 'localhost',
+                    port = '5432',
+                    user = 'postgres',
+                    password = 'postgres')
+  ##make the priorities a list
+  priorities_pscis <- priorities_spreadsheet %>% 
+    dplyr::mutate(site_int = as.integer(site)) %>% 
+    dplyr::distinct(site_int) %>% 
+    dplyr::filter(!is.na(site_int)) %>% 
+    dplyr::pull(site_int) 
+  
+  priorities_modelled <- priorities_spreadsheet %>% 
+    dplyr::distinct(model_crossing_id) %>% 
+    dplyr::filter(!is.na(model_crossing_id)) %>% ##need CV1 modelled crossing name
+    dplyr::pull(model_crossing_id) 
+  
+  sql <- glue::glue_sql(
+    "
+                                Select fh.pscis_stream_crossing_id, fh.model_crossing_id, fh.blue_line_key, 
+                                fh.downstream_route_measure, fh.wscode, fh.localcode,
+                                fh.uphab_gross_sub22, fh.upstr_species,  fh.dbm_mof_50k_grid_map_tile, 
+                                fh.upstr_alake_gross_obs, fh.upstr_alake_gross_inf, fh.upstr_awet_gross_all 
+                                FROM fish_passage.pscis_model_combined fh
+                                WHERE fh.pscis_stream_crossing_id IN
+                                ({priorities_pscis*}) OR
+                                fh.model_crossing_id IN
+                                ({priorities_modelled*})
+                                ",
+    .con = conn
+  )
+  query <- DBI::dbSendQuery(conn, sql)
+  fish_habitat_info <- DBI::dbFetch(query)
+  return(fish_habitat_info)
+}
+
+##--------------------------get watershed info-------------------------
+get_watershed <- function(priorities_spreadsheet, PSCIS_submission){
+  #establish connection with database
+  drv <- dbDriver("PostgreSQL")
+  conn <- dbConnect(drv,
+                    dbname = 'postgis',
+                    host = 'localhost',
+                    port = '5432',
+                    user = 'postgres',
+                    password = 'postgres')
+  ##make the priorities a list
+  priorities_pscis <- priorities_spreadsheet %>% 
+    dplyr::mutate(site_int = as.integer(site)) %>% 
+    dplyr::distinct(site_int) %>% 
+    dplyr::filter(!is.na(site_int)) %>% 
+    dplyr::pull(site_int) 
+  
+  priorities_modelled <- priorities_spreadsheet %>% 
+    dplyr::distinct(model_crossing_id) %>% 
+    dplyr::filter(!is.na(model_crossing_id)) %>% ##need CV1 modelled crossing name
+    dplyr::pull(model_crossing_id) 
+  
+  sql <- glue::glue_sql(
+    "
+                                Select fh.pscis_stream_crossing_id, fh.model_crossing_id, fh.blue_line_key, 
+                                fh.downstream_route_measure, fh.wscode, fh.localcode,
+                                fh.uphab_gross_sub22, fh.upstr_species,  fh.dbm_mof_50k_grid_map_tile, 
+                                fh.upstr_alake_gross_obs, fh.upstr_alake_gross_inf, fh.upstr_awet_gross_all 
+                                FROM fish_passage.pscis_model_combined fh
+                                WHERE fh.pscis_stream_crossing_id IN
+                                ({priorities_pscis*}) OR
+                                fh.model_crossing_id IN
+                                ({priorities_modelled*})
+                                ",
+    .con = conn
+  )
+  query <- DBI::dbSendQuery(conn, sql)
+  fish_habitat_info <- DBI::dbFetch(query) %>% 
+    mutate(name = case_when(!is.na(pscis_stream_crossing_id) ~ pscis_stream_crossing_id, 
+                            TRUE ~ model_crossing_id),
+           downstream_route_measure = as.integer(downstream_route_measure))
+  wshed <- mapply(fwapgr::fwa_watershed, blue_line_key = fish_habitat_info$blue_line_key, 
+                  downstream_route_measure = fish_habitat_info$downstream_route_measure) %>% 
+    purrr::set_names(nm = fish_habitat_info$name)
+  return(wshed)
+}
 
 
 
