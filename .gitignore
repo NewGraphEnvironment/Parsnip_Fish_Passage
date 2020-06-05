@@ -7,7 +7,6 @@ docs/stable_website_backup
 *.kml
 *.gpkg-shm
 *.gpkg-wal
-fig
 temp.R
 drafts
 data/drafts
