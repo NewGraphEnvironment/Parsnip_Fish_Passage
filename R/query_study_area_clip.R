@@ -171,6 +171,23 @@ st_write(rds_ften,     "./data/parsnip.gpkg", "rds_ften", update = TRUE)
 st_layers("./data/parsnip.gpkg")
 
 
+
+##here is the fish sampling and features for Simon
+table_habitat_raw <- drake::readd(table_habitat_raw) %>% 
+  dplyr::distinct(utm_easting, utm_northing, feature_type, .keep_all = T) %>% 
+  filter(!is.na(feature_type))
+# write_csv(table_habitat_raw, 'data/table_habitat_raw.csv', na = "NA")
+
+fish_sampling_data <- drake::readd(fish_sampling_data) 
+# write_csv(fish_sampling_data, 'data/fish_sampling_data.csv', na = "NA")
+
+
+
+
+
+
+
+###-----------------------------------------------queries used in the planning process --------------------
 # #this gives us the fish habitat for the Parsnip zone - parsnip (166), parsnip arm (164), carp(22) and nation (152) watersheds...
 dl <- dbGetQuery(conn,
                  "

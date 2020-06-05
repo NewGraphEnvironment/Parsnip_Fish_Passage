@@ -178,6 +178,27 @@ st_write(railway,     "./data/parsnip.gpkg", "railway", update = TRUE)
 
 st_layers("./data/parsnip.gpkg")  ##note that the priorities are also in there built from the overview table output
 
+##here is the fish sampling and features for Simon
+table_habitat_features <- drake::readd(table_habitat_raw) %>% 
+  dplyr::distinct(utm_easting, utm_northing, feature_type, .keep_all = T) %>% 
+  filter(!is.na(feature_type)) %>% 
+  sf::st_as_sf(coords = c("utm_easting", "utm_northing"), crs = 26910, remove = F) %>%
+  st_transform(crs = 4326)
+
+fish_sampling_data_sf <- drake::readd(fish_sampling_data)  %>% 
+  dplyr::distinct(utm_easting, utm_northing, species_code, .keep_all = T) %>% 
+  filter(!is.na(species_code)) %>% 
+  sf::st_as_sf(coords = c("utm_easting", "utm_northing"), crs = 26910, remove = F) %>%
+  st_transform(crs = 4326)
+
+##write to the geopackage
+sf::st_write(table_habitat_features, "./data/parsnip.gpkg", "habitat_features", update = TRUE)
+sf::st_write(fish_sampling_data_sf, "./data/parsnip.gpkg", "fish_sampling_data", update = TRUE)
+
+
+
+# write_csv(table_habitat_raw, 'data/table_habitat_raw.csv', na = "NA") ##this was how I did it before with raw inputs
+# write_csv(fish_sampling_data, 'data/fish_sampling_data.csv', na = "NA") ##this was how I did it before with raw inputs
 
 
 
