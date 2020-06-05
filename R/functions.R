@@ -247,7 +247,7 @@ make_table_planning <- function(planning_data){
               stream_word = my_stream_name,
               Stream = paste0("[", my_stream_name, "](", image_view_url, ")"),
               
-              map_linked = paste0("[", dbm_mof_50k_grid_map_tile, "](", paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/PARS_CRKD_CARP_', sub("(.{4})(.*)", "\\1.\\2", dbm_mof_50k_grid_map_tile), '.pdf'), ")"), 
+              map_linked = paste0("[", dbm_mof_50k_grid_map_tile, "](", paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/Parsnip_', sub("(.{4})(.*)", "\\1.\\2", dbm_mof_50k_grid_map_tile), '.pdf'), ")"), 
               `Map 50k` = dbm_mof_50k_grid_map_tile, 
               Road = road_name,
               `UTM (10N)` = paste0(round(utm_easting,0), " ", round(utm_northing,0)),
