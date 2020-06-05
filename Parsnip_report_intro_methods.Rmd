@@ -43,7 +43,7 @@ knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, conn
 # {.tabset}
 
 ## Introduction {.tabset}
-The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats [@swalesRoleOffChannelPonds1989; @Bramblett_2002].  Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues [@tech9_access]. In addition, open migration corridors are essential for adapting to the impacts of climate change such as rising water temperatures and changing flow regimes [@seligerRiverConnectivityHabitat2018]. There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat [@gollnerPrinceGeorgeTimber2013 ;@hooftPrinceGeorgeForest]. 
+The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats [@swalesRoleOffChannelPonds1989; @Bramblett_2002].  Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues [@tech9_access]. In addition, open migration corridors are essential for adapting to the impacts of climate change such as rising water temperatures and changing flow regimes [@seligerRiverConnectivityHabitat2018]. There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat [@gollnerPrinceGeorgeTimber2013; @hooftPrinceGeorgeForest]. 
 
 <br>
 
@@ -157,10 +157,14 @@ Construction of the 183 m high and 2134 m long W.A.C. Bennett Dam was completed 
 ```
 
 
-```{r hydrology2-print, eval = T, fig.cap='Parsnip River Above Misinchinka River (Station #07EE007 - Lat 55.08194 Lon -122.913063). Available daily discharge data from 1967 to 2015.'}
+```{r hydrology2-print, eval = T, fig.dim = c(5.1, 3.4), fig.cap='Parsnip River Above Misinchinka River (Station #07EE007 - Lat 55.08194 Lon -122.913063). Available daily discharge data from 1967 to 2015.'}
 # knitr::include_graphics("fig/hydrology1-1.png")  ##left this here in case we want to go back to having this build from scratch.
 
-knitr::include_graphics("fig/hydrology1.png")
+img <- png::readPNG("fig/hydrology1.png")
+grid::grid.raster(img)
+# 
+# 
+# knitr::include_graphics("fig/hydrology1.png")
 
 ##get the figure caption ready for the plot in the report
 
@@ -176,11 +180,14 @@ knitr::include_graphics("fig/hydrology1.png")
 
 <br>
 
-```{r hydrosummaryplot, fig.dim = c(6.5,4.32), fig.cap="Summary discharge statistics (annual maximum, minimum, mean and standard deviation) for Parsnip River at hyrometric station #07EE007.  Solid line is long term mean."}
+```{r hydrosummaryplot, fig.dim = c(5.1, 3.4), fig.cap="Summary discharge statistics (annual maximum, minimum, mean and standard deviation) for Parsnip River at hyrometric station #07EE007.  Solid line is long term mean."}
 ##fasstr::plot_data_screening2 is a custom version of plot_data_screening 
 # fasstr::plot_data_screening3(station_number = "07EE007")[["Data_Screening"]]
 
-knitr::include_graphics("fig/hydrology2.png")
+img <- png::readPNG("fig/hydrology2.png")
+grid::grid.raster(img)
+
+# knitr::include_graphics("fig/hydrology2.png")
 ```
 
 ### Fisheries {.tabset}
@@ -189,12 +196,11 @@ Fish species recorded in the Parsnip River watershed are detailed in Table \@ref
 <br>
 
 ```{r table-fish}
+
+##this needs to be tweeked to have a word and html output so the word one is tahoma at 9 font
+
+##removed this note for now.
 ##@pearceTSEKHENEFIRST2019 reports that Tse'khene elders participating in information gathering on Kokanee, Bull Trout and Arctic Grayling have a holistic, integrative perspective of the environment and consider individual fish species as components of a complex web of environmental relationships.
-
-# Tse'khene Elders from the McLeod Lake Indian Band report that sa'ba (Bull Trout) size and abundance has decreased in all rivers and tributaries from the reservoir with more injured and diseased fish captured in recent history than was common in the past [@pearceTSEKHENEFIRST2019]. 
-
-# Tse'khene Elders from the McLeod Lake Indian Band report that Arctic Grayling numbers have declined dramatically since the flooding of the reservoir and that few dusk'ihje (Arctic Grayling) have been caught in the territory in the past 30 years [@pearceTSEKHENEFIRST2019].
-
 
 # eval = identical(knitr::is_html_output(), FALSE) ##this is put in header of chunk if we don't want it to render to html
 
@@ -222,6 +228,9 @@ In 2018, sub-basins of the Anzac River watershed, Homininka River, Missinki Rive
 
 <br>
 
+Tse'khene Elders from the McLeod Lake Indian Band report that sa'ba (Bull Trout) size and abundance has decreased in all rivers and tributaries from the reservoir with more injured and diseased fish captured in recent history than was common in the past [@pearceTSEKHENEFIRST2019]. 
+
+<br>
 
 #### Arctic Grayling
 A detailed review of Arctic Grayling life history can be referenced in @stamfordFWCPArcticGrayling. Since impoundment of the Williston Reservoir, it appears that physical habitat and ecological changes have been the most significant factors limiting Arctic Grayling productivity. Although these changes are not well understood they have likely resulted in the inundation of key low gradient juvenile rearing and overwintering habitats, isolation of previously connected populations and increases in abundance of predators such as Bull Trout [@shrimptonj.m.GeneticAnalysisArctic2012; @hagenTrendAbundanceArctic2018].  
@@ -229,6 +238,10 @@ A detailed review of Arctic Grayling life history can be referenced in @stamford
 <br>
 
 Migration of mature adult Arctic Grayling occurs in the spring with arrival at known spawning locations coinciding with water temperatures of 4 $^\circ$C.  Spawning in the Parsnip watershed appears to occur between late-May and late-June within sites located primarily within the lower reaches of the Anzac and Table rivers as well as within the Parsnip River mainstem. Side-channel and multiple-channel locations containing small gravels appear to be selected for spawning. Currently, the primary distribution of Williston Arctic Grayling appears to be among fourth order and larger streams [@williamson_2004; @stamfordFWCPArcticGrayling].   Although past study results indicate that 0+ grayling appeared to overwinter in lower reaches of larger tributaries (i.e. Table, Anzac rivers) as well as the Parsnip River and that few age-1+ grayling have been sampled in tributaries, habitat use in small tributaries and the extent they are connected with the mainstem habitats of all core areas is not well understood. Between 1995 and 2019, Arctic Grayling population monitoring has been conducted in the Table River in nine out of 25 years (8 years for the Anzac) using snorkel surveys.  Results from 2018 are 2019 are intended to contributing to assessment of the conservation status of the species in the Parsnip Core area [@hagenTrendAbundanceArctic2018].
+
+<br>
+
+Tse'khene Elders from the McLeod Lake Indian Band report that Arctic Grayling numbers have declined dramatically since the flooding of the reservoir and that few dusk'ihje (Arctic Grayling) have been caught in the territory in the past 30 years [@pearceTSEKHENEFIRST2019].
 
 <br>
 
