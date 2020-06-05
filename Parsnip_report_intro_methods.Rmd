@@ -148,40 +148,39 @@ Construction of the 183 m high and 2134 m long W.A.C. Bennett Dam was completed 
 
 <br>
 
-```{r hydrology1, fig.dim = c(6.5,4.32), include= FALSE, echo=FALSE, comment=NA, message = FALSE}
+```{r hydrology1, eval = F, fig.dim = c(6.5,4.32), include= FALSE, echo=FALSE, comment=NA, message = FALSE}
+##this has been moved to the hydrology_parsnip.R file to simplify workflow for reproducability.  Requires download of the hydat database which is a burden for collaboration
 
-
-hydatr::hydat_load(source = "C://Users//allan//AppData//Local//tidyhydat//tidyhydat") # loads the database (you'll need to call this one each time you load the package)
+# hydatr::hydat_load(source = "C://Users//allan//AppData//Local//tidyhydat//tidyhydat") # loads the database (you'll need to call this one each time you load the package)
 # 
-# hydrograph <- plot_daily_stats(station_number = "07EE007",
-#                                start_year = 0,
-#                                end_year = 9999,
-#                                log_discharge = TRUE,
-#                                ignore_missing = TRUE)
-(drake::readd(hydrograph))
+# (drake::readd(hydrograph))
 ```
 
 
-```{r hydrology2-print, fig.cap=caption}
-knitr::include_graphics("fig/hydrology1-1.png")
+```{r hydrology2-print, eval = T, fig.cap='Parsnip River Above Misinchinka River (Station #07EE007 - Lat 55.08194 Lon -122.913063). Available daily discharge data from 1967 to 2015.'}
+# knitr::include_graphics("fig/hydrology1-1.png")  ##left this here in case we want to go back to having this build from scratch.
+
+knitr::include_graphics("fig/hydrology1.png")
 
 ##get the figure caption ready for the plot in the report
 
-tidyhat_info <- search_stn_number("07EE007")
-hydatr_info <- as.data.frame(hydat_station_info(tidyhat_info$STATION_NUMBER))
-hydatr_info <- mutate(hydatr_info, title = paste0(stringr::str_to_title(STATION_NAME),
-                                                  " (Station #",STATION_NUMBER," - Lat " ,round(LATITUDE,2)," Lon ",round(LONGITUDE,2), "). Available daily discharge data from ", 
-                                                  FIRST_YEAR, " to ",LAST_YEAR, " plotted with tidyhydat (Albers 2017) and fasstr (Goetz and Schwarz 2020)."))
-
-caption <- hydatr_info$title
-rm(tidyhat_info, hydatr_info)
+# tidyhat_info <- search_stn_number("07EE007")
+# hydatr_info <- as.data.frame(hydat_station_info(tidyhat_info$STATION_NUMBER))
+# hydatr_info <- mutate(hydatr_info, title = paste0(stringr::str_to_title(STATION_NAME),
+#                                                   " (Station #",STATION_NUMBER," - Lat " ,round(LATITUDE,2)," Lon ",round(LONGITUDE,2), "). Available daily discharge data from ", 
+#                                                   FIRST_YEAR, " to ",LAST_YEAR, "."))
+# 
+# caption <- hydatr_info$title
+# rm(tidyhat_info, hydatr_info)
 ```
 
 <br>
 
 ```{r hydrosummaryplot, fig.dim = c(6.5,4.32), fig.cap="Summary discharge statistics (annual maximum, minimum, mean and standard deviation) for Parsnip River at hyrometric station #07EE007.  Solid line is long term mean."}
 ##fasstr::plot_data_screening2 is a custom version of plot_data_screening 
-fasstr::plot_data_screening3(station_number = "07EE007")[["Data_Screening"]]
+# fasstr::plot_data_screening3(station_number = "07EE007")[["Data_Screening"]]
+
+knitr::include_graphics("fig/hydrology2.png")
 ```
 
 ### Fisheries {.tabset}

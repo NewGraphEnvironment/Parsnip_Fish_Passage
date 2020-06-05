@@ -47,11 +47,7 @@ plan1 <- drake_plan(
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
   table_planning = make_table_planning(planning_data),
   crossing_watersheds = get_watershed(fish_habitat_info = fish_habitat_model_outputs),
-  hydrograph = plot_daily_stats(station_number = "07EE007",
-                                 start_year = 0,
-                                 end_year = 9999,
-                                 log_discharge = TRUE,
-                                 ignore_missing = TRUE),
+  ##REMOVED THE HYDROGRAPHs from the plan and intro_methods file to allow report production using png outputs only
   ##now make the report
     report = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"), ##JUST CHANGED FOR A SEC

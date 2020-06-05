@@ -1,3 +1,5 @@
+##this is one of the files that is not run from scratch because it requires the hydat database to be downloaded to your computer.  Moved here from the rmd file
+
 
 library(tidyhydat)
 library(fasstr)
@@ -25,37 +27,6 @@ hydatr::hydat_load(source = "C://Users//allan//AppData//Local//tidyhydat//tidyhy
 #new.folder <- "C:/hydat"
 #current.folder <- "C://Users//Al//AppData//Local//tidyhydat//tidyhydat"
 
-## find the files that you want
-list.of.files <- list.files(current.folder)
-
-# #copy the files to the new folder- had to manually change name of file to .sqlite3 
-##should automate
-file.copy(list.of.files, new.folder)
-
-##find the source code for a function
-# getAnywhere("is_hydat")
-
-#use hydatr to find stations with recent data using place name and google search
-# hydat_find_stations("Maple Ridge, bc", year = 1999:2014)
-
-##use hydatr to find stations using lat/long ****added this lately
-# hydat_find_stations(loc, year = 1999:2015)
-# loc <- matrix(c(-127,54.8), ncol = 2)
-# colnames(loc) <- c("lat", "lon")
-# loc <- as.data.frame(loc)
-# loc <- as.vector(loc[1,1:2])
-# loc<- c(-95.3632715, 29.7632836)
-
-##convert lat long 4326 to wkid 3857 ****added this lately
-# library(sp)
-# library(rgdal)
-# coordinates(loc)=~lon+lat
-#proj4string(loc)=CRS("+init=epsg:4326")
-#spTransform(loc,CRS("+init=epsg:3857")) #don't need this
-#loc_df<- as.data.frame(loc)
-
-
-
 #Get detailed information about one hydro site with hydatr:
 (hydat_station_info("07EE007"))
 
@@ -73,23 +44,38 @@ hydatr_info <- as.data.frame(hydat_station_info(tidyhat_info$STATION_NUMBER))
 
 #bulkley river at smithers 08EE005# compared to station at quick (08EE004) and is very similiar
 #compared to station near Houston (just upstream of Morice 08EE003) and is much less water
-hydrograph <- plot_daily_stats(station_number = "07EE007",
+hydrograph <- fasstr::plot_daily_stats(station_number = "07EE007",
                                start_year = 0,
                                end_year = 9999,
                                log_discharge = TRUE,
                                ignore_missing = TRUE)
 hydrograph
 
+hydrograph_print <- hydrograph[["Daily_Statistics"]]
 
+test
+
+##For some reason we need to plot the $daily_statistics column for this to work
+ggsave(plot = hydrograph_print, file="./fig/hydrology1.png",
+       h=3.4, w=5.11, units="in", dpi=300)
+
+
+# fig/hydrology1-1.png
 
 ##get the figure caption ready for the plot in the report
 
 tidyhat_info <- search_stn_number("07EE007")
 hydatr_info <- as.data.frame(hydat_station_info(tidyhat_info$STATION_NUMBER))
-hydatr_info <- mutate(hydatr_info, title = paste0(tolower(STATION_NAME),
+hydatr_info <- mutate(hydatr_info, title = paste0(stringr::str_to_title(STATION_NAME),
                                                   " (Station #",STATION_NUMBER," - Lat " ,round(LATITUDE,6)," Lon ",round(LONGITUDE,6), "). Available daily discharge data from ", 
-                                                  FIRST_YEAR, " to ",LAST_YEAR, " plotted in R with fasstr (Goetz and Schwarz 2020)."))
+                                                  FIRST_YEAR, " to ",LAST_YEAR, "."))
 hydatr_info$title
 
-citation("tidyhydat")
-citation("fasstr")
+##fasstr::plot_data_screening2 is a custom version of plot_data_screening - modified a fork of fasstr to produce mean lines so specific to this version of the repository.
+summary_plot <- fasstr::plot_data_screening3(station_number = "07EE007")[["Data_Screening"]]
+summary_plot
+
+ggsave(plot = summary_plot, file="./fig/hydrology2.png",
+       h=3.4, w=5.11, units="in", dpi=300)
+
+
