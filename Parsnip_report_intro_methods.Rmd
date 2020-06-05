@@ -30,9 +30,9 @@ conn <- dbConnect(drv,
                   password = 'postgres')
 
 knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, connection = "conn",
-                      fig.align="center", fig.width = 5.118, fig.height = 3.409,
-                      fig.path = ('fig/'))
-
+                      fig.align="center", fig.width = 5.118, fig.height = 3.409)
+# fig.path = ('fig/')
+                      
 ```
 
 

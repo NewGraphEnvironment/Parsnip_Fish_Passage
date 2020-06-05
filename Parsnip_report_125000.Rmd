@@ -1,14 +1,14 @@
 ---
 title: "Habitat Confirmation"
 output:
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: no
     fig_caption: yes
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
 bibliography: references.bib
 csl: apa.csl
 ---
@@ -47,10 +47,9 @@ title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 ```
 
 ###### **PSCIS Crossing `r my_site`**
+
 ```{r}
 # test <- pull_data(sheet = loc_data, site = my_site)
-my_site2 <- '125353'
-
 ##have a look at the watershed
 # ggplot(data = my_watershed)+
 #   geom_sf(data = my_watershed, lwd = 0.15)
@@ -66,26 +65,26 @@ date <- pull_data(sheet = drake::readd(site_location_data), site = my_site, colu
 ```
 
 ```{r pull-info}
-my_watershed_area <- my_watershed %>% pull(area_km) ##can't get the rounding in
-loadd(PSCIS_submission, table_habitat_raw, table_overview_raw, priorities_spreadsheet)
-
-wetland <- table_overview_raw %>% filter(site == my_site & location == 'us') %>% mutate(lake = round(upstr_alake_gross_obs + upstr_alake_gross_inf),1) %>% pull(lake)
-stream <- table_overview_raw %>% filter(site == my_site) %>% mutate(stream = round(uphab_gross_sub22)) %>% pull(stream)
-stream_name <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(stream_name)
-mapsheet <- table_overview_raw %>% filter(site == my_site & location == 'us') %>% pull(dbm_mof_50k_grid_map_tile)
-my_road <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(road_name)
-my_utm <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% 
-  mutate(utm = paste0(utm_zone, 'N ', easting, ' ', northing)) %>% pull(utm)
-my_culvert_length <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(length_or_width_meters)
-my_outlet_drop <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(outlet_drop_meters)
-my_fill_depth <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(fill_depth_meters)
-my_culvert_width <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(fill_depth_meters)
-my_distance_upstream <- priorities_spreadsheet %>% filter(site == my_site & location == 'us') %>% pull(length)
-my_habitat_value <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(habitat_value)
-my_channel_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_channel_width_m)
-my_wetted_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_wetted_width_m)
-my_gradient <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(average_gradient_percent)
-my_priority <- priorities_spreadsheet %>% filter(site == my_site) %>% pull(priority)
+# my_watershed_area <- my_watershed %>% pull(area_km) ##can't get the rounding in
+# loadd(PSCIS_submission, table_habitat_raw, table_overview_raw, priorities_spreadsheet)
+# 
+# wetland <- table_overview_raw %>% filter(site == my_site & location == 'us') %>% mutate(lake = round(upstr_alake_gross_obs + upstr_alake_gross_inf),1) %>% pull(lake)
+# stream <- table_overview_raw %>% filter(site == my_site) %>% mutate(stream = round(uphab_gross_sub22)) %>% pull(stream)
+# stream_name <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(stream_name)
+# mapsheet <- table_overview_raw %>% filter(site == my_site & location == 'us') %>% pull(dbm_mof_50k_grid_map_tile)
+# my_road <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(road_name)
+# my_utm <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% 
+#   mutate(utm = paste0(utm_zone, 'N ', easting, ' ', northing)) %>% pull(utm)
+# my_culvert_length <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(length_or_width_meters)
+# my_outlet_drop <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(outlet_drop_meters)
+# my_fill_depth <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(fill_depth_meters)
+# my_culvert_width <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(fill_depth_meters)
+# my_distance_upstream <- priorities_spreadsheet %>% filter(site == my_site & location == 'us') %>% pull(length)
+# my_habitat_value <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(habitat_value)
+# my_channel_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_channel_width_m)
+# my_wetted_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_wetted_width_m)
+# my_gradient <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(average_gradient_percent)
+# my_priority <- priorities_spreadsheet %>% filter(site == my_site) %>% pull(priority)
 ```
 
 
@@ -118,17 +117,24 @@ if(knitr::is_html_output() == TRUE){
 
 <br>
 
-The culvert is located on a `r my_overview_info %>% pull(stream_name)` under `r my_overview_info %>% pull(road_name)` ~2km upstream of the confluence with the Parsnip River and approximatley 9km north-west of the outlet of Artic Lake (Table \@ref(tab:tableoverview)). Arctic Lake is located within Arctic Pacific Lakes Provincial Park.  At the time of the field surveys, a small remote logging camp was located approximately 3.5km to the north-west of the crossing location and active logging was occurring on the east side of the Parsnip River valley adjacent to the camp. @data_fish_obs indicate that fish have not previously been recorded in the stream.  The watershed upstream of the crossing drains an area of `r my_watershed %>% pull(area_km)`km^2^ from an maximum elevation of approximately 1600m.  There are no other stream crossing (culvert) barriers on the mainstem of the stream upstream of the `r my_overview_info %>% pull(road_name)` although one crossing is modelled as located on a tributary upstream. 
+**Site Location**
+The culvert is located on a `r my_overview_info %>% pull(stream_name)` under `r my_overview_info %>% pull(road_name)` ~2km upstream of the confluence with the Parsnip River and approximatley 9km north-west of the outlet of Artic Lake (Table \@ref(tab:tableoverview)). Arctic Lake is located within Arctic Pacific Lakes Provincial Park.  At the time of the field surveys, a small remote logging camp was located approximately 3.5km to the north-west of the crossing location and active logging was occurring on the east side of the Parsnip River valley adjacent to the camp. 
+
+<br>
+
+**Background Information**
+@data_fish_obs indicate that fish have not previously been recorded in the stream.  The watershed upstream of the crossing drains an area of `r my_watershed %>% pull(area_km)`km^2^ from an maximum elevation of approximately 1600m.  There are no other stream crossing (culvert) barriers on the mainstem of the stream upstream of the `r my_overview_info %>% pull(road_name)` although one crossing was modelled as located on a tributary upstream. 
 
 
 
 <br>
 
-Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to upstream wetland (`r my_overview_info %>% pull(upstr_awet_gross_all)`ha) and instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) habitat and because it was ranked by @hooftPrinceGeorgeForest as a high priority for follow up (Table \@ref(tab:table-planning)). 
+Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to upstream wetland (`r my_overview_info %>% pull(upstr_awet_gross_all)`ha) and instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) habitat and because it was ranked by @hooftPrinceGeorgeForest as a high priority for follow up (Table \@ref(tab:table-planning)). A map of the watershed including areas surveyed is provided in Attachment 1 – Map `r my_overview_info %>% pull(dbm_mof_50k_grid_map_tile)`.
 
 <br>
 
-The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map `r my_overview_info %>% pull(dbm_mof_50k_grid_map_tile)`.  At the time of the survey, the culvert  was considered a barrier to upstream fish passage with a length of ~`r my_pscis_info %>% pull(length_or_width_meters)`m, a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)` m and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert), Figure \@ref(fig:photo-outlet)). 
+**Stream Characteristics at Crossing**
+The habitat confirmation was completed on `r date`.   At the time of the survey, the culvert  was considered a barrier to upstream fish passage with a length of ~`r my_pscis_info %>% pull(length_or_width_meters)`m, a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)`m and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert), Figure \@ref(fig:photo-outlet)). There was a large, deep pool (`r my_pscis_info %>% pull(outlet_pool_depth_0_01m)`m) at the outlet of the culvert indicative of a severely confined channel.
 
 <br>
 
@@ -140,14 +146,20 @@ table_habitat_report %>% filter(Site == my_site) %>% pull(Comments)
 drake::readd(priorities_spreadsheet) %>% filter(site == my_site) %>% pull(comments_for_submission_with_fish_permit)
 ```
 
+**Stream Characteristics Downstream**
+The stream was surveyed downstream from the culvert for 325m.  Immediately downstream of the outlet pool the channel substrate was dominated by gravels with large woody debris abundant throughout (Figure \@ref(fig:photo-downstream1)).  Aproximatley 60m downstream of the crossing was an approximately 2m high breached historic beaver dam structure. Subsequent beaver dam structures resulted in a stream/wetland complex containing sometimes deep glide (up to 90 cm deep at time of survey) habitat (Figure \@ref(fig:photo-downstream2)).
 
-The stream was surveyed upstream from the culvert continuosly for 330m to a beaver influenced wetland area where walking became difficult (UTM:10N 577830 6038053).  The stream was accessed again from logging roads at points 1.6km upstream from the crossing then again at approximately 2.5km upstream of the crossing. The average channel width was `r my_habitat_info %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). Undercut banks, large woody debris and overhanging vegetation were abundant througout the surveyed area and gravels suitable for spawning were located within all upstream areas surveyed (Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream2). An unmanned aerial vehicle was utilized to capture footage of upstream habitat and is available [here at this link](https://www.youtube.com/watch?v=BT6cEmNK3f4).  Minnowtrapping was conducted upstream of the crossing with no fish captured. An upstream crossing location was 
+
+<br>
+
+**Stream Characteristics Upstream**
+The stream was surveyed upstream from the culvert continuosly for 330m to a beaver influenced wetland area where walking became difficult (UTM:10N 577830 6038053).  The stream was accessed again from logging roads at points 1.6km upstream from the crossing then again at approximately 2.5km upstream of the crossing. The average channel width was `r my_habitat_info %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). Undercut banks, large woody debris and overhanging vegetation were abundant througout the surveyed area and gravels suitable for spawning were located within all upstream areas surveyed (Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream2). An unmanned aerial vehicle was utilized to capture footage of upstream habitat and is available [here at this link](https://www.youtube.com/watch?v=BT6cEmNK3f4).  Minnowtrapping was conducted upstream of the crossing with no fish captured. One culvert on and upstream tributary (modelled crossing 16604087) was asessed and determined to be a barrier 
 
 <br>
 
 
 
-Overall it was ranked as a `r tolower(my_priority)` for rehabilitation.
+Overall it was ranked as a `r tolower(my_priority_info %>% pull(priority))` for rehabilitation.
 
 <br>
 
@@ -191,6 +203,20 @@ table_habitat_html()
 # list.files(paste0('data/photos/', my_site, '/'))
 # my_site
 ```
+
+<br>
+
+```{r photo-aerial, fig.cap= caption}
+caption = paste0('Aerial view of PSCIS crossing ', my_site, '.')
+
+img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/outlet.JPG'))
+grid::grid.raster(img)
+
+
+# knitr::include_graphics(paste0('data/photos/', my_site, '/outlet.JPG'))
+```
+
+
 <br>
 
 ```{r photo-outlet, fig.cap= caption}
@@ -201,6 +227,33 @@ grid::grid.raster(img)
 
 
 # knitr::include_graphics(paste0('data/photos/', my_site, '/outlet.JPG'))
+```
+
+<br>
+
+```{r photo-downstream1, fig.cap= caption, eval=F}
+caption = paste0('View of habitat immediately downstream of PSCIS crossing ', my_site, '.')
+
+img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/DSCF4502.JPG'))
+grid::grid.raster(img)
+```
+
+<br>
+
+```{r photo-downstream2, fig.cap= caption, eval=F}
+caption = paste0('View of habitat downstream of PSCIS crossing ', my_site, '.')
+
+img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/DSCF4508.JPG'))
+grid::grid.raster(img)
+```
+
+<br>
+
+```{r photo-downstream3, fig.cap= caption, eval=F}
+caption = paste0('View of habitat downstream of PSCIS crossing ', my_site, '.')
+
+img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/DSCF4511.JPG'))
+grid::grid.raster(img)
 ```
 
 
