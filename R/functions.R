@@ -49,13 +49,22 @@ fit_to_page <- function(ft, pgwidth = 6.75){
 }
 
 
+# my_flextable <- function(df, left_just_col = 2, ...){
+#   flextable::autofit(flextable::flextable(
+#     df,
+#     defaults = list(fontname = 'tahoma'))) %>% 
+#     flextable::my_theme_booktabs(left_just_cols = left_just_col, ...) %>% 
+#     fit_to_page()
+#   }
+
 my_flextable <- function(df, left_just_col = 2, ...){
   flextable::autofit(flextable::flextable(
     df,
     defaults = list(fontname = 'tahoma'))) %>% 
-    flextable::my_theme_booktabs(left_just_cols = left_just_col, ...) %>% 
+    flextable::my_theme_booktabs(fontsize = 9) %>% 
     fit_to_page()
-  }
+}
+
 
 # my_flextable_landscape <- function(df, left_just_col = 2, ...){  ##not useing this function at this point
 #   flextable::autofit(flextable::flextable(
