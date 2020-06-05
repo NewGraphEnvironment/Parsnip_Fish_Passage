@@ -1,10 +1,10 @@
 ---
-title: "Habitat Confirmation Report"
+title: "Habitat Confirmation"
 output:
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
-    toc: yes
+    toc: no
     fig_caption: yes
   bookdown::html_document2:
     number_sections: no
@@ -13,7 +13,7 @@ bibliography: references.bib
 csl: apa.csl
 ---
 
-```{r setup, include=FALSE, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
@@ -29,17 +29,25 @@ conn <- dbConnect(drv,
                   user = 'postgres',
                   password = 'postgres')
 
-knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, connection = "conn")
+knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, 
+                      connection = "conn", fig.align="center", fig.width = 5.118, fig.height = 3.409)
 options(knitr.table.format = "html")
 
 ```
 
+
+
+```{r}
+my_site <- '57681'
+title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
+```
+
+###### **PSCIS Crossing `r my_site`**
 ```{r}
 # test <- pull_data(sheet = loc_data, site = my_site)
-
-my_site <- '57681'
 my_site2 <- '125353'
-drake::loadd(table_habitat_report, table_culvert, table_overview_report)
+drake::loadd(table_habitat_report, table_culvert, table_overview_report, 
+             table_habitat_raw, table_planning, priorities_spreadsheet)
 
 ```
 
@@ -51,7 +59,7 @@ my_planning_data <- sf::st_read(conn, query = query) %>%
 ```
 
 ```{r pull-info}
-loadd(PSCIS_submission, table_overview_raw, priorities_spreadsheet)
+loadd(PSCIS_submission, table_habitat_raw, table_overview_raw, priorities_spreadsheet)
 lake <- my_planning_data %>% filter(stream_crossing_id == my_site) %>% mutate(lake = round(upstr_alake_gross_obs + upstr_alake_gross_inf),1) %>% pull(lake)
 wetland <- table_overview_raw %>% filter(site == my_site) %>% mutate(lake = round(upstr_alake_gross_obs + upstr_alake_gross_inf),1) %>% pull(lake)
 stream <- table_overview_raw %>% filter(site == my_site) %>% mutate(stream = round(uphab_gross_sub22)) %>% pull(stream)
@@ -67,12 +75,14 @@ my_fill_depth <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% p
 my_culvert_width <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(fill_depth_meters)
 my_distance_upstream <- priorities_spreadsheet %>% filter(site == my_site & location == 'us') %>% pull(length)
 my_habitat_value <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(habitat_value)
+my_channel_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_channel_width_m)
+my_wetted_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_wetted_width_m)
+my_gradient <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(average_gradient_percent)
+my_priority <- priorities_spreadsheet %>% filter(site == my_site) %>% pull(priority)
 ```
 
 
-<br>
-
-In the spring and summer of 2019, New Graph Environment (in collaboration with the Society for Ecosystem Restoration Northern BC, Hillcrest Geographics and the McLeod Lake Indian Band) conducted a literature and database review for the Parsnip River watershed to identify candidates for Fish Habitat Confirmation Assessments related to fish passage restoration planning.  Crossings identified as known or potential barriers to fish passage in the Provincial Stream Crossing Inventory Database (PSCIS) were analyzed within the context of the British Columbia Fish Habitat Model [@fish_habitat_model] and background fisheries information to identify crossings with potentially high fisheries value as well as large amounts of potential habitat upstream and prioritize these for further assessment. Prioritization rankings were assigned based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, at the crossing; and recommendations of past fish passage assessments [@gollnerPrinceGeorgeTimber2013].
+In the spring and summer of 2019, the Society for Ecosystem Restoration Northern BC (in collaboration with Hillcrest Geographics and the McLeod Lake Indian Band) conducted a literature and database review for the Parsnip River watershed to identify candidates for Fish Habitat Confirmation Assessments related to fish passage restoration planning.  Crossings identified as known or potential barriers to fish passage in the Provincial Stream Crossing Inventory Database (PSCIS) were analyzed within the context of the British Columbia Fish Habitat Model [@fish_habitat_model] and background fisheries information to identify crossings with potentially high fisheries value as well as large amounts of potential habitat upstream and prioritize these for further assessment. Prioritization rankings were assigned based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, at the crossing; and recommendations of past fish passage assessments [@gollnerPrinceGeorgeTimber2013].
 
 <br>
 
@@ -81,21 +91,11 @@ The habitat confirmation was completed in accordance with procedures outlined in
 
 <br>
 
-
+`r ##need to have 2 breaks with a space between to get bottom border of table to print thick - no idea why`
 
 <br>
 
 ```{r tablehabvalue, eval=T}
-##need to have 2 breaks with a space between to get bottom border of table to print thick - no idea why
-
-
-# tablehabvalue <- tibble::tibble(`Habitat Value` = c('High', 'Medium', 'Low'),
-#                                        `Fish Habitat Criteria` = c(
-#                                          'The presence of high value spawning or rearing habitat (e.g., locations with abundance of suitably sized gravels, deep pools, undercut banks, or stable debris) which are critical to the fish population.', 
-#                                          'Important migration corridor. Presence of suitable spawning habitat. Habitat with moderate rearing potential for the fish species present.', 'No suitable spawning habitat, and habitat with low rearing potential (e.g., locations without deep pools, undercut banks, or stable debris, and with little or no suitably sized spawning gravels for the fish species present).'
-#                                          )
-#                                 )
-
 if(knitr::is_html_output() == TRUE){
   knitr::kable(tablehabvalue,
                caption = 'Habitat value criteria (Fish Passage Technical Working Group, 2011).') %>% 
@@ -106,53 +106,36 @@ if(knitr::is_html_output() == TRUE){
 
 ```
 
+<br>
+
+The culvert is located on a `r stream_name` under `r my_road` immediately upstream of the confluence with the Parsnip Riverand approximatley 2.5 km north-east of Tacheeda Lakes  (Table \@ref(tab:tableoverview)) . At the time of the field surveys, the FSR had heavy traffic associated with the Gaslink Pipeline construction project.  One of the remote camps for the pipeline project was located approximatley 1.5 km up the FSR from the crossing location. 
+
+<br>
+
+The stream drains Goose Lake with Burbot, Sculpin, Lake Chub, Mountain Whitefish, Rainbow Trout, Redsider Shiner and Suckers recorded upstream [@data_fish_obs]. Goose Lake is located on the west side of the Parsnip River, is approximately 75 ha in area, sits at an elevation of approximatley 800 m and drains tributary watersheds with elevations reaching near 1000 m. Goose Lake was stocked with Rainbow Trout on eight occassions since 1982, with the last stocking event occuring in 2002 [@FishInventoriesData2020]. Stocking was discontinued in 2002 as the lake was more suitably managed as a wild fishery because the risks associated with possible genetic introgressions with native stocks outweighed the likely benefits of the stocking program @clarkeOminecaRegionStocked2005.  There are no other stream crossing (culvert) barriers on the mainstem of the stream between the FSR and Goose Lake which is located 7 km upstream of the culverts. 
+
+
+
+<br>
+
+Following office review, PSCIS stream crossing `r my_site` located on a `r stream_name` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to upstream lake/wetland (`r lake`ha) and instream (`r stream`km) habitat and because it was ranked by @gollnerPrinceGeorgeTimber2013 as a high priority for follow up (Table \@ref(tab:table-planning)). 
+
+<br>
+
+The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map `r mapsheet`.  At the time of the survey, the culvert under the CN Railway and the Chuchinka-Colbourne FSR was considered a barrier to upstream fish passage with a length of ~`r my_culvert_length` m, an average depth of fill on top of the culvert of `r my_fill_depth` m and an outlet drop of `r my_outlet_drop`m (Table \@ref(tab:tableculvert), Figure \@ref(fig:photo-outlet)). 
 
 <br>
 
 
-Following office review, PSCIS stream crossing `r my_site` located on a `r stream_name` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to upstream lake/wetland (`r lake` ha) and instream (`r stream` km) habitat and because it was ranked as a high priority for follow up in @gollnerPrinceGeorgeTimber2013. A map of the watershed including areas surveyed is provided in Attachment 1 – Map `r mapsheet`.  
+```{r eval=F}
+##this is useful to get some comments for the report
 
+table_habitat_report %>% filter(Site == my_site) %>% pull(Comments)
 
-```{r tableplan1, eval= FALSE}
-##could doctor this to have just the fish habitat model outputs I guess... not sure.
-
-##this should be going just in an appendix as it has errors from old pscis info.  lets just stuff in appendix and call it done.Left here for reference.
-
-##eval = knitr::is_html_output()
-if(knitr::is_html_output() == TRUE){
-select(drake::readd(table_planning),
-                    -stream_word, -`Map 50k`) %>% 
-  filter(Site == my_site) %>% 
-  rename(`Map 50k` = map_linked) %>% 
-  knitr::kable(caption = 'Historic PSCIS photos, PSCIS details, planning maps, Fish Habitat Model outputs and prioritization rank/comments for crossings ranked for follow up with habitat confirmation assessments.') %>% 
-  kableExtra::column_spec(column = 12, width_min = '2in') %>% 
-  kableExtra::kable_styling(c("condensed"), full_width = T) 
-  # kableExtra::scroll_box(width = "100%", height = "500px")
-  } else 
-    {
-    select(drake::readd(table_planning),
-                                     -Stream, -map_linked) %>% 
-  rename(Stream = stream_word) %>%
-  filter(Site == my_site) %>% 
-  flextable::flextable() %>%
-  flextable::my_theme_booktabs(fontsize = 8, left_just_cols = 2) %>%
-  # flextable::autofit() %>%
-  fit_to_page(pgwidth =  9.44) %>%  
-  flextable::width( j = 1:11, width = 0.658) %>%
-  flextable::width(., j = 12, width = 2.2) %>%
-  flextable::set_caption('Historic PSCIS details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.')
-  }
-  
-##caption = 'Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.'
 ```
 
-<br>
 
-The culvert is located on a `r stream_name` under `r my_road` immediately upstream of the confluence with the Parsnip River (`r my_utm`) and approximatley 2.5 km north-east of Tacheeda Lakes. At the time of the field surveys, the FSR had heavy traffic associated with the Gaslink Pipeline construction project.  One of the remote camps for the pipeline project was located approximatley 1.5 km up the FSR from the crossing location.  
-
-<br>
-
-The stream drains Goose Lake with Burbot, Sculpin, Lake Chub, Mountain Whitefish, Rainbow Trout, Redsider Shiner and Suckers recorded upstream [@FishInventoriesData2020]. Goose Lake is located on the west side of the Parsnip River, is approximately 75 ha in area, sits at an elevation of approximatley 800 m and drains tributary watersheds with elevations reaching near 1000 m. Goose Lake was stocked with Rainbow Trout on eight occassions since 1982, with the last stocking event occuring in 2002 [@FishInventoriesData2020]. Stocking was discontinued in 2002 as the lake was more suitably managed as a wild fishery because the risks associated with possible genetic introgressions with native stocks outweighed the likely benefits of the stocking program @clarkeOminecaRegionStocked2005.  There are no other stream crossing (culvert) barriers on the mainstem of the stream between the FSR and Goose Lake which is located 7 km upstream of the culverts. 
+The stream was surveyed upstream of the crossing for a distance of `r my_distance_upstream` m. No obstacles to fish passage were observed in the area surveyed.  Numerous young of year and parr salmonids (suspect Rainbow Trout) were observed. The average channel width was `r my_channel_width`m, the average wetted width was `r my_wetted_width`m and the average gradient was `r my_gradient`% (Table \@ref(tab:tablehabitat), Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream2)). Small woody debris, overhanging vegetation and undercut banks were abundant throughout the surveyed area. Occasional pockets of gravels were present suitable for spawning resident salmonids.  Minnowtrapping was conducted with Rainbow Trout captured upstream of the culvert and Burbot and Rainbow Trout captured downstream of the culvert. Overall the habitat upstream of the crossing was considered `r tolower(my_habitat_value)` due to the relatively low elevation of the watershed. Replacing the crossing would require a collaboration between CN Rail and FLNRORD with relatively high expected overall costs due to the length of the structure and the large amount of fill present over the culvert. Overall it was ranked as a `r tolower(my_priority)` for rehabilitation.
 
 <br>
 
@@ -166,9 +149,18 @@ if(knitr::is_html_output() == TRUE){
 
 <br>
 
-The habitat confirmation was completed on `r date`. At the time of the survey, the culvert under the CN Railway and the Chuchinka-Colbourne FSR was considered a barrier to upstream fish passage with a length of ~`r my_culvert_length` m, an average depth of fill on top of the culvert of `r my_fill_depth` m and an outlet drop of `r my_outlet_drop` m (Table \@ref(tab:tableculvert)). 
+```{r table-planning, eval= T}
 
+if(knitr::is_html_output() == TRUE){
+  table_planning_html()
+} else table_planning_flextable()
+
+
+```
+
+ 
 <br>
+
 
 ```{r tableculvert, eval=T}
 if(knitr::is_html_output() == TRUE){
@@ -177,26 +169,46 @@ table_culvert_html()
   
 ```
 
-<br>
-
-The stream was surveyed upstream of the crossing for a distance of `r my_distance_upstream` m. No obstacles to fish passage were observed in the area of stream surveyed.  Numerous young of year and parr salmonids (suspect Rainbow Trout) were observed.  Habitat value was considered `r my_habitat_value` with  (Table \@ref(tab:tablehabitat)).
 
 <br>
 
 ```{r tablehabitat, eval=T}
-
 if(knitr::is_html_output() == TRUE){
-  table_habitat_html()
-} else table_habitat_flextable()
+table_habitat_html()
+  } else table_habitat_flextable()
 
+# list.files(paste0('data/photos/', my_site, '/'))
+# my_site
+```
+<br>
+
+```{r photo-outlet, fig.cap= caption}
+caption = paste0('Outlet of PSCIS crossing ', my_site, '.')
+
+img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/outlet.JPG'))
+grid::grid.raster(img)
+
+
+# knitr::include_graphics(paste0('data/photos/', my_site, '/outlet.JPG'))
+```
+
+
+<br>
+
+```{r photo-upstream1, fig.cap= caption}
+caption = paste0('View of habitat upstream of PSCIS crossing ', my_site, '.')
+
+img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/DSCF4873.JPG'))
+grid::grid.raster(img)
 ```
 
 <br>
 
+```{r photo-upstream2, fig.cap= caption}
+caption = paste0('View of habitat upstream of PSCIS crossing ', my_site, '.')
 
-```{r}
-#### Put in your css file or directly in rmarkdown
-# https://stackoverflow.com/questions/31753897/2-column-section-in-r-markdown
+img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/DSCF4871.JPG'))
+grid::grid.raster(img)
 ```
 
 
@@ -205,5 +217,11 @@ dbDisconnect(conn = conn)
 
 # rmarkdown::render(input = 'Parsnip_report_crossing_appendices.Rmd', output_file = 'test.html')
 ```
+
+```{r eval=F}
+
+```
+
+<br>
 
 **References**
