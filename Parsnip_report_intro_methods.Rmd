@@ -220,7 +220,11 @@ table
 
 #### Bull Trout
 
-Bull Trout populations of the Williston Reservoir watershed are included within the Western Arctic 'Designatable Unit', which, in 2012, received a ranking of ‘Special Concern’ by the Committee on the Status of Endangered Wildlife in Canada  [@bt_cosewic].  A study of Bull Trout critical habitats in the Parsnip River was conducted in 2014 with the Misinchinka and Anzac systems identified as the most important systems for large bodied bull trout spawners accounting for a combined total of 65% of spawners counted.  The Table River was also highlighted as an important spawning destination accounting for an estimated 15% of the spawners.  Other watersheds identified as containing runs of large bodied Bull Trout spawners included the Colbourne, Reynolds, Hominka and Missinka River with potentially less than 50 spawners utilizing each sub-basin [@hagen_2015_critical_habs].  @bull_trout_synthesis have synthesized a large body of information regarding limiting factors, enhancement potential, critical habitats and conservation status for Bull Trout of the Williston Reservoir and the reader is encouraged to review this work for context.  They have recommended experimental enhancements within a monitoring framework for Williston Reservoir Bull Trout (some spawning and rearing in Parsnip River mainstem and tributaries) which include stream fertilization, side channel development, riparian restoration and fish access improvement.  
+Bull Trout populations of the Williston Reservoir watershed are included within the Western Arctic population 'Designatable Unit 10', which, in 2012, received a ranking of ‘Special Concern’ by the Committee on the Status of Endangered Wildlife in Canada  [@bt_cosewic].  They were added to Schedule 1 under the Species of Risk Act in 2019 [@speciesregistrycanadaBullTroutSalvelinus2020] and are also considered of special concern (blue-listed) provincially [@bcspeciesandecosystemexplorerSalvelinusConfluentusPop2020].  
+
+<br>
+
+A study of Bull Trout critical habitats in the Parsnip River was conducted in 2014 with the Misinchinka and Anzac systems identified as the most important systems for large bodied bull trout spawners accounting for a combined total of 65% of spawners counted.  The Table River was also highlighted as an important spawning destination accounting for an estimated 15% of the spawners.  Other watersheds identified as containing runs of large bodied Bull Trout spawners included the Colbourne, Reynolds, Hominka and Missinka River with potentially less than 50 spawners utilizing each sub-basin [@hagen_2015_critical_habs].  @bull_trout_synthesis have synthesized a large body of information regarding limiting factors, enhancement potential, critical habitats and conservation status for Bull Trout of the Williston Reservoir and the reader is encouraged to review this work for context.  They have recommended experimental enhancements within a monitoring framework for Williston Reservoir Bull Trout (some spawning and rearing in Parsnip River mainstem and tributaries) which include stream fertilization, side channel development, riparian restoration and fish access improvement.  
 
 <br>
 
@@ -237,7 +241,7 @@ A detailed review of Arctic Grayling life history can be referenced in @stamford
 
 <br>
 
-Migration of mature adult Arctic Grayling occurs in the spring with arrival at known spawning locations coinciding with water temperatures of 4 $^\circ$C.  Spawning in the Parsnip watershed appears to occur between late-May and late-June within sites located primarily within the lower reaches of the Anzac and Table rivers as well as within the Parsnip River mainstem. Side-channel and multiple-channel locations containing small gravels appear to be selected for spawning. Currently, the primary distribution of Williston Arctic Grayling appears to be among fourth order and larger streams [@williamson_2004; @stamfordFWCPArcticGrayling].   Although past study results indicate that 0+ grayling appeared to overwinter in lower reaches of larger tributaries (i.e. Table, Anzac rivers) as well as the Parsnip River and that few age-1+ grayling have been sampled in tributaries, habitat use in small tributaries and the extent they are connected with the mainstem habitats of all core areas is not well understood. Between 1995 and 2019, Arctic Grayling population monitoring has been conducted in the Table River in nine out of 25 years (8 years for the Anzac) using snorkel surveys.  Results from 2018 are 2019 are intended to contributing to assessment of the conservation status of the species in the Parsnip Core area [@hagenTrendAbundanceArctic2018].
+Migration of mature adult Arctic Grayling occurs in the spring with arrival at known spawning locations coinciding with water temperatures of 4$^\circ$C.  Spawning in the Parsnip watershed appears to occur between late-May and late-June within sites located primarily within the lower reaches of the Anzac and Table rivers as well as within the Parsnip River mainstem. Side-channel and multiple-channel locations containing small gravels appear to be selected for spawning. Currently, the primary distribution of Williston Arctic Grayling appears to be among fourth order and larger streams [@williamson_2004; @stamfordFWCPArcticGrayling]. @stewartFishLifeHistory2007 report that Arctic Grayling spawn in large and small tributaries to rivers and lakes, intermittent streams, within mainstem rivers as well as lakes, most commonly at tributary mouths.   Although past study results indicate that 0+ grayling appeared to overwinter in lower reaches of larger tributaries (i.e. Table, Anzac rivers) as well as the Parsnip River and that few age-1+ grayling have been sampled in tributaries, habitat use in small tributaries and the extent they are connected with the mainstem habitats of all core areas is not well understood. Between 1995 and 2019, Arctic Grayling population monitoring has been conducted in the Table River in nine out of 25 years (8 years for the Anzac) using snorkel surveys.  Results from 2018 are 2019 are intended to contributing to assessment of the conservation status of the species in the Parsnip Core area [@hagenTrendAbundanceArctic2018].
 
 <br>
 
@@ -318,11 +322,21 @@ pscis_fixed <-  pscis_planning %>%
 
 ```
 
-To identify priorities for crossing structure rehabilitation, background literature and the PSCIS database was reviewed for Parsnip River watershed streams and potential fish habitat associated with barrier and potential barrier culverts was analyzed within the context of outputs from the Fish Habitat Model [@fish_habitat_model]. The Fish Habitat Model was developed by the BC Ministry of Environment to provide estimates of the amount of fish habitat potentially located upstream of crossing locations.
+```{r extra-text}
+##extra text
+##In the spring and summer of 2019, the Society for Ecosystem Restoration Northern BC (in collaboration with Hillcrest Geographics and the McLeod Lake Indian Band) conducted a literature and database review for the Parsnip River watershed to identify candidates for Fish Habitat Confirmation Assessments related to fish passage restoration planning.
+
+# Crossings prioritized for habitat confimation field assessments were those identified as having potentially high fisheries value as well as potentially large amounts of habitat upstream. Prioritization rankings were assigned based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, near the crossing; stream order, previously recorded channel size and recommendations of past fish passage assessments [@gollnerPrinceGeorgeTimber2013; @hooftPrinceGeorgeForest].
+
+# Although  also prioritized crossings for future follow up, the report was not publicly accessible within provincial databases at the time of planning for 2019 field surveys and the PSCIS database contact was on leave.  The report has since been obtained and 
+```
+
+ 
+To identify priorities for crossing structure rehabilitation, background literature and the PSCIS database was reviewed for Parsnip River watershed streams and potential fish habitat associated with barrier and potential barrier culverts was analyzed within the context of outputs from the Fish Habitat Model [@fish_habitat_model] and associated watershed/fisheries information. The Fish Habitat Model was developed by the BC Ministry of Environment to provide estimates of the amount of fish habitat potentially located upstream of crossing locations. 
 
 <br>
 
-Past fish passage assessment reports for the Parsnip River watershed were first reviewed to identify crossing structure barriers previously ranked as high or moderate priorities for rehabilitation.  All crossings prioritized in past contractor reports underwent a detailed office review and ranking for follow up in the field.  To identify previously un-prioritized crossing structure barriers located on potentially high value streams, road crossing structures that met the following criteria in the Fish Habitat Model and/or PSCIS database also underwent a detailed review to rank crossings for Phase 2 - Habitat Confirmations.
+Past fish passage assessment reports for the Parsnip River watershed were first reviewed to identify crossing structure barriers previously ranked as priorities for rehabilitation in @gollnerPrinceGeorgeTimber2013 and @hooftPrinceGeorgeForest.  All crossings prioritized in @gollnerPrinceGeorgeTimber2013 and @hooftPrinceGeorgeForest underwent a detailed office review and ranking for follow up in the field. To identify previously un-prioritized crossing structure barriers located on potentially high value streams, road crossing structures that met the following criteria in the Fish Habitat Model and/or PSCIS database also underwent a detailed review to rank crossings for Phase 2 - Habitat Confirmations.
 
 <br>
 
@@ -334,6 +348,7 @@ Past fish passage assessment reports for the Parsnip River watershed were first 
  
 <br>
 
+
 A .kml file with crossing locations and rational for prioritizing for habitat confirmations was forwarded to provincial fish habitat biologists, McLeod Lake Indian Band staff, representatives from CN Rail, BC Timber Sales and Canfor Forest Products to provide an opportunity for review and scope for feedback.
 
 <br>
@@ -342,7 +357,33 @@ In the field, PSCIS crossings ranked as high priorities for follow-up were asses
 
 <br>
 
-Habitat confirmations were completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” (FPTWG 2011). The main objective was to confirm that upstream habitat quantity and quality is sufficient to justify remediation of the crossing to provide fish passage, and to determine if any obstructions exist below the crossing. Structure replacement can be justified if there is a large quantity of high value habitat upstream of crossing barriers provided there are no fish migration barriers immediately downstream or upstream of the crossing.
+Habitat confirmations were completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” (FPTWG 2011). The main objective of the field surveys was to document upstream habitat quantity and quality and to determine if any other obstructions exist above or below the crossing.  Habitat value was assessed based on channel morphology, flow characteristics (perennial, intermittent, ephemeral), the 
+presence/absence of deep  pools,un-embedded  boulders, substrate, woody debris, undercut banks, aquatic vegetation and overhanging riparian vegetation. Criteria used to rank habitat value is specified in @confirmation_checklist and summarized in Table \@ref(tab:tablehabvalue). 
+
+<br>
+
+Surveys were completed in accordance with procedures outlined in Resources Inventory Standards Committee (RIC) Fish and Fish Habitat Inventory Standards and Procedures [@bcfisheriesinformationservicesbranchReconnaissance200002001] with data collated on ["Site Cards"](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/laws-policies-standards-guidance/inventory-standards/aquatic-ecosystems) and submitted to the provincial database under scientific fish collection permit PG19-550935. Among others, habitat characteristics recorded included channel widths, wetted widths, residual pool depths, gradients, bankfull depths, stage, temperature, conductivity, pH, cover by type, substrate and channel morphology. When possible, the crew surveyed the stream downstream of the crossing to the point where fish presence had been previously confirmed. Any  potential  obstacles  to  fish  passage  were  inventoried  with  photos, physical  descriptions  and  locations  recorded on RIC site cards.  Surveyed routes were recorded using time-stamped handheld GPS units. When sites surveyed were located in areas near to where the subsequent day's surveys were planned, minnow-traps were set overnight to obtain fish sampling data.
+
+<br>
+
+`r ##need to have 2 breaks with a space between to get bottom border of table to print thick - no idea why`
+
+<br>
+
+```{r tablehabvalue, eval=T}
+# if(knitr::is_html_output() == TRUE){
+#   knitr::kable(tablehabvalue,
+#                caption = 'Habitat value criteria (Fish Passage Technical Working Group, 2011).') %>% 
+#     kableExtra::column_spec(column = 1, width_min = '1.5in') %>% 
+#     kableExtra::kable_styling(c("condensed"), full_width = T) 
+# } else table_habitat_value_flextable()  
+
+
+if(knitr::is_html_output() == TRUE){
+  table_habitat_value_html()
+} else table_habitat_value_flextable()
+```
+
 
 ```{r extra methods text}
 ##not includeing this right now
@@ -396,7 +437,7 @@ Review of the PSCIS database indicated that within the Parsnip River watershed, 
 
 <br>
 
-Habitat confirmation assessments were conducted between August 30, 2019 and September 8, 2019 by Allan Irvine, R.P.Bio, Jonathan St.John, R.P.Bio, Tyler Valle, Environmental Technician and Ken Solonas, Environmental Technician with 20 of the 26 crossings ranked as high priority for field review and one crossing ranked as moderate priority surveyed in the field.  Several crossings were surveyed briefly from the road with habitat confirmation assessments not completed due to passable conditions for downstream fish. Crossing 125149 was an overflow for an adjacent channel where a bridge was located, crossing 57621 had been replaced by a bridge and crossing 125261 was equipped with baffles and appeared passable to most life stages of salmonids at most flows. Seventeen habitat confirmations are presented in the "Overview Map" and "Overview Table" sections of this report.  A total of approximately 15 km of stream was assessed and fish sampling (primarily minnow trapping) was conducted upstream and downstream of six restoration candidate sites.  
+Habitat confirmation assessments were conducted between August 30, 2019 and September 8, 2019 by Allan Irvine, R.P.Bio, Jonathan St.Jean, R.P.Bio, Tyler Valle, Environmental Technician and Ken Solonas, Environmental Technician with 20 of the 26 crossings ranked as high priority for field review and one crossing ranked as moderate priority surveyed in the field.  Several crossings were surveyed briefly from the road with habitat confirmation assessments not completed due to passable conditions for downstream fish. Crossing 125149 was an overflow for an adjacent channel where a bridge was located, crossing 57621 had been replaced by a bridge and crossing 125261 was equipped with baffles and appeared passable to most life stages of salmonids at most flows. Seventeen habitat confirmations are presented in the "Overview Map" and "Overview Table" sections of this report.  A total of approximately 15 km of stream was assessed and fish sampling (primarily minnow trapping) was conducted upstream and downstream of six restoration candidate sites.  
 
 <br>
 
