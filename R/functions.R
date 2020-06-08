@@ -211,13 +211,16 @@ table_overview_html <- function(df = table_overview_report, site = my_site){
 }
 
 table_overview_html_all <- function(df){
-  reports_complete = c('125000', '125179', '125180', '125186', '125231')
+  reports_complete = c('125000', '125179', '125180', '125186', '125231') #this needs to be abstract
+  reports_complete_withzeros = c('57681')
   df %>% 
     mutate(Site = case_when(Site %in% reports_complete ~ paste0('[', Site, '](03_Parsnip_report_', Site, '.html)'),
-                                       TRUE ~ Site)) %>% 
+                                       TRUE ~ Site),
+           Site = case_when(Site %in% reports_complete_withzeros ~ paste0('[', Site, '](03_Parsnip_report_0', Site, '.html)'),
+                            TRUE ~ Site)) %>% 
     # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
     # filter(Site == my_site) %>% 
-    knitr::kable(caption = 'Overview of stream crossing.') %>% 
+    knitr::kable() %>%
     kableExtra::column_spec(column = 10, width_min = '2in') %>%
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
     kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
