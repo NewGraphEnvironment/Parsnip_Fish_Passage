@@ -214,17 +214,19 @@ table_overview_html_all <- function(df){
   reports_complete = c('125000', '125179', '125180', '125186', '125231') #this needs to be abstract
   reports_complete_withzeros = c('57681')
   df %>% 
-    mutate(Site = case_when(Site %in% reports_complete ~ paste0('[', Site, '](03_Parsnip_report_', Site, '.html)'),
+    mutate(Site = case_when(Site %in% reports_complete ~ paste0('**[', Site, '](03_Parsnip_report_', Site, '.html)**'),
                                        TRUE ~ Site),
-           Site = case_when(Site %in% reports_complete_withzeros ~ paste0('[', Site, '](03_Parsnip_report_0', Site, '.html)'),
+           Site = case_when(Site %in% reports_complete_withzeros ~ paste0('**[', Site, '](03_Parsnip_report_0', Site, '.html)**'),
                             TRUE ~ Site)) %>% 
+    rename(`*Habitat Gain (km)` = `Habitat Gain (km)`) %>% 
     # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
     # filter(Site == my_site) %>% 
     knitr::kable() %>%
-    kableExtra::column_spec(column = 10, width_min = '2in') %>%
-    kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
-    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
-  # kableExtra::scroll_box(width = "100%", height = "500px")
+    kableExtra::column_spec(column = 10, width_min = '4in') %>%
+    kableExtra::kable_styling(c("condensed"), full_width = T, font_size = 11) %>%
+    # kableExtra::footnote(general = ) %>% 
+    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;') %>% 
+    kableExtra::scroll_box(width = "100%", height = "500px")
 }
 
 ##function to trim up sheet and get names (was previously source from altools package)

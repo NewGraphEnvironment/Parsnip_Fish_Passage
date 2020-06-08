@@ -239,7 +239,7 @@ drake::loadd(table_overview_report)
 ```{r, eval = T}
 table_overview_html_all(df = table_overview_report)
 ```
-
+*Habitat gain based on Fish Habitat Model estimateds of linear stream length upstream of crossing with no section of modeled gradients >22% for 100m or more. Estimates currently not adjusted to indicate results from field surveys. Please see individual memos linked in Site column for refined estimates of potential habitat gained based on field surveys and conservative GIS estimates of upstream habitat in mainstem of stream only.
 
 ```{r, eval = F}
 filter(table_overview_report) %>%
