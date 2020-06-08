@@ -6,9 +6,8 @@ output:
 
 ```{r importdata, echo=FALSE}
 drake::loadd(tracks)
-drake::loadd(track_points)
 drake::loadd(c(site_location_data, habitat_data))
-source('R/packages.R')
+source('R/packages.R')  ##should clean up this area
 source('R/functions.R')
 
 # test <- pull_data(sheet = try)
@@ -98,8 +97,6 @@ This interactive report is in the early stages of development, is incomplete and
 <br>
 
 Please contact al@newgraphenvironment.com (2507771518) with feedback and any questions regarding the project. 
-
-
 
 
 <br>
@@ -238,7 +235,13 @@ Although readers are encouraged to use the interactive maps available here on th
 drake::loadd(table_overview_report)
 ```
 
-```{r}
+
+```{r, eval = T}
+table_overview_html_all(df = table_overview_report)
+```
+
+
+```{r, eval = F}
 filter(table_overview_report) %>%
   gt::gt() %>% 
   cols_width(
@@ -328,7 +331,7 @@ drake::readd(table_habitat_report) %>%
 ## High Priority Crossings {.tabset}
 
 ### Chuchinka-Arctic FSR {.tabset}
-Drone footage for habitat upstream of crossing 125000 is located [here at this link](https://www.youtube.com/watch?v=BT6cEmNK3f4) 
+Drone footage for habitat upstream of crossing 125000 is located [here at this link](https://www.youtube.com/watch?v=-foWvX1MSkg) 
 
 ```{r site125000}
 #### Tributary to Parsnip River - PSCIS 125000 
@@ -558,8 +561,8 @@ The field work procedures and preparation for this project are based on procedur
 ```{r include = FALSE,  message=FALSE}
 
 plot <- drake::r_vis_drake_graph(targets_only = TRUE, 
-                                 main = 'Interactive Workflow Diagram', 
-                                 build_times = "none")
+                                 main = 'Interactive Workflow Diagram' 
+                                 ) #build_times = "none"
 
 ```
 
