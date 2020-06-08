@@ -50,7 +50,7 @@ dbGetQuery(conn,
 dbGetQuery(conn,
            "SELECT column_name,data_type 
            FROM information_schema.columns 
-           WHERE table_name='modelled_habitat_potential'")
+           WHERE table_name='pscis_model_combined'")
 
 ##list the unique values in the column of a table
 dbGetQuery(conn,"SELECT DISTINCT(watershed_group_name)
@@ -195,12 +195,30 @@ fish_sampling_data_sf <- drake::readd(fish_sampling_data)  %>%
 sf::st_write(table_habitat_features, "./data/parsnip.gpkg", "habitat_features", update = TRUE)
 sf::st_write(fish_sampling_data_sf, "./data/parsnip.gpkg", "fish_sampling_data", update = TRUE)
 
-
-
 # write_csv(table_habitat_raw, 'data/table_habitat_raw.csv', na = "NA") ##this was how I did it before with raw inputs
 # write_csv(fish_sampling_data, 'data/fish_sampling_data.csv', na = "NA") ##this was how I did it before with raw inputs
 
+##this was removed from the plan as it was a bottleneck
+get_watershed <- function(fish_habitat_info){
+  mapply(fwapgr::fwa_watershed, blue_line_key = fish_habitat_info$blue_line_key,
+         downstream_route_measure = fish_habitat_info$downstream_route_measure_int) %>%
+    purrr::set_names(nm = fish_habitat_info$stream_crossing_id_either) 
+  # dplyr::bind_rows(.id = 'crossing_id')
+  
+}
 
+
+
+# wsheds <- drake::readd(crossing_watersheds) %>% purrr::list_modify('125098' = NULL) %>% data.table::rbindlist() #old way
+# sf::st_write(wsheds, "./data/parsnip.gpkg", "watersheds", update = TRUE) #old way
+
+##this function hits fwa api so is slow.  Should be done locally to speed up. sql on simons fwapg github
+crossing_watersheds <-  get_watershed(fish_habitat_info = drake::readd(fish_habitat_model_outputs)) %>% 
+  purrr::list_modify('125098' = NULL) %>%
+  data.table::rbindlist(idcol="crossing_id")
+sf::st_write(crossing_watersheds, "./data/parsnip.gpkg", "watersheds", delete_layer = T) ##untested but should work fine , update = TRUE
+
+st_layers("./data/parsnip.gpkg")
 
 
 

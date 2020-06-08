@@ -31,18 +31,18 @@ track_points2 <- dplyr::bind_cols(
   mutate(time = lubridate::as_datetime(time, tz="America/Vancouver")) ##put them in the same tz
 
 
-
-##i want an id of the track with the points
-track_id <- drake::readd(tracks_of_points) %>% 
-  bind_rows(.id = 'track_name') %>% 
-  as_tibble() %>% ##cannot do distinct when sf object
-  distinct(track_fid, track_seg_id, track_seg_point_id, .keep_all = T)
-
-##add the name of the track
-track_points2 <- left_join(track_points2,
-                           select(track_id,
-                                  track_name, track_fid, track_seg_id, track_seg_point_id),
-                           by = c('track_fid', 'track_seg_id', 'track_seg_point_id'))
+##-just pulled this out b/c broke wiht dplyr update
+# ##i want an id of the track with the points
+# track_id <- drake::readd(tracks_of_points) %>% 
+#   bind_rows(.id = 'track_name') %>% 
+#   as_tibble() %>% ##cannot do distinct when sf object
+#   distinct(track_fid, track_seg_id, track_seg_point_id, .keep_all = T)
+# 
+# ##add the name of the track
+# track_points2 <- left_join(track_points2,
+#                            select(track_id,
+#                                   track_name, track_fid, track_seg_id, track_seg_point_id),
+#                            by = c('track_fid', 'track_seg_id', 'track_seg_point_id'))
 
 
 
@@ -71,16 +71,17 @@ make_photo_metadata <- function(meta){
   meta_w_index <- bind_cols(meta,
                             indx_closest_point)
   meta_joined_to_tracks <- left_join(meta_w_index,
-            select(track_points2, track_name, rowname, time, ele, lon_gps_linked, lat_gps_linked),
+            select(track_points2, rowname, time, ele, lon_gps_linked, lat_gps_linked), ##pulled out track name
             by = c("gps_idx" = "rowname")) %>% 
     mutate(url  = paste0('https://raw.githubusercontent.com/NewGraphEnvironment/Parsnip_Fish_Passage/master/', 
                          sourcefile)) %>% 
-    select(crossing_id = directory, filename, createdate, gps_extracted_time = time, track_name, ele,
+    select(crossing_id = directory, filename, createdate, gps_extracted_time = time, ele,  ##pulled out track name
            gpslatitude, gpslongitude, lon_gps_linked, lat_gps_linked, imagedescription, model, url) %>% 
     mutate(lat_map = case_when(!is.na(gpslatitude) ~ gpslatitude,  ##use the gps from the camera when possible
                                TRUE ~ lat_gps_linked),
            lon_map = case_when(!is.na(gpslongitude) ~ gpslongitude,
-                               TRUE ~ lon_gps_linked)) %>% 
+                               TRUE ~ lon_gps_linked),
+           imagedescription = as.character(imagedescription)) %>% ##added this since it broke with dplyr update to 2.0
     mutate(crossing_id = basename(crossing_id))
   ##probably makes sense to just give the photos the crossing lat, lons when the photo is named upstream, downstream, inlet, outlet, barrel, aerial
   ##get lat lons for pscis
@@ -113,7 +114,7 @@ make_photo_metadata <- function(meta){
                             lon_pscis,
                           TRUE ~ lon_map)) %>% 
     mutate(time_diff = difftime(createdate, gps_extracted_time)) %>% 
-    select(crossing_id, filename, track_name, time_diff, 
+    select(crossing_id, filename, time_diff, ##pulled out track_name
            gpslatitude, lat_map, lat_gps_linked, lat_pscis,  gpslongitude, lon_map,
            lon_gps_linked,lon_pscis, everything(), 
            -geometry) %>% ##not sure this is necessary . read_csv doesn't like our file . 
@@ -142,7 +143,12 @@ make_photo_metadata <- function(meta){
                                  tools::file_path_sans_ext(filename) == 'aerial' ~
                                  lon_pscis,
                                TRUE ~ lon_map)
-           )
+           ) %>% 
+    sf::st_as_sf(coords = c("lon_map", "lat_map"), crs = 4326, remove = F) %>%
+    st_transform(crs = 26910) %>% 
+    mutate(easting = st_coordinates(.)[,1],
+           northing = st_coordinates(.)[,2]) %>% 
+    sf::st_set_geometry(NULL)
     }
 
 photo_metadata_processed <- photo_metadata_list %>% 

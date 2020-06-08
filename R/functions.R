@@ -1,41 +1,47 @@
-##filter the points
-make_tracks_of_points <- function(track_points, idx){
-  track_points %>% 
-    slice(min(idx):max(idx))
-}
+##things to do
+##deal with variable types and rounding issues on inport of spreadsheets
+##build reporting tables with shiny to allow user to choose parameters?
+##look at need for my_tracks.no longer linked to photo georeferenceing or use datatable for issue which triggered its pull
+##get method to transpose habitat_data so we can pull max, min, range etc values.and pull cover info by dominance category
 
-##turn points into a line for GPS tracks
-##from https://geocompr.github.io/geocompkg/articles/gps-tracks.html
-points2line_trajectory = function(p) {
-  c = st_coordinates(p)
-  i = seq(nrow(p) - 2)
-  l = purrr::map(i, ~ sf::st_linestring(c[.x:(.x + 1), ]))
-  s = purrr::map_dbl(i, function(x) {
-    geosphere::distHaversine(c[x, ], c[(x + 1), ]) /
-      as.numeric(p$time[x + 1] - p$time[x])
-  }
-  )
-  lfc = sf::st_sfc(l)
-  a = seq(length(lfc)) + 1 # sequence to subset
-  p_data = cbind(sf::st_set_geometry(p[a, ], NULL), s)
-  sf::st_sf(p_data, geometry = lfc)
-}
-
+# ##filter the points
+# make_tracks_of_points <- function(track_points, idx){
+#   track_points %>% 
+#     slice(min(idx):max(idx))
+# }
+# 
+# ##turn points into a line for GPS tracks
+# ##from https://geocompr.github.io/geocompkg/articles/gps-tracks.html
+# points2line_trajectory = function(p) {
+#   c = st_coordinates(p)
+#   i = seq(nrow(p) - 2)
+#   l = purrr::map(i, ~ sf::st_linestring(c[.x:(.x + 1), ]))
+#   s = purrr::map_dbl(i, function(x) {
+#     geosphere::distHaversine(c[x, ], c[(x + 1), ]) /
+#       as.numeric(p$time[x + 1] - p$time[x])
+#   }
+#   )
+#   lfc = sf::st_sfc(l)
+#   a = seq(length(lfc)) + 1 # sequence to subset
+#   p_data = cbind(sf::st_set_geometry(p[a, ], NULL), s)
+#   sf::st_sf(p_data, geometry = lfc)
+# }
+# 
 ##pull something from our data
 pull_data <- function(sheet, site, column = 'gazetted_name', direction = 'us'){
-  sheet %>% 
-    dplyr::filter(alias_local_name == paste0(site, '_', direction)) %>% 
+  sheet %>%
+    dplyr::filter(alias_local_name == paste0(site, '_', direction)) %>%
     dplyr::pull(column)
 }
-
-##pull UTM 
-pull_utm <- function(sheet, site){
-paste0(pull_data(sheet, site, column = 'utm_zone'), 
-       'U ',
-      pull_data(sheet, site, column = 'utm_easting'),
-      ' ',
-      pull_data(sheet, site, column = 'utm_northing'))
-}
+# 
+# ##pull UTM 
+# pull_utm <- function(sheet, site){
+# paste0(pull_data(sheet, site, column = 'utm_zone'), 
+#        'U ',
+#       pull_data(sheet, site, column = 'utm_easting'),
+#       ' ',
+#       pull_data(sheet, site, column = 'utm_northing'))
+# }
 
 ##set the default page size for flextable
 ##https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
@@ -49,14 +55,6 @@ fit_to_page <- function(ft, pgwidth = 6.75){
 }
 
 
-# my_flextable <- function(df, left_just_col = 2, ...){
-#   flextable::autofit(flextable::flextable(
-#     df,
-#     defaults = list(fontname = 'tahoma'))) %>% 
-#     flextable::my_theme_booktabs(left_just_cols = left_just_col, ...) %>% 
-#     fit_to_page()
-#   }
-
 my_flextable <- function(df, left_just_col = 2, ...){
   flextable::autofit(flextable::flextable(
     df,
@@ -65,14 +63,6 @@ my_flextable <- function(df, left_just_col = 2, ...){
     fit_to_page()
 }
 
-
-# my_flextable_landscape <- function(df, left_just_col = 2, ...){  ##not useing this function at this point
-#   flextable::autofit(flextable::flextable(
-#     df,
-#     defaults = list(fontname = 'tahoma'))) %>%
-#     flextable::my_theme_booktabs(left_just_cols = left_just_col) %>% 
-#     fit_to_page(pgwidth = 9) 
-# }
 
 ##-----------make table from hab assessment data
 make_table_habitat <- function(loc_dat, site_dat){
@@ -85,15 +75,15 @@ make_table_habitat <- function(loc_dat, site_dat){
            avg_wetted_width_m, average_residual_pool_depth_m,
            average_bankfull_depth_m,average_gradient_percent,
            bed_material_dominant, bed_material_subdominant, feature_type,
-           utm_zone, utm_easting, utm_northing) %>%
-    mutate_at(vars(avg_channel_width_m:average_gradient_percent), as.numeric) %>%
-    mutate_at(vars(avg_channel_width_m:average_gradient_percent), round, 2) %>%
-    mutate(average_gradient_percent = average_gradient_percent * 100) ,
+           utm_zone, utm_easting, utm_northing),
+    # mutate_at(vars(avg_channel_width_m:average_gradient_percent), as.numeric) %>%
+    # mutate_at(vars(avg_channel_width_m:average_bankfull_depth_m), round, 1) %>%
+    #   mutate(average_gradient_percent = round(average_gradient_percent * 100, 1)),##changed
+    # mutate(average_gradient_percent = average_gradient_percent * 100) ,
   by = c('alias_local_name' = 'local_name')) %>%
   tidyr::separate(alias_local_name, into = c('site', 'location'), remove = F) %>% 
     mutate(gazetted_names = stringr::str_replace_all(gazetted_names, 'Unnamed tributary', 'Trib')) 
 }
-
 
 ## -------make table habitat_report
 
@@ -214,6 +204,19 @@ table_overview_html <- function(df = table_overview_report, site = my_site){
   table_overview_report %>% 
     select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
     filter(Site == my_site) %>% 
+    knitr::kable(caption = 'Overview of stream crossing.') %>% 
+    kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
+    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
+  # kableExtra::scroll_box(width = "100%", height = "500px")
+}
+
+table_overview_html_all <- function(df){
+  reports_complete = c('125000', '125179', '125180', '125186', '125231')
+  df %>% 
+    mutate(Site = case_when(Site %in% reports_complete ~ paste0('[', Site, '](03_Parsnip_report_', Site, '.html)'),
+                                       TRUE ~ Site)) %>% 
+    # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
+    # filter(Site == my_site) %>% 
     knitr::kable(caption = 'Overview of stream crossing.') %>% 
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
     kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
@@ -499,7 +502,7 @@ get_fish_habitat_info <- function(priorities_spreadsheet){
   return(fish_habitat_info)
 }
 
-
+##this was removed from the plan as it was a bottleneck
 get_watershed <- function(fish_habitat_info){
   mapply(fwapgr::fwa_watershed, blue_line_key = fish_habitat_info$blue_line_key,
          downstream_route_measure = fish_habitat_info$downstream_route_measure_int) %>%
@@ -507,5 +510,19 @@ get_watershed <- function(fish_habitat_info){
     # dplyr::bind_rows(.id = 'crossing_id')
 
 }
+
+####--------------------------for appendix memos
+get_photo_utm <- function(site = my_site, photo = my_photo){
+  photo_metadata %>% 
+    filter(crossing_id == site & filename == photo) %>% 
+    mutate(utm = paste0('UTM: 10N ', round(easting,0), " ", round(northing,0))) %>% 
+    pull(utm)
+}
+
+get_img <- function(site = my_site, photo = my_photo){
+  jpeg::readJPEG(paste0('data/photos/', site, '/', photo))
+}
+
+at_na_remove <- function(x) x[!is.na(x)]
 
 
