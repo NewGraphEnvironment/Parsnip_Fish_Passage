@@ -1,0 +1,21 @@
+SELECT DISTINCT ON (pscis_model_combined_id)
+    a.pscis_model_combined_id, 
+    a.linear_feature_id,
+    b.watershed_code_50k,
+    substring(b.watershed_code_50k from 1 for 3)
+      ||'-'||substring(b.watershed_code_50k from 4 for 6)
+      ||'-'||substring(b.watershed_code_50k from 10 for 6)
+      ||'-'||substring(b.watershed_code_50k from 16 for 6)
+      ||'-'||substring(b.watershed_code_50k from 24 for 6)
+      ||'-'||substring(b.watershed_code_50k from 30 for 6)
+      ||'-'||substring(b.watershed_code_50k from 36 for 6) as watershed_code_50k_parsed,
+    b.blue_line_key_20k,
+    b.watershed_key_20k,
+    b.blue_line_key_50k,
+    b.watershed_key_50k,
+    b.match_type
+FROM fish_passage.pscis_model_combined a
+LEFT OUTER JOIN whse_basemapping.fwa_streams_20k_50k b
+ON a.linear_feature_id = b.linear_feature_id_20k
+WHERE a.watershed_group_code = 'PARS'
+ORDER BY a.pscis_model_combined_id, b.match_type;

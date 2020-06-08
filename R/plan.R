@@ -7,10 +7,13 @@ plan1 <- drake_plan(
         path = "./data/parsnip_habitat_assessments.xls", 
         .name_repair = janitor::make_clean_names) %>% 
     purrr::set_names(janitor::make_clean_names(names(.))) %>% 
-    purrr::map(at_trim_xlsheet2),  #moved to functions from https://github.com/NewGraphEnvironment/altools to reduce dependencies
+    purrr::map(at_trim_xlsheet2) %>% #moved to functions from https://github.com/NewGraphEnvironment/altools to reduce dependencies
+    purrr::map(plyr::colwise(type.convert)),  #change 1
   habitat_data = fish_data_submission %>% 
     purrr::pluck("step_4_stream_site_data") %>% 
-    tidyr::separate(local_name, into = c('site', 'location'), remove = F), 
+    tidyr::separate(local_name, into = c('site', 'location'), remove = F) %>% 
+    mutate(average_gradient_percent = round(average_gradient_percent * 100, 1)) %>% 
+    mutate_if(is.numeric, round, 1), ##change 2
   site_location_data = fish_data_submission %>% 
     purrr::pluck("step_1_ref_and_loc_info") %>% 
     dplyr::filter(!is.na(site_number))%>% 
@@ -36,17 +39,17 @@ plan1 <- drake_plan(
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
   track_points = read_sf(file_in("./data/field_cleaned.gpx"), layer = "track_points") %>% 
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
-  track_point_idx_list = sf::st_intersects(tracks, track_points) %>% 
-    purrr::set_names(., nm = pull(tracks, name)),
-  tracks_of_points = lapply(track_point_idx_list, 
-                            make_tracks_of_points, track_points = track_points),
-  my_tracks = tracks_of_points %>% 
-    map(points2line_trajectory),  ##convert our points to lines
+  # track_point_idx_list = sf::st_intersects(tracks, track_points) %>% 
+  #   purrr::set_names(., nm = pull(tracks, name)),
+  # tracks_of_points = lapply(track_point_idx_list, 
+  #                           make_tracks_of_points, track_points = track_points),
+  # my_tracks = tracks_of_points %>% 
+  #   map(points2line_trajectory),  ##convert our points to lines
   photo_metadata = readr::read_csv(file = 'data/photo_metadata.csv'),
   forest_tenure_road_lines = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
   table_planning = make_table_planning(planning_data),
-  crossing_watersheds = get_watershed(fish_habitat_info = fish_habitat_model_outputs),
+  crossing_watersheds = sf::st_read("data/parsnip.gpkg", layer = "watersheds"),
   ##REMOVED THE HYDROGRAPHs from the plan and intro_methods file to allow report production using png outputs only
   ##now make the report
     report = rmarkdown::render(
