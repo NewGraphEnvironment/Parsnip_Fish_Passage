@@ -17,20 +17,13 @@ csl: apa.csl
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
-source('R/packages.R')
-source('R/functions.R')
+# source('R/packages.R')
+# source('R/functions.R')
 # 
-#establish connection with database
-drv <- dbDriver("PostgreSQL")
-conn <- dbConnect(drv,
-                  dbname = 'postgis',
-                  host = 'localhost',
-                  port = '5432',
-                  user = 'postgres',
-                  password = 'postgres')
+
 
 knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, 
-                      connection = "conn", fig.align="center", fig.width = 5.118, fig.height = 3.409)
+                      fig.align="center", fig.width = 5.118, fig.height = 3.409)
 options(knitr.table.format = "html")
 
 drake::loadd(table_habitat_report, table_culvert, table_overview_report, ##we don't need most of these now
@@ -42,6 +35,7 @@ drake::loadd(table_habitat_report, table_culvert, table_overview_report, ##we do
 
 
 ```{r load-data}
+
 my_site <- '125000'
 title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 my_overview_info <- drake::readd(table_overview_raw) %>% filter(site == my_site & location == 'Upstream')
@@ -152,7 +146,7 @@ There is approximately 3km of high value mainstem habitat available upstream of 
 ```{r tableoverview, eval=T}
 
 if(knitr::is_html_output() == TRUE){
-  table_overview_html()
+  table_overview_html(df = table_overview_report)
 }else table_overview_flextable()
 ```
 
@@ -161,7 +155,7 @@ if(knitr::is_html_output() == TRUE){
 ```{r table-planning, eval= T}
 
 if(knitr::is_html_output() == TRUE){
-  table_planning_html()
+  table_planning_html(df = table_planning)
 } else table_planning_flextable()
 
 ```
@@ -172,7 +166,7 @@ if(knitr::is_html_output() == TRUE){
 
 ```{r tableculvert, eval=T}
 if(knitr::is_html_output() == TRUE){
-table_culvert_html()
+table_culvert_html(df = table_culvert)
   } else table_culvert_flextable()
   
 ```
@@ -182,7 +176,7 @@ table_culvert_html()
 
 ```{r tablehabitat, eval=T}
 if(knitr::is_html_output() == TRUE){
-table_habitat_html()
+table_habitat_html(df = table_habitat_report)
   } else table_habitat_flextable()
 
 # list.files(paste0('data/photos/', my_site, '/'))
@@ -192,10 +186,10 @@ table_habitat_html()
 <br>
 
 ```{r photo-aerial, fig.cap= caption}
-
+# photo_metadata <- drake::readd(photo_metadata)
 my_photo = 'aerial.jpg'
-my_photo_utm <- get_photo_utm()
-caption = paste0('Aerial view of PSCIS crossing ', my_site, ' (', my_photo_utm, ')','.')
+# my_photo_utm <- get_photo_utm(photo_metadata, site = my_site, photo = my_photo)
+caption = paste0('Aerial view of PSCIS crossing ', my_site, ' (', get_photo_utm(), ')','.')
 
 
 img <- jpeg::readJPEG(paste0('data/photos/', my_site, '/', my_photo))
@@ -211,7 +205,6 @@ grid::grid.raster(img)
 ```{r photo-outlet, fig.cap= caption}
 
 my_photo = 'outlet.JPG'
-
 caption = paste0('Outlet of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
 
 grid::grid.raster(get_img())
@@ -301,7 +294,9 @@ grid::grid.raster(get_img(site = '16604087'))
 
 
 ```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
-dbDisconnect(conn = conn)
+
+rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
+                    output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
 
 # rmarkdown::render(input = 'Parsnip_report_crossing_appendices.Rmd', output_file = 'test.html')
 ```

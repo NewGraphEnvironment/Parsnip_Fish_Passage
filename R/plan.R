@@ -48,8 +48,9 @@ plan1 <- drake_plan(
   photo_metadata = readr::read_csv(file = 'data/photo_metadata.csv'),
   forest_tenure_road_lines = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
-  table_planning = make_table_planning(planning_data),
+  table_planning = make_table_planning(planning_data = planning_data),
   crossing_watersheds = sf::st_read("data/parsnip.gpkg", layer = "watersheds"),
+  # reports_complete = c('125000', '125179', '125180', '125186', '125231'),
   ##REMOVED THE HYDROGRAPHs from the plan and intro_methods file to allow report production using png outputs only
   ##now make the report
     report = rmarkdown::render(

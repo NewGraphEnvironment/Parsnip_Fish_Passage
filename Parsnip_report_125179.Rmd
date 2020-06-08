@@ -1,14 +1,14 @@
 ---
 title: 
 output:
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: no
     fig_caption: yes
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
 bibliography: references.bib
 csl: apa.csl
 ---
@@ -21,16 +21,10 @@ source('R/packages.R')
 source('R/functions.R')
 # 
 #establish connection with database
-drv <- dbDriver("PostgreSQL")
-conn <- dbConnect(drv,
-                  dbname = 'postgis',
-                  host = 'localhost',
-                  port = '5432',
-                  user = 'postgres',
-                  password = 'postgres')
+
 
 knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, 
-                      connection = "conn", fig.align="center", fig.width = 5.118, fig.height = 3.409)
+                      fig.align="center", fig.width = 5.118, fig.height = 3.409)
 options(knitr.table.format = "html")
 
 drake::loadd(table_habitat_report, table_culvert, table_overview_report, ##we don't need most of these now
@@ -261,10 +255,9 @@ grid::grid.raster(get_img())
 
 
 
-```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
-dbDisconnect(conn = conn)
-
-# rmarkdown::render(input = 'Parsnip_report_crossing_appendices.Rmd', output_file = 'test.html')
+```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE, eval = F}
+rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
+                    output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
 ```
 
 <br>

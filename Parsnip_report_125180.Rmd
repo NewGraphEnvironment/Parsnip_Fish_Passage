@@ -261,10 +261,9 @@ grid::grid.raster(get_img())
 
 
 
-```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
-dbDisconnect(conn = conn)
-
-# rmarkdown::render(input = 'Parsnip_report_crossing_appendices.Rmd', output_file = 'test.html')
+```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE, eval = F}
+rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
+                    output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
 ```
 
 <br>

@@ -163,7 +163,7 @@ table_habitat_flextable <- function(df = table_habitat_report, site = my_site, .
 
 table_habitat_html <- function(df = table_habitat_report, site = my_site){
   df %>% 
-    filter(Site == my_site) %>% 
+    filter(Site == site) %>% 
     select(-Comments) %>% 
     knitr::kable(caption = 'Summary of habitat details') %>% 
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
@@ -184,7 +184,7 @@ table_culvert_flextable <- function(df = table_culvert, site = my_site){
 
 table_culvert_html <- function(df = table_culvert, site = my_site){
   df %>% 
-    filter(Site == my_site) %>% 
+    filter(Site == site) %>% 
     select(-Score) %>% 
     knitr::kable(caption = 'Summary of culvert fish passage assessment.') %>% 
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
@@ -194,16 +194,16 @@ table_culvert_html <- function(df = table_culvert, site = my_site){
 table_overview_flextable <- function(df = table_overview_report, site = my_site){
   df %>% 
     select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>%
-    filter(Site == my_site) %>%
+    filter(Site == site) %>%
     my_flextable(fontsize = 8) %>% 
     flextable::width(j = c(1,7), width = 0.658) %>%
     flextable::set_caption('Overview of stream crossing.')
 }
 
 table_overview_html <- function(df = table_overview_report, site = my_site){
-  table_overview_report %>% 
+  df %>% ##changed this
     select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
-    filter(Site == my_site) %>% 
+    filter(Site == site) %>% 
     knitr::kable(caption = 'Overview of stream crossing.') %>% 
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
     kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
@@ -218,6 +218,7 @@ table_overview_html_all <- function(df){
     # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
     # filter(Site == my_site) %>% 
     knitr::kable(caption = 'Overview of stream crossing.') %>% 
+    kableExtra::column_spec(column = 10, width_min = '2in') %>%
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
     kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
   # kableExtra::scroll_box(width = "100%", height = "500px")
@@ -275,7 +276,7 @@ make_table_planning <- function(planning_data){
     mutate(Comments = stringr::str_replace_all(Comments, 'Marlim 2013', 'Gollner et al. (2013)'),
            `Habitat Value` = case_when(`Habitat Value` == 'NANA' ~ '-',
                                        TRUE ~ `Habitat Value`))
-  table_planning
+  return(table_planning)
 }
 
 table_planning_html <- function(df = table_planning){
@@ -524,5 +525,10 @@ get_img <- function(site = my_site, photo = my_photo){
 }
 
 at_na_remove <- function(x) x[!is.na(x)]
+
+render_appendices <- function(my_site){
+  rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
+                    output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
+}
 
 

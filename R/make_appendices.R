@@ -11,5 +11,6 @@ render_appendices <- function(my_site){
 reports_complete %>% map(render_appendices)
 
 
-
-
+# 
+# rmarkdown::render(input = paste0('Parsnip_report.Rmd'),
+#                   output_file = paste0('docs/test.html'))

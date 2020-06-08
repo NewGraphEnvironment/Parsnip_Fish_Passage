@@ -14,7 +14,7 @@ data/~$priorities.xlsx
 data/~$pscis_phase2.xlsm
 test.Rmd
 test.html
-*.html
+
 map.Rmd
 R/make_hexsticker.R
 Parsnip_report_intro_methods.html
