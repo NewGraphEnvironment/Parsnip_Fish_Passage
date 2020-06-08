@@ -108,7 +108,19 @@ Please contact al@newgraphenvironment.com (2507771518) with feedback and any que
 ##add a culvert measurements output table with all the usual photos
 ##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
 
-loadd(tracks, forest_tenure_road_lines)
+loadd(tracks, forest_tenure_road_lines, my_tracks, test)
+
+##trying to filter so I can do a bounding box of just one feature - used poorman::filter instead
+# tracks2 <- left_join(
+#   tracks %>%
+#   st_drop_geometry() %>%
+#   distinct(site, .keep_all = T),
+#   select(tracks, name, geometry),
+#   by = 'name'
+# ) %>%
+#   st_as_sf()
+
+
 
 
 
@@ -146,7 +158,7 @@ map <- leaflet(height=500, width=780) %>%
   # addMeasure() %>% 
   # setView(lng = -105.644, lat = 51.618, zoom = 3)
   
-  addPolylines(data=drake::readd(fish_habitat_model_lines),  opacity=1, color = 'blue',
+  addPolylines(data=drake::readd(fish_habitat_model_lines),  opacity=1, color = '#6498d2',
                fillOpacity = 0.75, weight=2) %>% 
   addPolylines(data=forest_tenure_road_lines,  opacity=1, color = '#ff7f00',
                fillOpacity = 0.75, weight=2) %>%
@@ -181,31 +193,31 @@ map <- leaflet(height=500, width=780) %>%
   leafem::addHomeButton(ext = raster::extent(filter(table_overview_sf, priority %ilike% 'High')),
                         position = "topleft",
                         group = 'High Priority Crossings') %>%
-    leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125000')),
-                        position = "topleft", 
-                        group = '125000') %>% 
-      leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125179')),
+    leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125000')),
+                        position = "topleft",
+                        group = '125000') %>%
+      leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125179')),
                         position = "topleft", 
                         group = '125179') %>% 
-        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125180')),
+        leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125180')),
                         position = "topleft",
                         group = '125180') %>%
-        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125186')),
+        leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125186')),
                         position = "topleft",
                         group = '125186') %>%
-        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125231')),
+        leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125231')),
                         position = "topleft",
                         group = '125231') %>%
-        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125247')),
+        leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125247')),
                         position = "topleft",
                         group = '125247') %>%
-        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '125253')),
+        leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125253')),
                         position = "topleft",
                         group = '125253') %>%
-        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% '57687')), ##watch out here
+        leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '57687')), ##watch out here
                         position = "topleft",
                         group = '125345') %>%
-        leafem::addHomeButton(ext = raster::extent(filter(tracks, site %like% 'CV1')),
+        leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% 'CV1')),
                         position = "topleft",
                         group = 'CV1') %>%
   addScaleBar(position = 'bottomleft', options = scaleBarOptions(imperial = FALSE)) %>% 

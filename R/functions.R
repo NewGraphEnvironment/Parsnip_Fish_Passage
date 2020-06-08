@@ -6,7 +6,7 @@
 
 # ##filter the points
 # make_tracks_of_points <- function(track_points, idx){
-#   track_points %>% 
+#   track_points %>%
 #     slice(min(idx):max(idx))
 # }
 # 

@@ -35,16 +35,17 @@ plan1 <- drake_plan(
   #this section for locational info
   planning_data = get_planning_data(),
   fish_habitat_model_outputs = get_fish_habitat_info(priorities_spreadsheet = priorities_spreadsheet),
-  tracks = st_read(file_in("./data/field_cleaned.gpx"), layer = "tracks") %>% ##we need this to make track of points
+  tracks = read_sf(file_in("./data/field_cleaned.gpx"), layer = "tracks") %>% ##we need this to make track of points
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
   track_points = read_sf(file_in("./data/field_cleaned.gpx"), layer = "track_points") %>% 
     separate(name, into = c('site', 'direction', 'track_num'), remove = F),
-  # track_point_idx_list = sf::st_intersects(tracks, track_points) %>% 
+  # track_point_idx_list = sf::st_intersects(tracks, track_points) %>%
   #   purrr::set_names(., nm = pull(tracks, name)),
-  # tracks_of_points = lapply(track_point_idx_list, 
+  # tracks_of_points = lapply(track_point_idx_list,
   #                           make_tracks_of_points, track_points = track_points),
-  # my_tracks = tracks_of_points %>% 
-  #   map(points2line_trajectory),  ##convert our points to lines
+  # my_tracks = tracks_of_points %>%
+  #   map(points2line_trajectory), ##convert our points to lines,
+    # data.table::rbindlist(idcol="site"),  
   photo_metadata = readr::read_csv(file = 'data/photo_metadata.csv'),
   forest_tenure_road_lines = st_read('data/parsnip.gpkg', layer = 'rds_ften_priority'),
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
