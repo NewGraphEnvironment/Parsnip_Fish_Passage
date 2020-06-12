@@ -293,7 +293,7 @@ grid::grid.raster(get_img(site = '16604087'))
 ```
 
 
-```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
+```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE, eval=F}
 
 rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
                     output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
