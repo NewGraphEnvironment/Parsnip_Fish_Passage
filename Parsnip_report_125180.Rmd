@@ -54,7 +54,7 @@ my_habitat_info_ds <- drake::readd(table_habitat_raw) %>% filter(site == my_site
 my_watershed <- drake::readd(crossing_watersheds) %>% filter(crossing_id == my_site) %>% mutate(area_km = area_ha/100, area_km = round(area_km,1)) 
 date <- pull_data(sheet = drake::readd(site_location_data), site = my_site, column = 'survey_date') %>% format(., "%B %d, %Y")
 my_mapsheet <- my_overview_info %>% pull(dbm_mof_50k_grid_map_tile)
-my_map_link <- paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/Parsnip_', sub("(.{4})(.*)", "\\1.\\2", my_mapsheet), '.pdf')
+my_map_link <- paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/FishPassage_', sub("(.{4})(.*)", "\\1.\\2", my_mapsheet), '.pdf')
 my_distance_downstream <- drake::readd(fish_habitat_model_outputs) %>% filter(stream_crossing_id_either == my_site) %>% mutate(downstream_route_measure = round(downstream_route_measure/1000,1)) %>% pull(downstream_route_measure)
 my_planning_data <- drake::readd(planning_data) %>% filter(stream_crossing_id == my_site)
 # `r if(knitr::is_html_output() == TRUE){"Habitat Confirmation"}`
