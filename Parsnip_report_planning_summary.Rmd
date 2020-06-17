@@ -29,6 +29,7 @@ select(drake::readd(table_planning),
   rename(`Map 50k` = map_linked) %>%
   knitr::kable() %>%
   kableExtra::column_spec(column = 13, width_min = '2in') %>%
+  kableExtra::column_spec(column = 10, width_max = '1in') %>% ##fish species
   kableExtra::kable_styling(c("condensed"), full_width = T) %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
 
