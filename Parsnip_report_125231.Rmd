@@ -30,12 +30,13 @@ options(knitr.table.format = "html")
 #              planning_data, photo_metadata, habitat_data)
 
 drake::loadd(table_habitat_report, table_overview_report, table_planning, table_culvert, photo_metadata)
+my_site <- '125231'
 ```
 
 
 
 ```{r load-data}
-my_site <- '125231'
+
 title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 my_overview_info <- drake::readd(table_overview_raw) %>% filter(site == my_site & location == 'Upstream')
 my_pscis_info <- drake::readd(PSCIS_submission) %>% filter(pscis_crossing_id == my_site)
@@ -60,7 +61,7 @@ my_watershed <- drake::readd(crossing_watersheds) %>% filter(crossing_id == my_s
 date <- pull_data(sheet = drake::readd(site_location_data), site = my_site, column = 'survey_date',
                   direction = 'us') %>% format(., "%B %d, %Y")  ##you can modify for the downstream
 my_mapsheet <- my_overview_info %>% pull(dbm_mof_50k_grid_map_tile)
-my_map_link <- paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/pars_maps/Parsnip_', sub("(.{4})(.*)", "\\1.\\2", my_mapsheet), '.pdf')
+my_map_link <- paste0('https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/FishPassage_', sub("(.{4})(.*)", "\\1.\\2", my_mapsheet), '.pdf')
 my_distance_downstream <- drake::readd(fish_habitat_model_outputs) %>% filter(stream_crossing_id_either == my_site) %>% mutate(downstream_route_measure = round(downstream_route_measure/1000,1)) %>% pull(downstream_route_measure)
 my_planning_data <- drake::readd(planning_data) %>% filter(stream_crossing_id == my_site)
 
@@ -110,7 +111,7 @@ my_habitat_info_t <- left_join(
 
 ### Site Location
 
-Crossing `r my_site` is located on an unnamed tributary to the Table River near the 20km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km from the confluence of the Table River on the upstream side of the CN Railway (Table \@ref(tab:tableoverview)). At the time of the field surveys, there was very little traffic on the FSR, the road was in disrepair and there appeared to be no active logging in the immediate area. 
+Crossing `r my_site` is located on an unnamed tributary to the Table River near the 20km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km from the confluence of the Table River on the upstream side of the CN Railway (Table \@ref(tab:tableoverview)). At the time of the field surveys, there was active log hauling on the FSR. 
 
 <br>
 
@@ -231,7 +232,7 @@ my_site
 
 my_photo = 'outlet.JPG'
 
-caption = paste0('Inlet of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
+caption = paste0('Outlet of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
 
 grid::grid.raster(get_img())
 
