@@ -11,6 +11,7 @@ output:
     toc: yes
     fig_caption: yes
 bibliography: references.bib
+biblio-style: apalike
 ---
 
 ```{r setup, include=FALSE, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}

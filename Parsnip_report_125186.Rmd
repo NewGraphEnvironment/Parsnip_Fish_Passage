@@ -10,7 +10,7 @@ output:
     toc: no
     fig_caption: yes
 bibliography: references.bib
-csl: apa.csl
+biblio-style: apalike
 ---
 
 ```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
@@ -19,6 +19,7 @@ csl: apa.csl
 ### this one ! https://www.bibtex.com/e/entry-types/
 source('R/packages.R')
 source('R/functions.R')
+
 # 
 knitr::opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE, 
                       fig.align="center", fig.width = 5.118, fig.height = 3.409)
@@ -123,12 +124,13 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 
 ### Conclusion
 
-There is approximately 1.4km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient with near 700m of that having an average modelled slope of <5.5%.  Habitat surveyed was rated as high value for salmonids with Rainbow Trout presence confirmed up to 450m upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout is known to utilize adjacent streams of similiar size and topography within the vicinity of this stream and the watershed is designated as Fisheries Sensitive with critical habitat for Bull Trout and Arctic Grayling spawning as well as critical rearing habitat for Bull Trout juveniles and Arctic Grayling fry known in the Missinka River system.  The forest licensee in the area is Canfor and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
+There is approximately 1.4km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient.  Habitat surveyed was rated as high value for salmonids with Rainbow Trout presence confirmed up to 450m upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout is known to utilize adjacent streams of similiar size and topography within the vicinity of this stream and the watershed is designated as Fisheries Sensitive with critical habitat for Bull Trout and Arctic Grayling spawning as well as critical rearing habitat for Bull Trout juveniles and Arctic Grayling fry known in the Missinka River system.  The forest licensee operating in the area was Sinclar Group Forest Products Ltd. and the road tenure holder was the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
 
 <br>
 
 
 ```{r tableoverview, eval=T}
+
 
 if(knitr::is_html_output() == TRUE){
   table_overview_html()

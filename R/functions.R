@@ -211,13 +211,13 @@ table_overview_html <- function(df = table_overview_report, site = my_site){
 }
 
 table_overview_html_all <- function(df){
-  reports_complete = c('125000', '125179', '125180', '125186', '125231') #this needs to be abstract
+  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253') #this needs to be abstract
   reports_complete_withzeros = c('57681')
   df %>% 
     mutate(Site = case_when(Site %in% reports_complete ~ paste0('**[', Site, '](03_Parsnip_report_', Site, '.html)**'),
                                        TRUE ~ Site),
            Site = case_when(Site %in% reports_complete_withzeros ~ paste0('**[', Site, '](03_Parsnip_report_0', Site, '.html)**'),
-                            TRUE ~ Site)) %>% 
+                            TRUE ~ Site)) %>%  ##this adds the links to the sites in bold
     rename(`*Habitat Gain (km)` = `Habitat Gain (km)`) %>% 
     # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
     # filter(Site == my_site) %>% 
@@ -260,7 +260,8 @@ make_table_planning <- function(planning_data){
                                       TRUE ~ my_stream_name),
            my_priority = stringr::str_to_title(my_priority),
            road_name = case_when(is.na(road_name) ~ my_road_name,
-                                 TRUE ~ road_name)) %>% 
+                                 TRUE ~ road_name),
+           upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
     transmute(Site = stream_crossing_id, 
               stream_word = my_stream_name,
               Stream = paste0("[", my_stream_name, "](", image_view_url, ")"),
@@ -273,7 +274,8 @@ make_table_planning <- function(planning_data){
               `Lake (ha)` = round(upstr_alake_gross_obs + upstr_alake_gross_inf + upstr_awet_gross_all,1),
               `Wetland (ha)` = round(upstr_awet_gross_all,1),
               `Channel Width (m)` = round(downstream_channel_width,1), 
-              `Fish Upstream`= case_when(!is.na(upstr_species) ~ 'Yes', TRUE ~ 'No'), 
+              `Fish Upstream` = upstr_species, ##just changed this
+              # `Fish Upstream`= case_when(!is.na(upstr_species) ~ 'Yes', TRUE ~ 'No'), 
               `Habitat Value` = paste0(substr(habitat_value_code, 1, 1), tolower(substr(habitat_value_code, 2, nchar(habitat_value_code)))), 
               `Rank` = my_priority,
               Comments = my_text) %>% 
@@ -284,19 +286,21 @@ make_table_planning <- function(planning_data){
   return(table_planning)
 }
 
-table_planning_html <- function(df = table_planning){
+table_planning_html <- function(df = table_planning, site = my_site){
   df %>% 
-    filter(Site == my_site) %>% 
+    filter(Site == site) %>% 
     select(-stream_word, -`Map 50k`, -Site, -Stream, -Road, -`UTM (10N)`) %>% 
     rename(`Map 50k` = map_linked) %>% 
-    knitr::kable(caption = 'Planning map, PSCIS details, Fish Habitat Model outputs and prioritization rank/comments for crossings ranked for follow up with habitat confirmation assessments.') %>% 
+    knitr::kable(caption = 'Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization rank/comments.') %>% 
     kableExtra::column_spec(column = 9, width_min = '2in') %>% 
+    kableExtra::column_spec(column = 6, width_max = '1in') %>% ##fish species
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
     kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
 }
 
 table_planning_flextable <- function(df = table_planning, site = my_site){
   df %>% 
+    mutate(`Fish Upstream`= case_when(!is.na(`Fish Upstream`) ~ 'Yes', TRUE ~ 'No')) %>% ##just changed this so it will fit the page
     filter(Site == my_site) %>% 
     select(-Stream, -stream_word, -map_linked,  -Road) %>% 
     my_flextable(fontsize = 8) %>% 
@@ -531,9 +535,9 @@ get_img <- function(site = my_site, photo = my_photo){
 
 at_na_remove <- function(x) x[!is.na(x)]
 
-render_appendices <- function(my_site){
-  rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
-                    output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
-}
+# render_appendices <- function(my_site){
+#   rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
+#                     output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
+# }
 
 

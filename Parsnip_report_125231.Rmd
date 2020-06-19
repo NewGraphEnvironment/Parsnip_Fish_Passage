@@ -10,7 +10,7 @@ output:
     toc: no
     fig_caption: yes
 bibliography: references.bib
-csl: apa.csl
+biblio-style: apalike
 ---
 
 ```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
@@ -129,7 +129,7 @@ Provincial records indicate that Rainbow Trout have been captured just upstream 
 
 <br>
 
-The Table River (along with the Anzac River) is identified as the primary core of post-Williston Arctic Grayling distribtion in the Parsnip River watershed with life history, migration behaviours and critical habitats summarized in @hagen_2015_critical_habs.  The mainstem of the Table River contains critical habitats for all life stages of Arctic Grayling with adults observed moving among mainstem locations and tributaries during summer [@hagen_2015_critical_habs].  
+The Table River (along with the Anzac River) is identified as the primary core of post-Williston Arctic Grayling distribution in the Parsnip River watershed with life history, migration behaviours and critical habitats summarized in @hagen_2015_critical_habs.  The mainstem of the Table River contains critical habitats for all life stages of Arctic Grayling with adults observed moving among mainstem locations and tributaries during summer [@hagen_2015_critical_habs].  
 
 
 <br>
@@ -140,7 +140,7 @@ In 2018, the Table River watershed was designated as a fisheries sensitive water
 
 <br>
 
-Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modelled instream habitat (`r my_overview_info %>% pull(uphab_gross_sub22)`km) with a relatively large channel size (`r my_planning_data %>% pull(downstream_channel_width)`m) and Rainbow Trout documented upstream (Table \@ref(tab:table-planning)). The habitat confirmation was completed on September 4, 2019 (dowstream) and `r date` (upstream). A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
+Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modeled instream habitat (`r my_overview_info %>% pull(uphab_gross_sub22)`km) with a relatively large channel size (`r my_planning_data %>% pull(downstream_channel_width)`m) and Rainbow Trout documented upstream (Table \@ref(tab:table-planning)). The habitat confirmation was completed on September 4, 2019 (downstream) and `r date` (upstream). A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
 
 <br>
 
@@ -167,7 +167,7 @@ The stream was surveyed downstream from the culvert for `r my_priority_info_ds %
 
 ### Stream Characteristics Upstream
 
-The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m to 100m above the location of a newly installed bridge (modelled crossing 16603641, Figure \@ref(fig:photo-upstream3)). The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). Riparian vegetation was comprised of a mature coniferous forest and instream cover quantity was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`.  The dominant cover form was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available. Gravels suitable for spawning were present intermittently throughout the area surveyed (Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream2)). Although there were no permanent barriers, some debris steps from 30 - 70 cms high were located throughout. Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
+The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m to 100m above the location of a newly installed bridge (modeled crossing 16603641, Figure \@ref(fig:photo-upstream3)). The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). Riparian vegetation was comprised of a mature coniferous forest and instream cover quantity was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`.  The dominant cover form of cover was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available. Gravels suitable for spawning were present intermittently throughout the area surveyed (Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream2)). Although there were no permanent barriers, some debris steps from 30 - 70 cms high were located throughout. Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
 
 
 <br>
@@ -281,7 +281,7 @@ grid::grid.raster(get_img())
 #######remove next time#########################
 my_photo ='DSCF4729.JPG'
 
-my_caption = paste0('View of bridge (modelled crossing 16603641) located upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
+my_caption = paste0('View of bridge (modeled crossing 16603641) located upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
 
 grid::grid.raster(get_img())
 ```
