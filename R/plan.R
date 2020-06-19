@@ -68,7 +68,7 @@ plan1 <- drake_plan(
     knitr_in("Parsnip_report_planning_summary.Rmd"),
     output_file = file_out("./docs/Parsnip_report_planning_summary.html"),
     quiet = TRUE
-  )
+    )
 )
 
 
