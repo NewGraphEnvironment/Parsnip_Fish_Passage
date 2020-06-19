@@ -10,7 +10,7 @@ output:
     toc: no
     fig_caption: yes
 bibliography: references.bib
-csl: apa.csl
+biblio-style: apalike
 editor_options: 
   chunk_output_type: inline
 ---
@@ -19,6 +19,8 @@ editor_options:
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
+
+##moved to biblio-style: apalike from csl: apa.csl
 source('R/packages.R')
 source('R/functions.R')
 

@@ -108,7 +108,7 @@ Please contact al@newgraphenvironment.com (2507771518) with feedback and any que
 ##add a culvert measurements output table with all the usual photos
 ##georeference the upstream and downstream photos from the camera by cross-referencing the time to the gps.
 
-loadd(tracks, forest_tenure_road_lines, my_tracks, test)
+loadd(tracks, forest_tenure_road_lines, my_tracks)
 
 ##trying to filter so I can do a bounding box of just one feature - used poorman::filter instead
 # tracks2 <- left_join(
@@ -193,7 +193,7 @@ map <- leaflet(height=500, width=780) %>%
   leafem::addHomeButton(ext = raster::extent(filter(table_overview_sf, priority %ilike% 'High')),
                         position = "topleft",
                         group = 'High Priority Crossings') %>%
-    leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125000')),
+    leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125000')),  ##note that poorman detaches geom somehow .  dplyr leaves the geom as the whole object.. too weird
                         position = "topleft",
                         group = '125000') %>%
       leafem::addHomeButton(ext = raster::extent(poorman::filter(tracks, site %like% '125179')),
