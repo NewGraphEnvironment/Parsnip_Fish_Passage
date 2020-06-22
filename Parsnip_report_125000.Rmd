@@ -139,7 +139,7 @@ The stream was surveyed upstream from the culvert continuously for 330m to a bea
 
 ### Conclusion
 
-There is an estimated 3.5km of high value mainstem habitat available upstream of crossing `r my_site`. Rainbow Trout and Sculpin were confirmed as present by fish sampling immediately below the crossing.  No fish were captured upstream, indicating that the culvert is preventing migration to upstream habitat that appears suitable for not only Rainbow Trout and Sculpin, but also for Bull Trout rearing and spawning. The forest licensee in the area is Canfor and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info %>% pull(priority))` priority for rehabilitation.  
+There is an estimated 3.5km of high value mainstem habitat available upstream of crossing `r my_site`. Rainbow Trout and Sculpin were confirmed as present by fish sampling immediately below the crossing.  No fish were captured upstream, indicating that the culvert is preventing migration to upstream habitat that appears suitable for not only Rainbow Trout and Sculpin, but also for Bull Trout rearing and spawning. The forest licensee in the area is Sinclar Group and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info %>% pull(priority))` priority for rehabilitation.  
 
 <br>
 

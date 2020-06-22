@@ -146,7 +146,7 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 
 ### Conclusion
 
-There is approximately 2km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient.  The majority of this habitat is likely of high value with Rainbow Trout presence confirmed up to 1.5km upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout has also been confirmed upstream of the crossing and the watershed is designated as Fisheries Sensitive with critical habitat for the species known nearby. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
+There is approximately 2km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient.  The majority of this habitat is likely of high value with Rainbow Trout presence confirmed up to 1.5km upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout has also been confirmed upstream of the crossing and the watershed is designated as Fisheries Sensitive with critical habitat for the species known nearby. The forest licensee in the area is Sinclar Group and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
 
 <br>
 
