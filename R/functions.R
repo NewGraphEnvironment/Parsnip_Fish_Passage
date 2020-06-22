@@ -211,7 +211,7 @@ table_overview_html <- function(df = table_overview_report, site = my_site){
 }
 
 table_overview_html_all <- function(df){
-  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253') #this needs to be abstract
+  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253', '125345') #this needs to be abstract
   reports_complete_withzeros = c('57681')
   df %>% 
     mutate(Site = case_when(Site %in% reports_complete ~ paste0('**[', Site, '](03_Parsnip_report_', Site, '.html)**'),
