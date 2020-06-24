@@ -1,14 +1,14 @@
 ---
 title: 
 output:
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: no
     fig_caption: yes
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
 bibliography: references.bib
 biblio-style: apalike
 ---
@@ -99,7 +99,6 @@ my_habitat_info_t <- left_join(
 
 ```
 
-
 ## Crossing `r my_site` - `r my_overview_info %>% pull(road_name)` - `r my_overview_info %>% pull(stream_name)`
 
 ```{r}
@@ -112,6 +111,7 @@ my_habitat_info_t <- left_join(
 ### Site Location
 
 Crossing `r my_site` is located on an unnamed tributary to the Table River near the 20km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km from the confluence of the Table River on the upstream side of the CN Railway (Table \@ref(tab:tableoverview)). At the time of the field surveys, there was active log hauling on the FSR. 
+
 
 <br>
 
