@@ -25,13 +25,12 @@ reports_complete = c('057681',
                      '125231', 
                      '125247',
                      '125253',
-                     '125345')
+                     '125345',
+                     'CV1')
 
 
 ##knit the appendices
 reports_complete %>% map(render_separately_all)
-
-
 
 
 

@@ -55,11 +55,11 @@ fit_to_page <- function(ft, pgwidth = 6.75){
 }
 
 
-my_flextable <- function(df, left_just_col = 2, ...){
+my_flextable <- function(df,  ...){ ##left_just_col = 2 was an option
   flextable::autofit(flextable::flextable(
     df,
     defaults = list(fontname = 'tahoma'))) %>% 
-    flextable::my_theme_booktabs(fontsize = 9) %>% 
+    flextable::theme_booktabs(fontsize = 9) %>% ##changed from flextable::my_theme_booktabs(fontsize = 9) %>% 
     fit_to_page()
 }
 
@@ -211,8 +211,8 @@ table_overview_html <- function(df = table_overview_report, site = my_site){
 }
 
 table_overview_html_all <- function(df){
-  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253', '125345') #this needs to be abstract
-  reports_complete_withzeros = c('57681')
+  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253', '125345', 'CV1') #this needs to be abstract
+  reports_complete_withzeros = c('57681', '57690')
   df %>% 
     mutate(Site = case_when(Site %in% reports_complete ~ paste0('**[', Site, '](03_Parsnip_report_', Site, '.html)**'),
                                        TRUE ~ Site),
@@ -240,7 +240,7 @@ at_trim_xlsheet2 <- function(df, column_last = ncol(df)) {
 
 
 ##import pscis info
-import_pscis <- function(workbook_name = 'pscis_phase2.xlsm'){
+import_pscis <- function(workbook_name = 'pscis_phase2.xlsm'){ ##new template.  could change file back to .xls
   read_excel(path = paste0("./data/", workbook_name), 
                     sheet = 'PSCIS Assessment Worksheet') %>% 
   # purrr::set_names(janitor::make_clean_names(names(.))) %>% 
@@ -535,9 +535,18 @@ get_img <- function(site = my_site, photo = my_photo){
 
 at_na_remove <- function(x) x[!is.na(x)]
 
-# render_appendices <- function(my_site){
-#   rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
-#                     output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'))
-# }
+##there are issues with rmarkdown::render and default environments so to run all the reports we need this weird system
+##https://stackoverflow.com/questions/32257970/knitr-inherits-variables-from-a-users-environment-even-with-envir-new-env
+render_separately <- function(...) callr::r(
+  function(...) rmarkdown::render(..., envir = globalenv()), 
+  args = list(...), show = TRUE)
+
+# render_separately(input = paste0('Parsnip_report_', my_site, '.Rmd'), 
+#                   output_file = paste0('docs/03_Parsnip_report_', my_site, '.html'), quiet = TRUE)
+
+render_separately_all <- function(site){
+  render_separately(input = paste0('Parsnip_report_', site, '.Rmd'), 
+                    output_file = paste0('docs/03_Parsnip_report_', site, '.html'), quiet = TRUE, clean = T)
+}
 
 

@@ -51,20 +51,31 @@ plan1 <- drake_plan(
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
   table_planning = make_table_planning(planning_data = planning_data),
   crossing_watersheds = sf::st_read("data/parsnip.gpkg", layer = "watersheds"),
-  # reports_complete = c('125000', '125179', '125180', '125186', '125231'),
+  report_appendices_rmd_files = c('057681',
+                       '057690',
+                       '125000', 
+                       '125179', 
+                       '125180', 
+                       '125186', 
+                       '125231', 
+                       '125247',
+                       '125253',
+                       '125345',
+                       'CV1'),
   ##REMOVED THE HYDROGRAPHs from the plan and intro_methods file to allow report production using png outputs only
   ##now make the report
-    report = rmarkdown::render(
+    report_main = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"), ##JUST CHANGED FOR A SEC
     output_file = file_out("./docs/index.html"),
     quiet = TRUE
   ),
-  report2 = rmarkdown::render(
-    knitr_in("Parsnip_report_intro_methods.Rmd"),
-    output_file = file_out("./docs/Parsnip_report_intro_methods.html"),
-    quiet = TRUE
-  ),
-  report3 = rmarkdown::render(
+  report_appendices = report_appendices_rmd_files %>% map(render_separately_all),
+#   report2 = rmarkdown::render(
+#     knitr_in("Parsnip_report_intro_methods.Rmd"),
+#     output_file = file_out("./docs/Parsnip_report_intro_methods.html"),
+#     quiet = TRUE
+#   ),
+  planning_summary_table = rmarkdown::render(
     knitr_in("Parsnip_report_planning_summary.Rmd"),
     output_file = file_out("./docs/Parsnip_report_planning_summary.html"),
     quiet = TRUE
