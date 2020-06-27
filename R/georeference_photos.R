@@ -8,7 +8,9 @@ make_photo_metadata_list <- function(input_file){
   exifr::read_exif(input_file,recursive=T) %>% 
     mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
     purrr::set_names(., nm = tolower(names(.))) %>% ##column names lowercase
-    tibble::add_column(!!!cols[setdiff(names(cols), names(.))])
+    tibble::add_column(!!!cols[setdiff(names(cols), names(.))]) %>% 
+    mutate(createdate = case_when(directory =='data/photos/57696' ~ createdate + 64*60, ##we hadn't yet set the time right on our camera!!
+           TRUE ~ createdate))
 }
 
 files <- paste0('data/photos/',list.files('data/photos'))
@@ -147,7 +149,7 @@ make_photo_metadata <- function(meta){
     sf::st_as_sf(coords = c("lon_map", "lat_map"), crs = 4326, remove = F) %>%
     st_transform(crs = 26910) %>% 
     mutate(easting = st_coordinates(.)[,1],
-           northing = st_coordinates(.)[,2]) %>% 
+           northing = st_coordinates(.)[,2]) %>% ##this gives us coordinates for the report captions
     sf::st_set_geometry(NULL)
     }
 
@@ -165,10 +167,10 @@ write.csv(photo_metadata_processed, file = 'data/photo_metadata.csv', row.names 
 ###---------------------------------------this is before we moved it to a function--------------##############
 # cols <- c(gpslatitude = NA_real_, gpslongitude = NA_real_, imagedescription = NA)
 # 
-# photo_metadata <- exifr::read_exif("data/photos/125000",recursive=T) %>% 
-#   mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
-#   purrr::set_names(., nm = tolower(names(.))) %>%  ##column names lowercase
-#   tibble::add_column(!!!cols[!names(cols) %in% names(.)])
+photo_metadata <- exifr::read_exif("data/photos/57696",recursive=T) %>%
+  mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
+  purrr::set_names(., nm = tolower(names(.))) %>%  ##column names lowercase
+  tibble::add_column(!!!cols[!names(cols) %in% names(.)])
 # 
 # 
 # # ##so this give us the index from the gps points
@@ -198,7 +200,7 @@ write.csv(photo_metadata_processed, file = 'data/photo_metadata.csv', row.names 
 # 
 # # ##probably makes sense to just give the photos the crossing lat, lons when the photo is named upstream, downstream, inlet, outlet, barrel, aerial
 # ##get lat lons for pscis
-# pscis2 <- drake::readd(pscis) %>%
+# pscis2 <- drake::readd(PSCIS_submission) %>%
 #   filter(!is.na(easting)) %>% ##remove the ones with no info yet
 #   sf::st_as_sf(coords = c("easting", "northing"), crs = 26910) %>%
 #   st_transform(crs = 4326) %>%

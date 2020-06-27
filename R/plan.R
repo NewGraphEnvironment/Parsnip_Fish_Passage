@@ -63,7 +63,8 @@ plan1 <- drake_plan(
     '125253',
     '125345',
     'CV1',
-    '057695'),
+    '057695',
+    '057696'),
   ##REMOVED THE HYDROGRAPHs from the plan and intro_methods file to allow report production using png outputs only
   ##now make the report
     report_main = rmarkdown::render(
