@@ -56,37 +56,6 @@ my_watershed <- drake::readd(crossing_watersheds) %>% filter(crossing_id == my_s
 
 ## Crossing `r my_site` - `r my_overview_info %>% pull(road_name)` - `r my_overview_info %>% pull(stream_name)`
 
-```{r}
-# test <- pull_data(sheet = loc_data, site = my_site)
-##have a look at the watershed
-# ggplot(data = my_watershed)+
-#   geom_sf(data = my_watershed, lwd = 0.15)
-```
-
-```{r pull-info}
-# my_watershed_area <- my_watershed %>% pull(area_km) ##can't get the rounding in
-# loadd(PSCIS_submission, table_habitat_raw, table_overview_raw, priorities_spreadsheet)
-# 
-# wetland <- table_overview_raw %>% filter(site == my_site & location == 'us') %>% mutate(lake = round(upstr_alake_gross_obs + upstr_alake_gross_inf),1) %>% pull(lake)
-# stream <- table_overview_raw %>% filter(site == my_site) %>% mutate(stream = round(uphab_gross_sub22)) %>% pull(stream)
-# stream_name <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(stream_name)
-# mapsheet <- table_overview_raw %>% filter(site == my_site & location == 'us') %>% pull(dbm_mof_50k_grid_map_tile)
-# my_road <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(road_name)
-# my_utm <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% 
-#   mutate(utm = paste0(utm_zone, 'N ', easting, ' ', northing)) %>% pull(utm)
-# my_culvert_length <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(length_or_width_meters)
-# my_outlet_drop <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(outlet_drop_meters)
-# my_fill_depth <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(fill_depth_meters)
-# my_culvert_width <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(fill_depth_meters)
-# my_distance_upstream <- priorities_spreadsheet %>% filter(site == my_site & location == 'us') %>% pull(length)
-# my_habitat_value <- PSCIS_submission %>% filter(pscis_crossing_id == my_site) %>% pull(habitat_value)
-# my_channel_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_channel_width_m)
-# my_wetted_width <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(avg_wetted_width_m)
-# my_gradient <- table_habitat_raw %>% filter(site == my_site & location == 'us') %>% pull(average_gradient_percent)
-# my_priority <- priorities_spreadsheet %>% filter(site == my_site) %>% pull(priority)
-```
-
-
 ### Site Location
 
 Crossing `r my_site` is located on an unnamed tributary to the Parsnip River under the `r my_overview_info %>% pull(road_name)`, approximately 2km upstream of the confluence with the Parsnip River and approximately 9km north-west of the outlet of Arctic Lake (Table \@ref(tab:tableoverview)). Arctic Lake is located within Arctic Pacific Lakes Provincial Park which is situated on the north side of the north-south continental divide that separates watersheds flowing north to the Arctic Ocean and the Fraser River watershed that flows south and west to the Pacific Ocean.  At the time of the field surveys, a small remote logging camp was located approximately 3.5km to the north-west of the crossing location and active logging was occurring on the east side of the Parsnip River valley adjacent to the camp. 

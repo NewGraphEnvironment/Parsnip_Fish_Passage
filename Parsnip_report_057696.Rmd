@@ -13,7 +13,7 @@ bibliography: references.bib
 biblio-style: apalike
 ---
 
-```{r setup, include= knitr::is_html_output(), comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+```{r setup-57696, include= knitr::is_html_output(), comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
@@ -215,12 +215,6 @@ table_habitat_html()
 
 <br>
 
-```{r view-photo-names, eval = F}
-list.files(paste0('data/photos/', my_site, '/'))
-my_site
-
-```
-
 
 ```{r photo-culvert-57696, fig.cap= caption, eval = T}
 
@@ -309,6 +303,10 @@ rmarkdown::render(input = paste0('Parsnip_report_0', my_site, '.Rmd'),
 
 <br>
 
-### References
+
+```{r, eval = knitr::is_html_output()}
+knitr::asis_output("### References") # Header that is only shown if print_option == TRUE
+```
+
 
 

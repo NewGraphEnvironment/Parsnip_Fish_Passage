@@ -211,7 +211,7 @@ table_overview_html <- function(df = table_overview_report, site = my_site){
 }
 
 table_overview_html_all <- function(df){
-  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253', '125345', 'CV1') #this needs to be abstract
+  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253', '125345', 'CV1', '125098') #this needs to be abstract
   reports_complete_withzeros = c('57681', '57690', '57695', '57696')
   df %>% 
     mutate(Site = case_when(Site %in% reports_complete ~ paste0('**[', Site, '](03_Parsnip_report_', Site, '.html)**'),
@@ -291,7 +291,7 @@ table_planning_html <- function(df = table_planning, site = my_site){
     filter(Site == site) %>% 
     select(-stream_word, -`Map 50k`, -Site, -Stream, -Road, -`UTM (10N)`) %>% 
     rename(`Map 50k` = map_linked) %>% 
-    knitr::kable(caption = 'Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization rank/comments.') %>% 
+    knitr::kable(caption = 'Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization for follow up with fish habiat confirmation rank/comments.') %>% 
     kableExtra::column_spec(column = 9, width_min = '2in') %>% 
     kableExtra::column_spec(column = 6, width_max = '1in') %>% ##fish species
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
@@ -306,7 +306,7 @@ table_planning_flextable <- function(df = table_planning, site = my_site){
     my_flextable(fontsize = 8) %>% 
     flextable::width(j = c(1,2,10), width = 0.55) %>%
     flextable::width(j = c(6,8), width = 0.69) %>% 
-    flextable::set_caption('Historic PSCIS details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments.')
+    flextable::set_caption('Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization for follow up with fish habiat confirmation rank/comments.')
 }
 
 
