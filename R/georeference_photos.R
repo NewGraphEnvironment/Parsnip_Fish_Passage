@@ -167,10 +167,10 @@ write.csv(photo_metadata_processed, file = 'data/photo_metadata.csv', row.names 
 ###---------------------------------------this is before we moved it to a function--------------##############
 # cols <- c(gpslatitude = NA_real_, gpslongitude = NA_real_, imagedescription = NA)
 # 
-photo_metadata <- exifr::read_exif("data/photos/57696",recursive=T) %>%
-  mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
-  purrr::set_names(., nm = tolower(names(.))) %>%  ##column names lowercase
-  tibble::add_column(!!!cols[!names(cols) %in% names(.)])
+# photo_metadata <- exifr::read_exif("data/photos/57696",recursive=T) %>%
+#   mutate(CreateDate = lubridate::as_datetime(CreateDate, tz="America/Vancouver")) %>% ##put them in the same tz
+#   purrr::set_names(., nm = tolower(names(.))) %>%  ##column names lowercase
+#   tibble::add_column(!!!cols[!names(cols) %in% names(.)])
 # 
 # 
 # # ##so this give us the index from the gps points
