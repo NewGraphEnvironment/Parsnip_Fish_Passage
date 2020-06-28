@@ -2,14 +2,14 @@
 title: "Parsnip Watershed Fish Habitat Confirmations - DRAFT"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: yes
     fig_caption: yes
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
 bibliography: references.bib
 biblio-style: apalike
 ---
@@ -19,6 +19,7 @@ biblio-style: apalike
 source('R/packages.R')  ##should clean up this area
 source('R/functions.R')
 
+#always_allow_html: true
 # test <- pull_data(sheet = try)
 
 ```
@@ -535,14 +536,10 @@ Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization
 
 
 
-<br>
-
-
-
 
 <br>
 
-```{r eval=TRUE, out.width= '100%', fig.cap="Overview Map of Parsnip River Watershed fish passage restoration candidates. Field survey tracks are represented by pink lines. Forest tenure roads are orange lines. Details of sites provided in pop-up windows of crossings with photos currently provided for high priority sites."}
+```{r eval=knitr::is_html_output(), out.width= '100%', fig.cap="Overview Map of Parsnip River Watershed fish passage restoration candidates. Field survey tracks are represented by pink lines. Forest tenure roads are orange lines. Details of sites provided in pop-up windows of crossings with photos currently provided for high priority sites."}
 ##--------lets map it-----------------------------------------------------------------------
 ##time to set the watershed code here
 ##pass it get the watershed boundaries. Dissolve boundaries and display semi-transparent.
@@ -675,6 +672,9 @@ map
 
 ```
 
+```{r overview_map, fig.cap="Overview Map", out.width = '100%', eval= (knitr::is_html_output() == FALSE)}
+knitr::include_graphics("fig/overview_map.jpg")
+```
 
 
 
@@ -685,7 +685,7 @@ drake::loadd(table_overview_report)
 ```
 
 
-```{r, eval = T}
+```{r, eval = knitr::is_html_output()}
 table_overview_html_all(df = table_overview_report)
 ```
 *Habitat gain based on Fish Habitat Model estimates of linear stream length upstream of crossing with no section of modeled gradients >22% for 100m or more. Estimates currently not adjusted to indicate results from field surveys. Please see individual memos linked in Site column for refined estimates of potential habitat gained based on field surveys and conservative GIS estimates of upstream habitat in mainstem of stream only.
@@ -996,6 +996,36 @@ filter(drake::readd(table_habitat_report),
 
 <br>
 
+```{r}
+# ```{r }
+# files <- list.files(pattern = "[.]Rmd$") ##then get rid of 'Parsnip_report
+# child_docs <- c("Parsnip_report_057696.Rmd", "Parsnip_report_125098.Rmd")
+# ```
+# 
+
+```
+
+
+```{r eval = (knitr::is_html_output() == FALSE)}
+child_docs <- c("Parsnip_report_057696.Rmd", "Parsnip_report_125098.Rmd")
+
+
+##this grabs all our appendices
+# child_docs= list.files(pattern = "[.]Rmd$") %>% ##automated grab of the appendices
+#   data.frame(files_df = .) %>%
+#   filter(files_df != 'Parsnip_report.Rmd' &  files_df != 'Parsnip_report_planning_summary.Rmd' & files_df != 'test.Rmd') %>%
+#   pull(files_df)
+
+##when we render to word we need to add the {r child = child_docs} chunk below
+
+```
+
+<br>
+
+```{r, eval = (knitr::is_html_output() == FALSE), child = child_docs}
+```
+
+
 ## Workflow Layout 
 
 The field work procedures and preparation for this project are based on procedures developed by the provincial [Fish Passage Technical Working Group](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage) in the [Checklist for Habitat Confirmation](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/habitat-confirmation-projects).  The checklist was developed to guide biologists confirming fish habitat value at a stream crossings which have been identified as potential high‐priorities for fish passage restoration.
@@ -1034,7 +1064,6 @@ plot
 ## References
 
 ```{r include = F}
-##don't foget to diconnect from database yo
+##don't forget to diconnect from database yo
 dbDisconnect(conn = conn)
 ```
-
