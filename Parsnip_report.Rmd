@@ -2,14 +2,14 @@
 title: "Parsnip Watershed Fish Habitat Confirmations - DRAFT"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: yes
     fig_caption: yes
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
 bibliography: references.bib
 biblio-style: apalike
 ---
@@ -1021,9 +1021,6 @@ child_docs <- c("Parsnip_report_057696.Rmd", "Parsnip_report_125098.Rmd")
 ```
 
 <br>
-
-```{r, eval = (knitr::is_html_output() == FALSE), child = child_docs}
-```
 
 
 ## Workflow Layout 

@@ -51,20 +51,27 @@ plan1 <- drake_plan(
   fish_habitat_model_lines = sf::st_read('data/fish_habitat.geojson', layer = 'fish_habitat'),
   table_planning = make_table_planning(planning_data = planning_data),
   crossing_watersheds = sf::st_read("data/parsnip.gpkg", layer = "watersheds"),
-  report_appendices_rmd_files = c(
-    '057681',
-    '057690',
-    '125000', 
-    '125179', 
-    '125180', 
-    '125186', 
-    '125231', 
-    '125247',
-    '125253',
-    '125345',
-    'CV1',
-    '057695',
-    '057696'),
+  report_appendices_rmd_files = list.files(pattern = "[.]Rmd$") %>% ##automated grab of the appendices
+    str_replace_all('Parsnip_report_','') %>% 
+    str_replace_all('.Rmd','') %>%
+    data.frame(files_df = .) %>% 
+    filter(files_df != 'Parsnip_report' &  files_df != 'planning_summary' & files_df != 'test') %>% 
+    pull(files_df),
+  # report_appendices_rmd_files = c(
+  #   '057681',
+  #   '057690',
+  #   '125000', 
+  #   '125179', 
+  #   '125180', 
+  #   '125186', 
+  #   '125231', 
+  #   '125247',
+  #   '125253',
+  #   '125345',
+  #   'CV1',
+  #   '057695',
+  #   '057696',
+  #   '125098'),
   ##REMOVED THE HYDROGRAPHs from the plan and intro_methods file to allow report production using png outputs only
   ##now make the report
     report_main = rmarkdown::render(
