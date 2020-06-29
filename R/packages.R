@@ -38,7 +38,8 @@ pacman::p_load(
   officer,
   jpeg,
   png,
-  grid
+  grid,
+  english
   )
 pacman::p_load_gh("poissonconsulting/fwapgr")
 #pacman::p_load(mapview)

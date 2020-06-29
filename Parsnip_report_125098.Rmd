@@ -16,7 +16,7 @@ biblio-style: apalike
 ```{r setup-125098, include= knitr::is_html_output(), comment=NA, echo =FALSE, message=FALSE, warning=FALSE,  eval= knitr::is_html_output()}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
-### this one ! https://www.bibtex.com/e/entry-types/
+##### this one ! https://www.bibtex.com/e/entry-types/
 source('R/packages.R')
 source('R/functions.R')
 
@@ -102,7 +102,18 @@ my_habitat_info_t <- left_join(
 
 ```
 
-## Crossing `r my_site` - `r my_overview_info %>% pull(road_name)` Road - `r my_overview_info %>% pull(stream_name)`
+
+```{r, eval = knitr::is_html_output() == FALSE}
+word_title <- paste0('# Appendix - Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' Road - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(word_title) # Header that is only shown if print_option == TRUE
+```
+
+
+```{r, eval = knitr::is_html_output()}
+html_title <- paste0('# Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' Road - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(html_title) # Header that is only shown if print_option == TRUE
+```
+
 
 ```{r}
 # test <- pull_data(sheet = loc_data, site = my_site)
@@ -111,14 +122,14 @@ my_habitat_info_t <- left_join(
 #   geom_sf(data = my_watershed, lwd = 0.15)
 ```
 
-### Site Location
+##### Site Location
 
 Crossing `r my_site` is located on an unnamed `r my_pscis_info %>% pull(stream_name)` near the 1km mark of an unnamed road (tenure ID R01821B).  The road is accessed from the Chuchinka-Arctic FSR.  The culvert is located `r my_distance_downstream`km upstream from the confluence with the Parsnip River (Table \@ref(tab:tableoverview-125098)). At the time of the field surveys, there appeared to be no active log hauling on the road at the crossing location. 
 
 
 <br>
 
-### Background Information
+##### Background Information
 
 At the crossing location, the stream is 1st order with watershed elevations ranging from a maximum of 830m to 780m at the culvert. There were no other crossings upstream. 
 
@@ -137,7 +148,7 @@ Following office review, PSCIS stream crossing `r my_site` was ranked as a moder
 
 <br>
 
-### Stream Characteristics at Crossing
+##### Stream Characteristics at Crossing
 
 At the time of the survey, the un-embedded and non-backwatered `r my_pscis_info %>% pull(diameter_or_span_meters)`m diameter crossing was considered a barrier to upstream fish passage with a pipe length of `r my_pscis_info %>% pull(length_or_width_meters)`m, a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)`% and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert-125098), Figure \@ref(fig:photo-culvert-125098)). Water temperature was `r my_habitat_info_us %>% pull(temperature_c)`$^\circ$C and conductivity was `r my_habitat_info_us %>% pull(conductivity_m_s_cm)`uS/cm.
 
@@ -153,13 +164,13 @@ drake::readd(priorities_spreadsheet) %>% filter(site == my_site) %>% pull(commen
 
 ```
 
-### Stream Characteristics Downstream
+##### Stream Characteristics Downstream
 
 The stream was surveyed downstream from the culvert for `r my_priority_info_ds %>% pull(length)`m. Overall, total cover amount was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(ds)` with  `r my_habitat_info_t %>% filter(ds == 'dominant') %>% pull(rowname)` dominant and`r my_habitat_info_t %>% filter(ds == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also present. However, the small stream had very minimal flows with moss present mid-channel indicating low flow volumes were typical for the system (Figures \@ref(fig:photo-downstream1-125098) - \@ref(fig:photo-downstream2-125098)). Occasional pockets of gravels suitable for spawning were noted as present. The average channel width was `r my_habitat_info_ds %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_ds %>% mutate(avg_wetted_width_m = round(avg_wetted_width_m,1)) %>%  pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_ds %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125098)).  Riparian vegetation was comprised of a mature coniferous forest. Habitat value downstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()` due to likely very limited rearing and spawning potential resulting from low flow conditions.
 
 <br>
 
-### Stream Characteristics Upstream
+##### Stream Characteristics Upstream
 
 The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m.  The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125098)). Riparian vegetation was comprised of a mature coniferous forest and total cover amount was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`. The dominant cover form was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available (Figures \@ref(fig:photo-upstream1-125098) - \@ref(fig:photo-upstream2-125098)). Some pockets of gravels suitable for spawning were noted as present. Habitat value downstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()` due to likely very limited rearing and spawning potential resulting from low flow conditions.
 
@@ -167,7 +178,7 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 <br>
 
 
-### Conclusion
+##### Conclusion
 
 Mapping indicates there is 1km of habitat upstream of crossing `r my_site`. Although Rainbow Trout have been recorded upstream, habitat value was rated as low due to a lack of significant flow volume. Review of Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR) licensee operating areas maps indicate that the forest licensee in the area is Sinclar Group however the road tenure holder is detailed as Winton Global Lumber Ltd. [@moeForestTenureRoad2019].  The crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.
 
@@ -286,6 +297,6 @@ rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
 <br>
 
 ```{r, eval = knitr::is_html_output()}
-knitr::asis_output("### References") # Header that is only shown if print_option == TRUE
+knitr::asis_output("##### References") # Header that is only shown if print_option == TRUE
 ```
 
