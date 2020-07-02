@@ -1,14 +1,14 @@
 ---
 title: 
 output:
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: no
     fig_caption: yes
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
 bibliography: references.bib
 biblio-style: apalike
 ---
@@ -110,7 +110,7 @@ knitr::asis_output(word_title) # Header that is only shown if print_option == TR
 
 
 ```{r, eval = knitr::is_html_output()}
-html_title <- paste0('# Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' Road - ', my_overview_info %>% pull(stream_name))
+html_title <- paste0('### Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' Road - ', my_overview_info %>% pull(stream_name))
 knitr::asis_output(html_title) # Header that is only shown if print_option == TRUE
 ```
 
@@ -180,7 +180,7 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 
 ##### Conclusion
 
-Mapping indicates there is 1km of habitat upstream of crossing `r my_site`. Although Rainbow Trout have been recorded upstream, habitat value was rated as low due to a lack of significant flow volume. Review of Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR) licensee operating areas maps indicate that the forest licensee in the area is Sinclar Group however the road tenure holder is detailed as Winton Global Lumber Ltd. [@moeForestTenureRoad2019].  The crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.
+Mapping indicates there is 1km of habitat upstream of crossing `r my_site`. Although Rainbow Trout have been recorded upstream, habitat value was rated as low value due to a lack of significant flow volume. Review of Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR) licensee operating areas maps indicate that the forest licensee in the area is Sinclar Group however the road tenure holder is detailed as Winton Global Lumber Ltd. [@moeForestTenureRoad2019].  The crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.
 
 <br>
 

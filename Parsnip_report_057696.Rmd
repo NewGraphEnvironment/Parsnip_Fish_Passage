@@ -110,7 +110,7 @@ knitr::asis_output(word_title) # Header that is only shown if print_option == TR
 
 
 ```{r, eval = knitr::is_html_output()}
-html_title <- paste0('# Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
+html_title <- paste0('### Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
 knitr::asis_output(html_title) # Header that is only shown if print_option == TRUE
 ```
 
@@ -272,6 +272,8 @@ my_caption = paste0('Habitat downstream of PSCIS crossing ', my_site, ' (', get_
 grid::grid.raster(get_img())
 ```
 
+<br>
+
 ```{r photo-upstream-extra1-57696, fig.cap= my_caption, eval=T}
 my_photo ='upstream-extra1.JPG'
 
@@ -279,7 +281,7 @@ my_caption = paste0('Downstream view of 15m long cascade with gradient of 32% lo
 
 grid::grid.raster(get_img())
 ```
-<br>
+
 
 <br>
 
@@ -301,6 +303,7 @@ my_caption = paste0('View of habitat upstream of PSCIS crossing ', my_site, ' ('
 
 grid::grid.raster(get_img())
 ```
+
 <br>
 
 

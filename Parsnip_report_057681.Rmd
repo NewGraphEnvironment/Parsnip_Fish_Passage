@@ -15,7 +15,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+```{r setup-057681, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
@@ -38,7 +38,7 @@ drake::loadd(table_habitat_report, table_overview_report, table_planning, table_
 
 
 
-```{r load-data}
+```{r load-data-057681}
 my_site <- '57681'
 title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 my_overview_info <- drake::readd(table_overview_raw) %>% filter(site == my_site & location == 'Upstream')
@@ -90,7 +90,18 @@ my_planning_data <- drake::readd(planning_data) %>% filter(stream_crossing_id ==
 ```
 
 
-## Crossing `r my_site` - `r my_overview_info %>% pull(road_name)` - `r my_overview_info %>% pull(stream_name)`
+```{r, eval = knitr::is_html_output() == FALSE}
+word_title <- paste0('# Appendix - Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(word_title) # Header that is only shown if print_option == TRUE
+```
+
+
+```{r, eval = knitr::is_html_output()}
+html_title <- paste0('### Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(html_title) # Header that is only shown if print_option == TRUE
+```
+
+
 
 ```{r}
 # test <- pull_data(sheet = loc_data, site = my_site)
@@ -99,14 +110,14 @@ my_planning_data <- drake::readd(planning_data) %>% filter(stream_crossing_id ==
 #   geom_sf(data = my_watershed, lwd = 0.15)
 ```
 
-### Site Location
+##### Site Location
 
-Crossing `r my_site` is located on an unnamed tributary to the Parsnip River under the CN Railway and `r my_overview_info %>% pull(road_name)` immediately upstream of the confluence with the Parsnip River and approximately 2.5 km north-east of Tacheeda Lakes  (Table \@ref(tab:tableoverview)). At the time of the field surveys, the FSR had heavy traffic associated with the Gaslink Pipeline construction project. A remote camp for the pipeline project was located approximately 1.5 km up the FSR from the crossing location. 
+Crossing `r my_site` is located on an unnamed tributary to the Parsnip River under the CN Railway and `r my_overview_info %>% pull(road_name)` immediately upstream of the confluence with the Parsnip River and approximately 2.5 km north-east of Tacheeda Lakes  (Table \@ref(tab:tableoverview-057681)). At the time of the field surveys, the FSR had heavy traffic associated with the Gaslink Pipeline construction project. A remote camp for the pipeline project was located approximately 1.5 km up the FSR from the crossing location. 
 
 <br>
 
 
-### Background Information
+##### Background Information
 
 At the crossing location, the stream is a 4th order stream with a watershed area upstream of the crossing of `r my_watershed %>% pull(area_km)`km^2^. The stream drains Goose Lake with Burbot, Sculpin, Lake Chub, Mountain Whitefish, Rainbow Trout, Redside Shiner and Suckers recorded upstream [@data_fish_obs]. Goose Lake is located on the west side of the Parsnip River, is approximately 75ha in area, sits at an elevation of approximately 800m and drains tributary watersheds with elevations reaching near 1000m. Goose Lake was stocked with Rainbow Trout on eight occasions since 1982, with the last stocking event occurring in 2002 [@FishInventoriesData2020]. Stocking was discontinued in 2002 as the lake was thought to be more suitably managed as a wild fishery and because the risks associated with possible genetic introgressions with native stocks were assessed as outweighing the likely benefits of the stocking program [@clarkeOminecaRegionStocked2005].  There are no other crossing barriers on the mainstem of the stream between the FSR and Goose Lake which is located 7 km upstream of the culverts. PSCIS crossing 57676 is located between Goose Lake and an upstream lake/wetland area and although it was assessed as a barrier in 2012, PSCIS data indicates low value habitat upstream with "no further action" recommended in recorded contractor comments [@gollnerPrinceGeorgeTimber2013; @hooftPrinceGeorgeForest].
 
@@ -114,14 +125,14 @@ At the crossing location, the stream is a 4th order stream with a watershed area
 
 <br>
 
-Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to upstream lake (`r my_overview_info %>% mutate(lake = round(sum(upstr_alake_gross_obs, upstr_alake_gross_inf),1)) %>% pull(lake)`ha), wetland (`r my_overview_info %>% mutate(upstr_awet_gross_all = round(upstr_awet_gross_all,1)) %>% pull(upstr_awet_gross_all)`ha) and instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) habitat. Additionally, it was known as fish bearing upstream of the crossing and ranked by @gollnerPrinceGeorgeTimber2013 as a high priority for follow up (Table \@ref(tab:table-planning)). The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
+Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to upstream lake (`r my_overview_info %>% mutate(lake = round(sum(upstr_alake_gross_obs, upstr_alake_gross_inf),1)) %>% pull(lake)`ha), wetland (`r my_overview_info %>% mutate(upstr_awet_gross_all = round(upstr_awet_gross_all,1)) %>% pull(upstr_awet_gross_all)`ha) and instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) habitat. Additionally, it was known as fish bearing upstream of the crossing and ranked by @gollnerPrinceGeorgeTimber2013 as a high priority for follow up (Table \@ref(tab:table-planning-057681)). The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
 
 
 <br>
 
-### Stream Characteristics at Crossing
+##### Stream Characteristics at Crossing
 
-At the time of the survey, the `r my_pscis_info %>% pull(diameter_or_span_meters)`m diameter culvert under the CN Railway and the Chuchinka-Colbourne FSR was considered a barrier to upstream fish passage with a length of `r my_pscis_info %>% pull(length_or_width_meters)`m, an average depth of fill on top of the culvert of `r my_pscis_info %>% pull(fill_depth_meters)`m and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert), Figure \@ref(fig:photo-culvert)). Water temperature was `r my_habitat_info_us %>% pull(temperature_c)`$^\circ$C and conductivity was `r my_habitat_info_us %>% pull(conductivity_m_s_cm)`uS/cm.
+At the time of the survey, the `r my_pscis_info %>% pull(diameter_or_span_meters)`m diameter culvert under the CN Railway and the Chuchinka-Colbourne FSR was considered a barrier to upstream fish passage with a length of `r my_pscis_info %>% pull(length_or_width_meters)`m, an average depth of fill on top of the culvert of `r my_pscis_info %>% pull(fill_depth_meters)`m and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert-057681), Figure \@ref(fig:photo-culvert-057681)). Water temperature was `r my_habitat_info_us %>% pull(temperature_c)`$^\circ$C and conductivity was `r my_habitat_info_us %>% pull(conductivity_m_s_cm)`uS/cm.
 
 
 <br>
@@ -135,26 +146,26 @@ drake::readd(priorities_spreadsheet) %>% filter(site == my_site) %>% pull(commen
 
 ```
 
-### Stream Characteristics Downstream
+##### Stream Characteristics Downstream
 
-The stream joins the Parsnip River immediately downstream from the culvert . Minnow traps were set overnight below the crossing with one Burbot (81mm fork length) and two Rainbow Trout (52mm) captured (Figures \@ref(fig:photo-downstream1) - \@ref(fig:photo-downstream2)).
-
-<br>
-
-### Stream Characteristics Upstream
-Upstream of the crossing a `r my_priority_info_us %>% pull(length)`m site was surveyed. No obstacles to fish passage were observed and numerous young of year and parr salmonids (suspect Rainbow Trout) were observed. Wetland type habitat was present for the first approximately 100m upstream of the crossing and the average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat), Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream3)). Small woody debris, overhanging vegetation and undercut banks were abundant throughout the surveyed area and occasional pockets of gravels were present suitable for spawning small bodied salmonids.  Minnow trapping was conducted upstream of the crossing with four Rainbow Trout parr captured (45 - 54mm). Overall the habitat upstream of the crossing was considered `r my_pscis_info %>% pull(habitat_value) %>% tolower()` due to the relatively low elevation of the watershed and the brackish type water quality. 
+The stream joins the Parsnip River immediately downstream from the culvert . Minnow traps were set overnight below the crossing with one Burbot (81mm fork length) and two Rainbow Trout (52mm) captured (Figures \@ref(fig:photo-downstream1-057681) - \@ref(fig:photo-downstream2-057681)).
 
 <br>
 
+##### Stream Characteristics Upstream
+Upstream of the crossing a `r my_priority_info_us %>% pull(length)`m site was surveyed. No obstacles to fish passage were observed and numerous young of year and parr salmonids (suspect Rainbow Trout) were observed. Wetland type habitat was present for the first approximately 100m upstream of the crossing and the average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-057681), Figures \@ref(fig:photo-upstream1-057681) - \@ref(fig:photo-upstream3-057681)). Small woody debris, overhanging vegetation and undercut banks were abundant throughout the surveyed area and occasional pockets of gravels were present suitable for spawning small bodied salmonids.  Minnow trapping was conducted upstream of the crossing with four Rainbow Trout parr captured (45 - 54mm). Overall the habitat upstream of the crossing was considered `r my_pscis_info %>% pull(habitat_value) %>% tolower()` due to the relatively low elevation of the watershed and the brackish type water quality. 
 
-### Conclusion
+<br>
+
+
+##### Conclusion
 
 There is over 7km of low gradient mainstem habitat upstream of crossing `r my_site` as well as a modeled `r my_overview_info %>% mutate(upstr_alake_gross_obs = round(upstr_alake_gross_obs,1)) %>% pull(upstr_alake_gross_obs)`ha of confirmed fish bearing lake. Multiple species have been confirmed upstream of the crossing including a self-sustaining population of Rainbow Trout with genetics likely influenced by historic stocking programs. Habitat surveyed was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()` value for salmonids due to relatively low elevation of the watershed, the prevalence of wetland type habitats and the likely lack of upstream spawning areas suitable for migratory large bodied Bull Trout and downstream Arctic Grayling populations. Although Canadian Forest Products Ltd. and BCTS use the road to access their operations areas, the forest licensee directly adjacent to the crossing is Sinclar Group. The road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNRORD) and the operator of the railway is CN Rail. Replacement of the crossing will require a collaboration between FLNRORD and CN Rail with relatively high replacement costs expected due to the length of the structure, the presence of the railway and the large amount of fill over the culvert. Overall, the crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
 
 <br>
 
 
-```{r tableoverview, eval=T}
+```{r tableoverview-057681, eval=T}
 
 if(knitr::is_html_output() == TRUE){
   table_overview_html()
@@ -163,7 +174,7 @@ if(knitr::is_html_output() == TRUE){
 
 <br>
 
-```{r table-planning, eval= T}
+```{r table-planning-057681, eval= T}
 
 if(knitr::is_html_output() == TRUE){
   table_planning_html()
@@ -175,7 +186,7 @@ if(knitr::is_html_output() == TRUE){
 <br>
 
 
-```{r tableculvert, eval=T}
+```{r tableculvert-057681, eval=T}
 if(knitr::is_html_output() == TRUE){
 table_culvert_html()
   } else table_culvert_flextable()
@@ -185,7 +196,7 @@ table_culvert_html()
 
 <br>
 
-```{r tablehabitat, eval=T}
+```{r tablehabitat-057681, eval=T}
 if(knitr::is_html_output() == TRUE){
 table_habitat_html()
   } else table_habitat_flextable()
@@ -195,14 +206,14 @@ table_habitat_html()
 
 <br>
 
-```{r view-photo-names, eval = F}
+```{r view-photo-names-057681, eval = F}
 list.files(paste0('data/photos/', my_site, '/'))
 my_site
 
 ```
 
 
-```{r photo-culvert, fig.cap= caption}
+```{r photo-culvert-057681, fig.cap= caption}
 
 my_photo = 'outlet.JPG'
 
@@ -216,7 +227,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream1, fig.cap= my_caption, eval=T}
+```{r photo-downstream1-057681, fig.cap= my_caption, eval=T}
 my_photo = 'downstream.JPG'
 
 my_caption = paste0('Habitat downstream of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -226,7 +237,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream2, fig.cap= my_caption, eval=T}
+```{r photo-downstream2-057681, fig.cap= my_caption, eval=T}
 ##special case
 my_photo = 'downstream_minnowtraps.JPG'
 
@@ -251,7 +262,7 @@ grid::grid.raster(get_img())
 
 
 
-```{r photo-upstream1, fig.cap= my_caption, eval=T}
+```{r photo-upstream1-057681, fig.cap= my_caption, eval=T}
 my_photo ='upstream3.JPG'
 
 my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -262,7 +273,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-upstream2, fig.cap= my_caption, eval=T}
+```{r photo-upstream2-057681, fig.cap= my_caption, eval=T}
 my_photo ='DSCF4873.JPG'
 
 my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -272,7 +283,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-upstream3, fig.cap= my_caption, eval=T}
+```{r photo-upstream3-057681, fig.cap= my_caption, eval=T}
 my_photo ='DSCF4871.JPG'
 
 my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -291,6 +302,9 @@ rmarkdown::render(input = paste0('Parsnip_report_0', my_site, '.Rmd'),  ##specia
 
 <br>
 
-### References
+
+```{r, eval = knitr::is_html_output()}
+knitr::asis_output("##### References") # Header that is only shown if print_option == TRUE
+```
 
 
