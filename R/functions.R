@@ -54,12 +54,20 @@ fit_to_page <- function(ft, pgwidth = 6.75){
   return(ft_out)
 }
 
+fit_to_page_landscape <- function(ft, pgwidth = 12){
+  
+  ft_out <- ft %>% autofit()
+  
+  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+  return(ft_out)
+}
+
 
 my_flextable <- function(df,  ...){ ##left_just_col = 2 was an option
   flextable::autofit(flextable::flextable(
     df,
     defaults = list(fontname = 'tahoma'))) %>% 
-    flextable::theme_booktabs(fontsize = 9) %>% ##changed from flextable::my_theme_booktabs(fontsize = 9) %>% 
+    flextable::theme_booktabs(fontsize = 8) %>% ##changed from flextable::my_theme_booktabs(fontsize = 9) %>% 
     fit_to_page()
 }
 
@@ -145,7 +153,7 @@ table_habitat_value_html <- function(...){
 table_habitat_value_flextable <- function(...){
   my_flextable(tablehabvalue, ...) %>%
     flextable::width(j = 1, width = 1) %>%
-    # align(j = 2, align = 'left', part = "all") %>%
+    align(j = c(1,2), align = 'left', part = "all") %>%
     flextable::set_caption('Habitat value criteria (Fish Passage Technical Working Group, 2011).')
 }
 
@@ -211,22 +219,38 @@ table_overview_html <- function(df = table_overview_report, site = my_site){
 }
 
 table_overview_html_all <- function(df){
-  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253', '125345', 'CV1', '125098', '125128') #this should be abstract
+  reports_complete = c('125000', '125179', '125180', '125186', '125231', '125247', '125253', '125345', 'CV1', '125098', '125128', '125175', '125403') #this should be abstract 125128
   reports_complete_withzeros = c('57681', '57690', '57695', '57696')
-  df %>% 
+  df %>%
     mutate(Site = case_when(Site %in% reports_complete ~ paste0('**[', Site, '](03_Parsnip_report_', Site, '.html)**'),
                                        TRUE ~ Site),
            Site = case_when(Site %in% reports_complete_withzeros ~ paste0('**[', Site, '](03_Parsnip_report_0', Site, '.html)**'),
                             TRUE ~ Site)) %>%  ##this adds the links to the sites in bold
-    rename(`*Habitat Gain (km)` = `Habitat Gain (km)`) %>% 
-    # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
-    # filter(Site == my_site) %>% 
-    knitr::kable() %>%
+    rename(`*Habitat Gain (km)` = `Habitat Gain (km)`) %>%
+    # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>%
+    # filter(Site == my_site) %>%
+    knitr::kable(caption = 'Overview of stream crossings where habitat confirmation assessments were conducted.') %>%
     kableExtra::column_spec(column = 10, width_min = '4in') %>%
     kableExtra::kable_styling(c("condensed"), full_width = T, font_size = 11) %>%
-    # kableExtra::footnote(general = ) %>% 
-    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;') %>% 
+    # kableExtra::footnote(general = ) %>%
+    kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;') %>%
     kableExtra::scroll_box(width = "100%", height = "500px")
+}
+
+
+table_overview_flextable_all <- function(df){
+  df %>% 
+    rename(`*Habitat Gain (km)` = `Habitat Gain (km)`) %>%
+    flextable::flextable(defaults = list(fontname = 'tahoma')) %>% 
+    # flextable::autofit() %>% 
+    flextable::theme_booktabs(fontsize = 8) %>%
+    fit_to_page_landscape() %>% 
+    flextable::width(j = c(10), width = 2.5) %>%
+    flextable::width(j = c(2:7), width = 0.8) %>% #0.55
+    flextable::width(j = c(1,8:9), width = 0.55) %>% 
+    align(align = "left", part = "all") %>% 
+    valign(valign = "top", part = "body") %>% 
+    flextable::set_caption('Overview of stream crossing.')
 }
 
 ##function to trim up sheet and get names (was previously source from altools package)
@@ -302,10 +326,11 @@ table_planning_flextable <- function(df = table_planning, site = my_site){
   df %>% 
     mutate(`Fish Upstream`= case_when(!is.na(`Fish Upstream`) ~ 'Yes', TRUE ~ 'No')) %>% ##just changed this so it will fit the page
     filter(Site == my_site) %>% 
-    select(-Stream, -stream_word, -map_linked,  -Road) %>% 
+    select(-Stream, -stream_word, -map_linked,  -Road, -`UTM (10N)`) %>% ##just added utm
     my_flextable(fontsize = 8) %>% 
-    flextable::width(j = c(1,2,10), width = 0.55) %>%
-    flextable::width(j = c(6,8), width = 0.69) %>% 
+    flextable::width(j = c(1,2,9), width = 0.55) %>%
+    flextable::width(j = c(10), width = 1.5) %>%
+    flextable::width(j = c(5,7), width = 0.69) %>% #was 6 and 8
     flextable::set_caption('Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization for follow up with fish habiat confirmation rank/comments.')
 }
 

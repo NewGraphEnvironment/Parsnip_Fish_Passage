@@ -144,6 +144,12 @@ make_photo_metadata <- function(meta){
            lon_map = case_when(crossing_id == '125000' & 
                                  tools::file_path_sans_ext(filename) == 'aerial' ~
                                  lon_pscis,
+                               TRUE ~ lon_map),
+           lat_map = case_when(tools::file_path_sans_ext(filename) == 'valle_boat' ~
+                                 54.91830,
+                               TRUE ~ lat_map),
+           lon_map = case_when(tools::file_path_sans_ext(filename) == 'valle_boat' ~
+                                 -122.68940,
                                TRUE ~ lon_map)
            ) %>% 
     sf::st_as_sf(coords = c("lon_map", "lat_map"), crs = 4326, remove = F) %>%
