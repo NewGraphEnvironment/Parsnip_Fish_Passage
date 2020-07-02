@@ -13,7 +13,7 @@ bibliography: references.bib
 biblio-style: apalike
 ---
 
-```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+```{r setup-125345, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
@@ -35,7 +35,7 @@ drake::loadd(table_habitat_report, table_overview_report, table_planning, table_
 
 
 
-```{r load-data}
+```{r load-data-125345}
 my_site <- '125345'
 title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 my_overview_info <- drake::readd(table_overview_raw) %>% filter(site == my_site & location == 'Upstream')
@@ -81,15 +81,25 @@ my_habitat_info_t <- left_join(
 ```
 
 
-## Crossings `r my_site` and 57687 - `r my_overview_info %>% pull(road_name)` and CN Railway - `r my_overview_info %>% pull(stream_name)`
+```{r, eval = knitr::is_html_output() == FALSE}
+word_title <- paste0('# Appendix - Crossings ', my_site, ' and 57687 - ', my_overview_info %>% pull(road_name), ' and CN Railway - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(word_title) # Header that is only shown if print_option == TRUE
+```
 
-### Site Location
+
+```{r, eval = knitr::is_html_output()}
+html_title <- paste0('### Crossing ', my_site, ' and 57687 - ', my_overview_info %>% pull(road_name), ' and CN Railway - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(html_title) # Header that is only shown if print_option == TRUE
+```
+
+
+##### Site Location
 
 Crossing `r my_site` is located on an unnamed tributary to the Parsnip River just south-east of Reynolds Creek near the 13km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km upstream from the confluence of the stream and the Parsnip River (Table \@ref(tab:tableoverview-125345)). PSCIS crossing 57687 is located immediately upstream of the FSR under the CN Railway. At the time of the field surveys, there was very little activity on the FSR and the road was in disrepair.  Less than 1km south of the crossing location, there was a washout on the FSR that had narrowed the road to a width just barely passable by 4 x 4 pickup.
 
 <br>
 
-### Background Information
+##### Background Information
 
 At the crossing location, the stream is 4th order with a watershed area upstream of the road estimated at `r my_watershed %>% pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 900m to 730m at the culvert.  Although, there are several modeled crossings located on tributary streams upstream of the FSR and railway crossings (modeled crossings 16601006, 16601673, 16601173, 16601175, 16600094 and 16601726), there is not significant amounts of habitat modeled upstream of their mapped locations.
 
@@ -104,7 +114,7 @@ Following office review, PSCIS stream crossing `r my_site` was ranked as a high 
 
 <br>
 
-### Stream Characteristics at Crossing
+##### Stream Characteristics at Crossing
 
 At the time of the survey, crossing 125345 was un-embedded and non-backwatered.  The double pipe culvert (`r my_pscis_info %>% pull(diameter_or_span_meters)`m each) was considered a barrier to upstream fish passage with pipe lengths of `r my_pscis_info %>% pull(length_or_width_meters)`m and a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)`% (Table \@ref(tab:tableculvert-125345), Figure \@ref(fig:photo-culvert-125345)). Crossing 57687 under the railway was also a double pipe structure and was considered a barrier as it was un-embedded and non-backwatered with pipe lengths of 18m, diameters of 1.2m each and a culvert slope of 2% (Figure \@ref(fig:photo-extra1-125345)). Water temperature was `r my_habitat_info_us %>% pull(temperature_c)`$^\circ$C and conductivity was recorded as `r my_habitat_info_us %>% pull(conductivity_m_s_cm)`uS/cm.
 
@@ -121,20 +131,20 @@ kable(drake::readd(table_habitat_report) %>% filter(Site == my_site) %>% pull(Co
 
 ```
 
-### Stream Characteristics Downstream
+##### Stream Characteristics Downstream
 
 The stream was surveyed downstream from the culvert for `r my_priority_info_ds %>% pull(length)`m to the confluence of the Parsnip River (Figure \@ref(fig:photo-extra2-125345)). Overall, total cover amount was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(ds)` with  `r my_habitat_info_t %>% filter(ds == 'dominant') %>% pull(rowname)` dominant (Figures \@ref(fig:photo-downstream1-125345) - \@ref(fig:photo-downstream2-125345)). Cover was also present as `r my_habitat_info_t %>% filter(ds == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()`. Gravels suitable for spawning were abundant throughout the area surveyed. The average channel width was `r my_habitat_info_ds %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_ds %>% mutate(avg_wetted_width_m = round(avg_wetted_width_m,1)) %>%  pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_ds %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125345)). Habitat value downstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()` with salmonid fry and cyprinids observed downstream throughout the area surveyed. At the time of the survey, trailers were present at a hunting and fishing camp located near the confluence of the stream and the Parsnip River.
 
 <br>
 
-### Stream Characteristics Upstream
+##### Stream Characteristics Upstream
 
 The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m. Beaver activity was present in the area surveyed with a 0.6 m high structure noted approximately 180m upstream from crossing 125345 (Figure \@ref(fig:photo-upstream1-125345)). The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125345)). Riparian vegetation was comprised of a mature coniferous forest and instream cover quantity was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`.  The dominant form of cover was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available. Gravels suitable for spawning were abundant throughout the area surveyed (Figures \@ref(fig:photo-upstream2-125345) - \@ref(fig:photo-upstream3-125345)). There were no barriers to upstream fish migration observed. Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
 
 <br>
 
 
-### Conclusion
+##### Conclusion
 
 There is approximately 4.7km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient with several large tributaries also present likely providing additional high value fish habitat. Habitat surveyed was rated as high value for salmonids with fish presence confirmed immediately downstream of the crossings. The forest licensees in the area are BC Timber Sales and Sinclar Group. The road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR). Overall, crossing 125345 and 57687 were ranked as `r tolower(my_priority_info_us %>% pull(priority))` priorities for rehabilitation. Effective remediation of fish passage at these locations will require coordination between CN Rail and FLNR. 
 
@@ -172,16 +182,18 @@ table_culvert %>%
     knitr::kable(caption = 'Summary of culvert fish passage assessment.') %>%
     kableExtra::kable_styling(c("condensed"), full_width = T) %>%
     kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
-  } else table_culvert_flextable()
+  } else table_culvert %>% 
+    filter(Site == '125345' | Site == '57687') %>%
+    select(-Score) %>% 
+    my_flextable(fontsize = 8) %>%
+    flextable::width( j = c(1,8,9), width = 0.658) %>%
+    flextable::width( j = c(4), width = 0.75) %>%
+    flextable::width( j = c(5), width = 0.88) %>%
+    # flextable::width(., j = 9, width = 2.2) %>%
+    flextable::set_caption('Summary of culvert fish passage assessment.')
 
 
-# ##if we have time we could look to add both crossings to the table like this
-# table_culvert %>%
-#     filter(Site == '125345' | Site == '57687') %>%
-#     select(-Score) %>%
-#     knitr::kable(caption = 'Summary of culvert fish passage assessment.') %>%
-#     kableExtra::kable_styling(c("condensed"), full_width = T) %>%
-#     kableExtra::row_spec(0 ,  bold = F, extra_css = 'vertical-align: middle !important;')
+
 ```
 
 
@@ -196,12 +208,6 @@ table_habitat_html()
 ```
 
 <br>
-
-```{r view-photo-names, eval = F}
-list.files(paste0('data/photos/', my_site, '/'))
-my_site
-
-```
 
 
 ```{r photo-culvert-125345, fig.cap= caption}
@@ -257,7 +263,7 @@ grid::grid.raster(get_img())
 <br>
 
 ```{r photo-downstream2-125345, fig.cap= my_caption, eval=T}
-##SPECIAL CASE####
+##SPECIAL CASE######
 
 my_photo ='TimePhoto_20190906_145555.jpg'
 
@@ -288,6 +294,7 @@ my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_
 
 grid::grid.raster(get_img())
 ```
+
 <br>
 
 ```{r photo-upstream3-125345, fig.cap= my_caption, eval=T}
@@ -297,6 +304,7 @@ my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_
 
 grid::grid.raster(get_img())
 ```
+
 <br>
 
 ```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE, eval=F}
@@ -307,6 +315,9 @@ rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
 
 <br>
 
-### References
+
+```{r, eval = knitr::is_html_output()}
+knitr::asis_output("##### References") # Header that is only shown if print_option == TRUE
+```
 
 
