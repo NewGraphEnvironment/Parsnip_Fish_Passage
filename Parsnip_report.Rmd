@@ -1,6 +1,6 @@
 ---
-title: "Parsnip Watershed Fish Habitat Confirmations - DRAFT"
-date: "`r format(Sys.time(), '%B %Y')`"
+title: "Parsnip River Watershed – Fish Habitat Confirmations (PEA-F20-F-2967) - DRAFT"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   bookdown::html_document2:
     number_sections: no
@@ -9,7 +9,6 @@ output:
     reference_docx: word_template.docx
     bibliography: references.bib
     toc: yes
-    fig_caption: yes
 bibliography: references.bib
 biblio-style: apalike
 ---
@@ -53,8 +52,118 @@ drake::loadd(c(site_location_data, habitat_data, table_overview_report))
 ```
 
 
+```{r loadpscis}
+
+##filter with a date so that the report is reproducable after we submit our data
+
+##things we want to know are - how many crossings assessed, how many barriers, how many potential barriers and how many fords
+
+#Enter the values for you database connection and connect
+#connect and see if the connection to the database is working
+
+
+
+# print(dbGetQuery(conn,
+#            "SELECT table_name
+#            FROM information_schema.tables
+#            WHERE table_schema='whse_basemapping'"))
+
+
+query <- "WITH wsg AS (SELECT * FROM whse_basemapping.fwa_watershed_groups_poly WHERE watershed_group_id IN ('166')) Select p.*, wsg.watershed_group_code FROM whse_fish.pscis_assessment_svw p, wsg WHERE ST_Intersects(p.geom,wsg.geom)"
+
+pscis_historic <-  sf::st_read(conn, query = query)
+
+#make table of results
+pscis_historic_summary <-   pscis_historic %>% 
+  st_set_geometry(NULL) %>% 
+  select(current_barrier_result_code,watershed_group_code) %>%
+  filter(watershed_group_code == 'PARS') %>% 
+  group_by(current_barrier_result_code)  %>% 
+  summarise(count =n()) 
+  
+  
+pscis_historic_references <- pscis_historic %>%
+  st_set_geometry(NULL) %>% 
+  filter(watershed_group_code == 'PARS') %>% 
+  group_by(consultant_name, year = lubridate::year(lubridate::as_date(assessment_date)), ecocat_url)  %>% ##http://a100.gov.bc.ca/pub/acat/public/viewReport.do?reportId=50797 this is the Hooft 2015 report.  the link in pscis is incorrect
+  summarise(count =n()) %>% 
+  mutate(reference_year = year + 1,
+         reference_year = case_when(consultant_name %ilike% 'hooft' ~ year + 2,
+                                    TRUE ~ reference_year)) %>% 
+         # ecocat_url = case_when(consultant_name %ilike% 'hooft' ~ 'http://a100.gov.bc.ca/pub/acat/public/viewReport.do?reportId=50797',
+         #                        TRUE ~  ecocat_url))
+  ungroup() %>% 
+  mutate(consultant_name = stringr::str_to_title(consultant_name)) 
+  # filter(consultant_name != 'REGIONAL MANAGER NORTHERN')  ##the links don't work on these
+
+##get my pcsic working table used to prioritized for hab confirmations
+query <- "WITH wsg AS (SELECT * FROM whse_basemapping.fwa_watershed_groups_poly WHERE watershed_group_id IN ('166')) Select p.*, wsg.watershed_group_code FROM working.my_pscis_20190709 p, wsg WHERE ST_Intersects(p.geom,wsg.geom)"
+
+pscis_planning <-  sf::st_read(conn, query = query) %>% 
+  select(-fid) ##need to get rid of this to burn to geopackage for some reason
+
+test <- pscis_planning %>%
+  filter(!is.na(my_priority)) %>% 
+  mutate(my_priority = stringr::str_to_title(my_priority)) %>% 
+  filter(my_priority == 'High')
+  
+
+##save it to the geopackage for simon
+# st_write(pscis_planning,     "./data/pscis_planning.geojson", "pscis_planning")
+
+
+pscis_planning_summary <- pscis_planning %>% ##lets see if we can replicate our screening variables NOT COMPLETE
+  st_set_geometry(NULL) %>%
+  filter(!is.na(my_priority)) %>% 
+  mutate(my_priority = stringr::str_to_title(my_priority)) %>% 
+  group_by(my_priority) %>% 
+  summarize(count =n())
+
+##get a summary of fixed crossings
+pscis_fixed <-  pscis_planning %>%
+  st_set_geometry(NULL) %>%
+  filter(my_priority %like% 'fixed')
+
+```
 
 # {.tabset}
+
+```{r}
+if(knitr::is_html_output() == TRUE){
+knitr::asis_output("## Executive Summary")
+  } else knitr::asis_output('**Executive Summary**')  
+```
+
+
+The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats. In addition, open migration corridors are can facilitate adaptation to the impacts of climate change such as rising water temperatures and changing flow regimes. Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues.  There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat.
+
+<br>
+
+In the spring and summer of 2019, the Society for Ecosystem Restoration Northern BC (in collaboration with New Graph Environment, Hillcrest Geographics and the McLeod Lake Indian Band) conducted fish habitat confirmation assessments throughout the Parsnip River watershed.  Prior to the field surveys a literature and Provincial Stream Crossing Inventory Summary System (PSCIS) database review was conducted and a community scoping exercise within the McLeod Lake Indian Band was undertaken to focus the work on fish passage restoration candidates with the highest potential benefits for salmonid populations in the watershed. Crossings prioritized for habitat confirmation field assessments were those identified as having potentially high fisheries value as well as likely large quantities of habitat upstream. The project aligns with the Fish and Wildlife Compensation Program Streams Action Plan [@fishandwildlifecompensationprogramPeaceBasinStreams2014] objective of conserving or enhancing high priority species and habitats by implementing actions to both identify restoration opportunities and restore fish passage in streams.
+
+<br>
+
+Review of the PSCIS database indicated that within the Parsnip River watershed, since `r min(pscis_historic_references$year)`, `r length(pscis_historic$id)` assessments for fish passage (Phase 1) have been conducted at crossing structures. Locations of 99 crossing structure assessments were selected for a detailed office review and ranked for follow up based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, near the crossing; stream order, previously recorded channel size and recommendations of past fish passage assessments. 
+
+<br>
+ 
+Habitat confirmation assessments were conducted between August 30, 2019 and September 8, 2019 at 17 crossings ranked as high or moderate priority for follow up. During the habitat confirmations a total of approximately 15 km of stream was assessed with `r table_overview_report %>% filter(Priority %ilike% 'high') %>% nrow() %>% english::as.english()` crossings rated as high priorities for rehabilitation, `r table_overview_report %>% filter(Priority %ilike% 'Moderate') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings rated as moderate priorities and `r table_overview_report %>% filter(Priority %ilike% 'Low') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings rated as low priorities.
+
+<br>
+
+At the time of reporting, communications were underway with Ministry of Forests, Lands, Natural Resource Operations & Rural Development representatives, forest licensees and engineering consultants to commission an engineering site plan and design for a fish passable structure to replace one of the barrier culverts identified as a high priority for replacement. It is expected that funding for the design will be provided through this project. 
+
+
+
+```{r}
+if(knitr::is_html_output() == TRUE){
+knitr::asis_output("## Acknowledgements")
+  } else knitr::asis_output('**Acknowledgements**')  
+```
+
+The Society For Ecosystem Restoration Northern BC gratefully acknowledges the financial support of the Fish and Wildlife Compensation Program for its contribution to this project. The FWCP is partnership between BC Hydro, the Province of B.C., Fisheries and Oceans Canada, First Nations and public stakeholders to conserve and enhance fish and wildlife in watersheds impacted by BC Hydro dams.
+
+\newpage
 
 ## Introduction {.tabset}
 The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats [@swalesRoleOffChannelPonds1989; @Bramblett_2002].  Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues [@tech9_access]. In addition, open migration corridors are essential for adapting to the impacts of climate change such as rising water temperatures and changing flow regimes [@seligerRiverConnectivityHabitat2018]. There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat [@gollnerPrinceGeorgeTimber2013; @hooftPrinceGeorgeForest]. 
@@ -164,7 +273,7 @@ The Parsnip River watershed is located within the south-eastern portion of the 1
 
 <br>
 
-The continental divide separates watersheds flowing north into the Arctic Ocean via the Mackenzie River and south and west into the Pacific Ocean via the Fraser River (Figure \@ref(fig:overview_map)). The Parsnip River is a 6th order stream with a watershed that drains an area of `r round(watershed_raw$area/100, 0)` km^2^. The mainstem of the river flows within the Rocky Mountain Trench in a north direction into Williston Reservoir starting from the continental divide adjacent to Arctic Lakes. Major tributaries include the Misinchinka, Colbourne, Reynolds, Anzac, Table, Hominka and Missinka sub-basins which drain the western slopes of the Hart Ranges of the Rocky Mountains.  The Parsnip River has a mean annual discharge of `r round(fasstr::calc_longterm_mean(station_number = "07EE007")$LTMAD,1)` m^3^/s with flow patterns typical of high elevation watersheds on the west side of the northern Rocky Mountains which receive large amounts of precipitation as snow leading to peak levels of discharge during snowmelt, typically from May to July (Figures \@ref(fig:hydrology2-print) - \@ref(fig:hydrosummaryplot)). 
+The continental divide separates watersheds flowing north into the Arctic Ocean via the Mackenzie River and south and west into the Pacific Ocean via the Fraser River (Figure \@ref(fig:overview-map)). The Parsnip River is a 6th order stream with a watershed that drains an area of `r round(watershed_raw$area/100, 0)` km^2^. The mainstem of the river flows within the Rocky Mountain Trench in a north direction into Williston Reservoir starting from the continental divide adjacent to Arctic Lakes. Major tributaries include the Misinchinka, Colbourne, Reynolds, Anzac, Table, Hominka and Missinka sub-basins which drain the western slopes of the Hart Ranges of the Rocky Mountains.  The Parsnip River has a mean annual discharge of `r round(fasstr::calc_longterm_mean(station_number = "07EE007")$LTMAD,1)` m^3^/s with flow patterns typical of high elevation watersheds on the west side of the northern Rocky Mountains which receive large amounts of precipitation as snow leading to peak levels of discharge during snowmelt, typically from May to July (Figures \@ref(fig:hydrology2-print) - \@ref(fig:hydrosummaryplot)). 
 
 <br>
 
@@ -173,7 +282,7 @@ Construction of the 183 m high and 2134 m long W.A.C. Bennett Dam was completed 
 <br>
 
 
-```{r overview_map, fig.cap="Overview Map", out.width = '100%', eval= (knitr::is_html_output() == FALSE)}
+```{r overview-map, fig.cap="Overview Map", out.width = '100%', eval= (knitr::is_html_output() == FALSE)}
 knitr::include_graphics("fig/overview_map.jpg")
 ```
 
@@ -224,7 +333,7 @@ grid::grid.raster(img)
 ```
 
 ### Fisheries {.tabset}
-Fish species recorded in the Parsnip River watershed are detailed in Table \@ref(tab:table-fish) [@data_fish_obs]. In addition to flooding related to the formation of the Williston Reservoir, transmission lines, gas pipelines, rail, road networks, forestry, elevated water temperatures, interrupted connectivity, invasion from non-native species and insect infestations affecting forested areas pose threats to fisheries values in the Parsnip River watershed [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling; @bull_trout_synthesis; @bt_cosewic]. 
+Fish species recorded in the Parsnip River watershed are detailed in Table \@ref(tab:table-fish) [@data_fish_obs]. In addition to flooding related to the formation of the Williston Reservoir, transmission lines, gas pipelines, rail, road networks, forestry, elevated water temperatures, interrupted connectivity, invasion from non-native species and insect infestations affecting forested areas pose threats to fisheries values in the Parsnip River watershed [@hagen_2015_critical_habs; @stamfordFWCPArcticGrayling; @bull_trout_synthesis; @bt_cosewic]. A brief summary of trends and knowledge status related to Arctic Grayling, Bull Trout, Kokanee, Mountain Whitefish and Rainbow Trout in Williston Watershed streams is provided in @fishandwildlifecompensationprogramPeaceBasinStreams2014 with a more detailed review of the state of knowledge for Parsnip River watershed populations of Arctic Grayling and Bull Trout provided below.
 
 <br>
 
@@ -237,12 +346,25 @@ Fish species recorded in the Parsnip River watershed are detailed in Table \@ref
 
 # eval = identical(knitr::is_html_output(), FALSE) ##this is put in header of chunk if we don't want it to render to html
 
-table <- flextable::flextable(fish_table) %>%
-  flextable::theme_booktabs(fontsize = 12) %>% ##my_theme_booktabs( fontsize = 12, left_just_cols = 2)
-  align(align = "left", part = "all") %>% 
+if(knitr::is_html_output() == TRUE){
+  fish_table %>% 
+    knitr::kable(caption = 'Fish species recorded in the Parsnip River watershed.') %>% 
+    # kableExtra::column_spec(column = 1, width_min = '1.5in') %>% 
+    kableExtra::kable_styling(c("condensed"), full_width = T) 
+} else fish_table %>%
+  my_flextable(fontsize = 8) %>% 
   flextable::autofit() %>%
+  flextable::align(i = NULL, j = c(1:3), align = "left", part = "all") %>% 
   flextable::set_caption('Fish species recorded in the Parsnip River watershed.')
-table
+
+
+##this can be removed now
+# table <- flextable::flextable(fish_table) %>%
+#   flextable::theme_booktabs(fontsize = 12) %>% ##my_theme_booktabs( fontsize = 12, left_just_cols = 2)
+#   align(align = "left", part = "all") %>% 
+#   flextable::autofit() %>%
+#   flextable::set_caption('Fish species recorded in the Parsnip River watershed.')
+# table
 ```
 
 ```{r}
@@ -291,79 +413,6 @@ The overall goal of our project was to build capacity, awareness and momentum fo
 
 ## Methods 
 
-```{r loadpscis}
-
-##filter with a date so that the report is reproducable after we submit our data
-
-##things we want to know are - how many crossings assessed, how many barriers, how many potential barriers and how many fords
-
-#Enter the values for you database connection and connect
-#connect and see if the connection to the database is working
-
-
-
-# print(dbGetQuery(conn,
-#            "SELECT table_name
-#            FROM information_schema.tables
-#            WHERE table_schema='whse_basemapping'"))
-
-
-query <- "WITH wsg AS (SELECT * FROM whse_basemapping.fwa_watershed_groups_poly WHERE watershed_group_id IN ('166')) Select p.*, wsg.watershed_group_code FROM whse_fish.pscis_assessment_svw p, wsg WHERE ST_Intersects(p.geom,wsg.geom)"
-
-pscis_historic <-  sf::st_read(conn, query = query)
-
-#make table of results
-pscis_historic_summary <-   pscis_historic %>% 
-  st_set_geometry(NULL) %>% 
-  select(current_barrier_result_code,watershed_group_code) %>%
-  filter(watershed_group_code == 'PARS') %>% 
-  group_by(current_barrier_result_code)  %>% 
-  summarise(count =n()) 
-  
-  
-pscis_historic_references <- pscis_historic %>%
-  st_set_geometry(NULL) %>% 
-  filter(watershed_group_code == 'PARS') %>% 
-  group_by(consultant_name, year = lubridate::year(lubridate::as_date(assessment_date)), ecocat_url)  %>% ##http://a100.gov.bc.ca/pub/acat/public/viewReport.do?reportId=50797 this is the Hooft 2015 report.  the link in pscis is incorrect
-  summarise(count =n()) %>% 
-  mutate(reference_year = year + 1,
-         reference_year = case_when(consultant_name %ilike% 'hooft' ~ year + 2,
-                                    TRUE ~ reference_year)) %>% 
-         # ecocat_url = case_when(consultant_name %ilike% 'hooft' ~ 'http://a100.gov.bc.ca/pub/acat/public/viewReport.do?reportId=50797',
-         #                        TRUE ~  ecocat_url))
-  ungroup() %>% 
-  mutate(consultant_name = stringr::str_to_title(consultant_name)) 
-  # filter(consultant_name != 'REGIONAL MANAGER NORTHERN')  ##the links don't work on these
-
-##get my pcsic working table used to prioritized for hab confirmations
-query <- "WITH wsg AS (SELECT * FROM whse_basemapping.fwa_watershed_groups_poly WHERE watershed_group_id IN ('166')) Select p.*, wsg.watershed_group_code FROM working.my_pscis_20190709 p, wsg WHERE ST_Intersects(p.geom,wsg.geom)"
-
-pscis_planning <-  sf::st_read(conn, query = query) %>% 
-  select(-fid) ##need to get rid of this to burn to geopackage for some reason
-
-test <- pscis_planning %>%
-  filter(!is.na(my_priority)) %>% 
-  mutate(my_priority = stringr::str_to_title(my_priority)) %>% 
-  filter(my_priority == 'High')
-  
-
-##save it to the geopackage for simon
-# st_write(pscis_planning,     "./data/pscis_planning.geojson", "pscis_planning")
-
-
-pscis_planning_summary <- pscis_planning %>% ##lets see if we can replicate our screening variables NOT COMPLETE
-  st_set_geometry(NULL) %>%
-  filter(!is.na(my_priority)) %>% 
-  mutate(my_priority = stringr::str_to_title(my_priority)) %>% 
-  group_by(my_priority) %>% 
-  summarize(count =n())
-
-##get a summary of fixed crossings
-pscis_fixed <-  pscis_planning %>%
-  st_set_geometry(NULL) %>%
-  filter(my_priority %like% 'fixed')
-
-```
 
 ```{r extra-text}
 ##extra text
@@ -424,8 +473,6 @@ if(knitr::is_html_output() == TRUE){
 
 Past fish passage assessment reports for the Parsnip River watershed were first reviewed to identify crossing structure barriers previously ranked as priorities for rehabilitation in @gollnerPrinceGeorgeTimber2013.  All crossings prioritized in @gollnerPrinceGeorgeTimber2013 underwent a detailed office review and ranking for follow up in the field. Of note, @hooftPrinceGeorgeForest also contains prioritization information for the Parsnip River watershed however it was not publicly available at the time of field planning due to technical issues with provincial databases and an inability to contact the report author.  However, this report was obtained in the spring of 2020 and included prioritizations have been cross referenced with 2019 habitat confirmations in the results of this document. During planning for field surveys, to identify crossing structure barriers located on potentially high value streams not prioritized in @gollnerPrinceGeorgeTimber2013, road crossing structures that met the following criteria in the Fish Habitat Model and/or PSCIS database also underwent a detailed review to rank crossings for Phase 2 - Habitat Confirmations.
 
-<br>
-
  * Stream crossing barriers and potential barriers on streams with confirmed fish presence upstream of the structure.
  * Stream crossing barriers and potential barriers on streams documented as ≥ 1.5m wide with linear lengths of modeled upstream habitat <22% gradient for ≥500 m.
  * Stream crossing barriers and potential barriers located on streams classified as 3rd order or higher.
@@ -444,11 +491,11 @@ In the field, PSCIS crossings ranked as high priorities for follow-up were asses
 <br>
 
 Habitat confirmations were completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” (FPTWG 2011). The main objective of the field surveys was to document upstream habitat quantity and quality and to determine if any other obstructions exist above or below the crossing.  Habitat value was assessed based on channel morphology, flow characteristics (perennial, intermittent, ephemeral), the 
-presence/absence of deep  pools,un-embedded  boulders, substrate, woody debris, undercut banks, aquatic vegetation and overhanging riparian vegetation. Criteria used to rank habitat value is specified in @confirmation_checklist and summarized in Table \@ref(tab:tablehabvalue). 
+presence/absence of deep  pools,un-embedded  boulders, substrate, woody debris, undercut banks, aquatic vegetation and overhanging riparian vegetation. Criteria used to rank habitat value is specified in @confirmation_checklist and summarized in Table \@ref(tab:tablehabvalue). Data from fish habitat assessments and habitat confirmation assessments will be submitted to the PSCIS database.
 
 <br>
 
-Surveys were completed in accordance with procedures outlined in Resources Inventory Standards Committee (RIC) Fish and Fish Habitat Inventory Standards and Procedures [@bcfisheriesinformationservicesbranchReconnaissance200002001] with data collated on ["Site Cards"](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/laws-policies-standards-guidance/inventory-standards/aquatic-ecosystems) and submitted to the provincial database under scientific fish collection permit PG19-550935. The [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) was used to store field data and facilitate data input.  Among others, habitat characteristics recorded included channel widths, wetted widths, residual pool depths, gradients, bankfull depths, stage, temperature, conductivity, pH, cover by type, substrate and channel morphology. When possible, the crew surveyed the stream downstream of the crossing to the point where fish presence had been previously confirmed. Any  potential  obstacles  to  fish  passage  were  inventoried  with  photos, physical  descriptions  and  locations  recorded on RIC site cards.  Surveyed routes were recorded using time-stamped handheld GPS units. When sites surveyed were located in areas near to where the subsequent day's surveys were planned, minnow-traps were set overnight to obtain fish sampling data.
+During habitat confirmations assessment of habitat was completed in accordance with procedures outlined in Resources Inventory Standards Committee (RIC) Fish and Fish Habitat Inventory Standards and Procedures [@bcfisheriesinformationservicesbranchReconnaissance200002001] with data collated on ["Site Cards"](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/laws-policies-standards-guidance/inventory-standards/aquatic-ecosystems) and submitted to the provincial database under scientific fish collection permit PG19-550935. The [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) was used to store field data and facilitate data input.  Among others, habitat characteristics recorded included channel widths, wetted widths, residual pool depths, gradients, bankfull depths, stage, temperature, conductivity, pH, cover by type, substrate and channel morphology. When possible, the crew surveyed the stream downstream of the crossing to the point where fish presence had been previously confirmed. Any  potential  obstacles  to  fish  passage  were  inventoried  with  photos, physical  descriptions  and  locations  recorded on RIC site cards.  Surveyed routes were recorded using time-stamped handheld GPS units. When sites surveyed were located in areas near to where the subsequent day's surveys were planned, minnow-traps were set overnight to obtain fish sampling data.
 
 <br>
 
@@ -482,7 +529,6 @@ if(knitr::is_html_output() == TRUE){
 } else table_habitat_value_flextable()
 ```
 
-<br>
 
 ```{r extra methods text}
 ##not includeing this right now
@@ -500,24 +546,20 @@ if(knitr::is_html_output() == TRUE){
 
 <br>
 
-## Results {.tabset .active}
-Review of the PSCIS database indicated that within the Parsnip River watershed, since `r min(pscis_historic_references$year)`, `r length(pscis_historic$id)` assessments for fish passage (Phase 1) have been conducted at crossing structures. Locations of 99 crossing structure assessments received a detailed review with `r pscis_planning_summary %>% filter(my_priority == 'High') %>% pull(count)` crossings given a high priority for field review with habitat confirmation assessments. It should be noted that 4 of the crossings prioritized as high priorities for follow up were logged twice in the PSCIS database so in actuality only 22 crossings were present in the field.  `r pscis_planning_summary %>% filter(my_priority == 'Mod') %>% pull(count) %>% english::as.english() %>% str_to_title()` crossings were assessed with a moderate priority, `r pscis_planning_summary %>% filter(my_priority == 'Low') %>% pull(count)` crossings were assessed with a low priority and `r pscis_planning_summary %>% filter(my_priority == 'No Fix') %>% pull(count)` were assessed as "no fix". Additionally, `r pscis_planning_summary %>% filter(my_priority == 'Fixed') %>% pull(count) %>% english::as.english()` crossings were noted as "fixed". Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments is available [HERE](https://newgraphenvironment.github.io/Parsnip_Fish_Passage/Parsnip_report_planning_summary.html) and a Google Earth (.kml) file with crossing locations and pre-habitat confirmation prioritization rational for crossing rated as high and moderate priority for follow up with habitat confirmations is available  [HERE](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage/raw/master/data/planning_high_mod_culverts.zip). In addition to the Parsnip River watershed group, georeferenced field maps were also generated for the Carp River watershed group and the Crooked River Watershed group areas to prepare for future fish passage and habitat confirmation surveys and are available [HERE](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/) along with associated Fish Habitat Model data outputs which are available [HERE](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/data/).
+## Results and Discussion {.tabset .active}
+Review of the PSCIS database indicated that within the Parsnip River watershed, since `r min(pscis_historic_references$year)`, `r length(pscis_historic$id)` assessments for fish passage (Phase 1) have been conducted at crossing structures. Locations of 99 crossing structure assessments were selected for a detailed office review based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, near the crossing; stream order, previously recorded channel size and recommendations of past fish passage assessments. Following review, `r pscis_planning_summary %>% filter(my_priority == 'High') %>% pull(count)` crossings given a high priority for field review with habitat confirmation assessments. It should be noted that 4 of the crossings prioritized as high priorities for follow up were logged twice in the PSCIS database so in actuality only 22 crossings were present in the field.  `r pscis_planning_summary %>% filter(my_priority == 'Mod') %>% pull(count) %>% english::as.english() %>% str_to_title()` crossings were assessed with a moderate priority, `r pscis_planning_summary %>% filter(my_priority == 'Low') %>% pull(count)` crossings were assessed with a low priority and `r pscis_planning_summary %>% filter(my_priority == 'No Fix') %>% pull(count)` were assessed as "no fix". Additionally, `r pscis_planning_summary %>% filter(my_priority == 'Fixed') %>% pull(count) %>% english::as.english()` crossings were noted as "fixed". Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments is available [HERE](https://newgraphenvironment.github.io/Parsnip_Fish_Passage/Parsnip_report_planning_summary.html) and a Google Earth (.kml) file with crossing locations and pre-habitat confirmation prioritization rational for crossing rated as high and moderate priority for follow up with habitat confirmations is available  [HERE](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage/raw/master/data/planning_high_mod_culverts.zip). In addition to the Parsnip River watershed group, georeferenced field maps were also generated for the Carp River watershed group and the Crooked River Watershed group areas to prepare for future fish passage and habitat confirmation surveys and are available [HERE](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/) along with associated Fish Habitat Model data outputs which are available [HERE](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/data/).
 
 <br>
  
-Habitat confirmation assessments were conducted between August 30, 2019 and September 8, 2019 by Allan Irvine, R.P.Bio, Jonathan St.Jean, R.P.Bio, Tyler Valle, Environmental Technician and Ken Solonas, Environmental Technician with 17 crossings ranked as high or moderate priority for follow up surveyed in the field with habitat confirmation assessments. During the habitat confirmations a total of approximately 15 km of stream was assessed and fish sampling (primarily minnow trapping) was conducted upstream and downstream of six restoration candidate sites. Several crossings were also surveyed briefly from the road with fish passage assessments completed only (no habitat confirmation assessments completed) as conditions were assessed as passable for fish migrating upstream. Crossing 125149 was an overflow for an adjacent channel where a bridge was located, crossing 57621 had been replaced by a bridge and crossing 125261 (Fern Creek) was equipped with baffles and appeared passable to most life stages of salmonids at most flows. Additionally, fish passage assessments were conducted on all significantly sized streams on the Hodda-Lake FSR located immediately east of McLeod Lake with data to be uploaded to the PSCIS database.   
+Habitat confirmation assessments were conducted between August 30, 2019 and September 8, 2019 by Allan Irvine, R.P.Bio, Jonathan St.Jean, R.P.Bio, Tyler Valle, Environmental Technician and Ken Solonas, Environmental Technician with 17 crossings ranked as high or moderate priority for follow. During the habitat confirmations a total of approximately 15 km of stream was assessed and fish sampling (primarily minnow trapping) was conducted upstream and downstream of six restoration candidate sites. Several crossings were also surveyed briefly from the road with fish passage assessments completed only (no habitat confirmation assessments completed) as conditions were assessed as passable for fish migrating upstream. Crossing 125149 was an overflow for an adjacent channel where a bridge was located, crossing 57621 had been replaced by a bridge and crossing 125261 (Fern Creek) was equipped with baffles and appeared passable to most life stages of salmonids at most flows. Additionally, fish passage assessments were conducted on all significantly sized streams on the Hodda-Lake FSR located immediately east of McLeod Lake with data to be uploaded to the PSCIS database.   
  
 <br>
  
 Following habitat confirmation assessments, `r table_overview_report %>% filter(Priority %ilike% 'high') %>% nrow() %>% english::as.english()` crossings were rated as high priorities for rehabilitation due to the relatively high value and/or quantity of habitat gain associated with rehabilitation. `r table_overview_report %>% filter(Priority %ilike% 'Moderate') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings were rated as moderate priorities. `r table_overview_report %>% filter(Priority %ilike% 'Low') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings were rated as low priority since the fisheries value gains associated with crossing rehabilitation were relatively low and/or where the presence of natural barriers would nullify the potential value of crossing rehabilitation. Field maps showing crossing locations, habitat confirmation field tracks, Fish Habitat Model outputs, historic fish observations and documented barriers to fish passage are available [here](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/). Results from sites surveyed are summarized in `r if(knitr::is_html_output() == TRUE){knitr::asis_output("Figure \\@ref(fig:overview-map-interactive) ([Overview Map]) and ")}`Table \@ref(tab:tableoverviewreportall) `r if(knitr::is_html_output() == TRUE){knitr::asis_output("([Overview Table])")}` with detailed reporting including links to georeferenced maps also provided in site specific appendices of this document`r if(knitr::is_html_output() == TRUE){knitr::asis_output(" (linked through Site column of Table \\@ref(tab:tableoverviewreportall))")}`.
 
-```{r eval = F}
-print_this <- ""
-knitr::asis_output(print_this)
-# Results from sites surveyed are summarized in `r if(knitr::is_html_output() == TRUE){knitr::asis_output("the Overview Table")}`.
-```
+<br>
 
-
+At the time of reporting, communications were underway with Ministry of Forests, Lands, Natural Resource Operations & Rural Development representatives, forest licensees and engineering consultants to commission an engineering site plan and design for a fish passable structure to replace one of the barrier culverts identified as a high priority for replacement. It is expected that funding for the design will be provided through this project. 
 
 <br>
 
@@ -751,9 +793,18 @@ if(knitr::is_html_output() == TRUE){
 
 <br>
 
+## Recommendations
+Recommended next steps for fish passage restoration in the Parsnip Watershed include:
+
+ * Acquisition of funding to contribute towards costs related to the implementation of the physical works to replace the structure receiving replacement structure design through the 2019/2020 project.
+ * Drafting and implementation of a plan to conduct aquatic assessments evaluating the impacts of proposed restoration works on local fish populations. 
+ * Facilitated discussions between watershed stakeholders (i.e. First Nations, FWCP, FLNRORD, forest licensees, CN Rail, Coastal Gaslink) and potential funding sources to acquire funding to first procure site plans and replacement designs for structures identified as high priorities for restoration and then for the replacement of these structures as well as for monitoring of the impacts of these investments. 
+
 
 ```{r, eval = knitr::is_html_output()}
 knitr::asis_output("## References") # Header that is only shown if print_option == TRUE
+
+##extra text Although it is not a comprehensive inventory of all linear development related fish passage issues in the Parsnip River watershed, fish passage restoration planning undertaken through this project in 2019/2020 have identified `r table_overview_report %>% filter(Priority %ilike% 'high') %>% nrow() %>% english::as.english()` stream crossing structures as high priorities for fish passage restoration.  At the time of reporting, discussions with stakeholders in the watershed were underway to commission an engineering site plan and replacement structure design for one of these culverts.  
 ```
 
 
@@ -763,18 +814,25 @@ dbDisconnect(conn = conn)
 ```
 
 
+```{r include= FALSE, echo=FALSE, comment=NA, message=FALSE, warning=FALSE, eval=F}
+##since our make is all messed we can do this her like this I think
+rmarkdown::render(input = 'Parsnip_report.Rmd',  
+                    output_file = 'docs/index.html') #
+```
+
 
 ```{r eval = (knitr::is_html_output() == FALSE)}
-child_docs <- c("Parsnip_report_057696.Rmd", "Parsnip_report_125098.Rmd", "Parsnip_report_125128.Rmd", "Parsnip_report_cv1.Rmd")
+# child_docs <- c("Parsnip_report_057696.Rmd", "Parsnip_report_125098.Rmd", "Parsnip_report_125128.Rmd", "Parsnip_report_cv1.Rmd")
 
 
-##this grabs all our appendices
-# child_docs= list.files(pattern = "[.]Rmd$") %>% ##automated grab of the appendices
-#   data.frame(files_df = .) %>%
-#   filter(files_df != 'Parsnip_report.Rmd' &  files_df != 'Parsnip_report_planning_summary.Rmd' & files_df != 'test.Rmd') %>%
-#   pull(files_df)
+##this gives us the names of all our appendices to feed in as child documents
+child_docs <-  list.files(pattern = "[.]Rmd$") %>% ##automated grab of the appendices
+  data.frame(files_df = .) %>%
+  filter(files_df != 'Parsnip_report.Rmd' &  files_df != 'Parsnip_report_planning_summary.Rmd' & files_df != 'test.Rmd') %>%
+  pull(files_df) %>% 
+  as.vector()
 
-##when we render to word we need to add the {r child = child_docs} chunk below
+##when we render to word we need to add the {r child = child_docs} chunk below - it doesn't 
 
 ```
 

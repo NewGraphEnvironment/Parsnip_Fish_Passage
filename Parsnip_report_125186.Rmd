@@ -13,10 +13,10 @@ bibliography: references.bib
 biblio-style: apalike
 ---
 
-```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+```{r setup-125186, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
-### this one ! https://www.bibtex.com/e/entry-types/
+##### this one ! https://www.bibtex.com/e/entry-types/
 source('R/packages.R')
 source('R/functions.R')
 
@@ -35,7 +35,7 @@ drake::loadd(table_habitat_report, table_overview_report, table_planning, table_
 
 
 
-```{r load-data}
+```{r load-data-125186}
 my_site <- '125186'
 title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 my_overview_info <- drake::readd(table_overview_raw) %>% filter(site == my_site & location == 'Upstream')
@@ -57,7 +57,16 @@ my_planning_data <- drake::readd(planning_data) %>% filter(stream_crossing_id ==
 ```
 
 
-## Crossing `r my_site` - `r my_overview_info %>% pull(road_name)` - `r my_overview_info %>% pull(stream_name)`
+```{r, eval = knitr::is_html_output() == FALSE}
+word_title <- paste0('# Appendix - Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(word_title) # Header that is only shown if print_option == TRUE
+```
+
+
+```{r, eval = knitr::is_html_output()}
+html_title <- paste0('### Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(html_title) # Header that is only shown if print_option == TRUE
+```
 
 ```{r}
 # test <- pull_data(sheet = loc_data, site = my_site)
@@ -66,13 +75,13 @@ my_planning_data <- drake::readd(planning_data) %>% filter(stream_crossing_id ==
 #   geom_sf(data = my_watershed, lwd = 0.15)
 ```
 
-### Site Location
+##### Site Location
 
-Crossing `r my_site` is located on an unnamed tributary to the Missinka River near the 7.5km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located approximately 4.1km and 5.1km west of  crossings 125180 and 125179 which also were surveyed with habitat confirmation assessments. The stream empties into the Missinka River `r my_distance_downstream`km downstream of crossing `r my_site` (Table \@ref(tab:tableoverview)). At the time of the field surveys, there was very little traffic on the FSR, the road was in disrepair and there appeared to be no active logging in the immediate area. 
+Crossing `r my_site` is located on an unnamed tributary to the Missinka River near the 7.5km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located approximately 4.1km and 5.1km west of  crossings 125180 and 125179 which also were surveyed with habitat confirmation assessments. The stream empties into the Missinka River `r my_distance_downstream`km downstream of crossing `r my_site` (Table \@ref(tab:tableoverview-125186)). At the time of the field surveys, there was very little traffic on the FSR, the road was in disrepair and there appeared to be no active logging in the immediate area. 
 
 <br>
 
-### Background Information
+##### Background Information
 
 At the crossing location, the unnamed tributary to the Missinka River is a 3rd order stream with a watershed area upstream of the road of approximatley 4.7km^2^. The elevation of the watershed ranges from a maximum of 1400m to 800m at the culvert.  There are no other stream crossing (culvert) barriers on the mainstem of the stream upstream of the `r my_overview_info %>% pull(road_name)`. 
 
@@ -88,13 +97,13 @@ In 2018, the Missinka River watershed was designated as a fisheries sensitive wa
 
 <br>
 
-Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) habitat with a relatively large channel size (`r my_planning_data %>% pull(downstream_channel_width)`m) and Rainbow Trout documented upstream (Table \@ref(tab:table-planning)). The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
+Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) habitat with a relatively large channel size (`r my_planning_data %>% pull(downstream_channel_width)`m) and Rainbow Trout documented upstream (Table \@ref(tab:table-planning-125186)). The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
 
 <br>
 
-### Stream Characteristics at Crossing
+##### Stream Characteristics at Crossing
 
-At the time of the survey, the un-embedded culvert  was considered a barrier to upstream fish passage with a length of `r my_pscis_info %>% pull(length_or_width_meters)`m, a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)`% and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert), Figure \@ref(fig:photo-culvert)). Water temperature was `r my_habitat_info_extra_us %>% pull(temperature_c)`$^\circ$C and conductivity was `r my_habitat_info_extra_us %>% pull(conductivity_m_s_cm)`uS/cm.
+At the time of the survey, the un-embedded culvert  was considered a barrier to upstream fish passage with a length of `r my_pscis_info %>% pull(length_or_width_meters)`m, a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)`% and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert-125186), Figure \@ref(fig:photo-culvert-125186)). Water temperature was `r my_habitat_info_extra_us %>% pull(temperature_c)`$^\circ$C and conductivity was `r my_habitat_info_extra_us %>% pull(conductivity_m_s_cm)`uS/cm.
 
 <br>
 
@@ -107,29 +116,29 @@ drake::readd(priorities_spreadsheet) %>% filter(site == my_site) %>% pull(commen
 
 ```
 
-### Stream Characteristics Downstream
+##### Stream Characteristics Downstream
 
-The stream was surveyed downstream from the culvert for `r my_priority_info_ds %>% pull(length)`m. The channel contained abundant gravels suitable for spawning and young of year salmonids were observed approximately 100 m downstream of crossing. Undercut banks comprised the dominant form of cover with overhanging vegetation, large woody debris and small woody debris also present and contributing to high habitat complexity (Figures \@ref(fig:photo-downstream1) - \@ref(fig:photo-downstream2)). The average channel width was `r my_habitat_info_ds %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_ds %>% mutate(avg_wetted_width_m = round(avg_wetted_width_m,1)) %>%  pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_ds %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). There were sections of abandoned dry channel at the bottom of the area surveyed and although the watered channel could not immediately be located during the survey, it is not likely disconnected from the Missinka River mainstem for much of the year (or at all) based the quantity of flow upstream. Following post-survey review of Bing Satellite aerial imagery, it appears the channel may meander west of the mapped streamline location, joining a wetland complex before flowing into the Missinka River. Habitat value downstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value)`.
-
-
-<br>
-
-### Stream Characteristics Upstream
-
-The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m. The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). Riparian vegetation was comprised of a mature mixed forest and instream cover was abundant.  The dominant cover form was large woody debris with boulders, undercut banks, overhanging vegetation, small woody debris, pools to 0.6m deep and gravels suitable for spawning present (Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream2)). Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value)`.
+The stream was surveyed downstream from the culvert for `r my_priority_info_ds %>% pull(length)`m. The channel contained abundant gravels suitable for spawning and young of year salmonids were observed approximately 100 m downstream of crossing. Undercut banks comprised the dominant form of cover with overhanging vegetation, large woody debris and small woody debris also present and contributing to high habitat complexity (Figures \@ref(fig:photo-downstream1-125186) - \@ref(fig:photo-downstream2-125186)). The average channel width was `r my_habitat_info_ds %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_ds %>% mutate(avg_wetted_width_m = round(avg_wetted_width_m,1)) %>%  pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_ds %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125186)). There were sections of abandoned dry channel at the bottom of the area surveyed and although the watered channel could not immediately be located during the survey, it is not likely disconnected from the Missinka River mainstem for much of the year (or at all) based the quantity of flow upstream. Following post-survey review of Bing Satellite aerial imagery, it appears the channel may meander west of the mapped streamline location, joining a wetland complex before flowing into the Missinka River. Habitat value downstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value)`.
 
 
 <br>
 
+##### Stream Characteristics Upstream
 
-### Conclusion
+The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m. The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125186)). Riparian vegetation was comprised of a mature mixed forest and instream cover was abundant.  The dominant cover form was large woody debris with boulders, undercut banks, overhanging vegetation, small woody debris, pools to 0.6m deep and gravels suitable for spawning present (Figures \@ref(fig:photo-upstream1-125186) - \@ref(fig:photo-upstream2-125186)). Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value)`.
+
+
+<br>
+
+
+##### Conclusion
 
 There is approximately 1.4km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient.  Habitat surveyed was rated as high value for salmonids with Rainbow Trout presence confirmed up to 450m upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout is known to utilize adjacent streams of similiar size and topography within the vicinity of this stream and the watershed is designated as Fisheries Sensitive with critical habitat for Bull Trout and Arctic Grayling spawning as well as critical rearing habitat for Bull Trout juveniles and Arctic Grayling fry known in the Missinka River system.  The forest licensee operating in the area was Sinclar Group Forest Products Ltd. and the road tenure holder was the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
 
 <br>
 
 
-```{r tableoverview, eval=T}
+```{r tableoverview-125186, eval=T}
 
 
 if(knitr::is_html_output() == TRUE){
@@ -139,7 +148,7 @@ if(knitr::is_html_output() == TRUE){
 
 <br>
 
-```{r table-planning, eval= T}
+```{r table-planning-125186, eval= T}
 
 if(knitr::is_html_output() == TRUE){
   table_planning_html()
@@ -151,7 +160,7 @@ if(knitr::is_html_output() == TRUE){
 <br>
 
 
-```{r tableculvert, eval=T}
+```{r tableculvert-125186, eval=T}
 if(knitr::is_html_output() == TRUE){
 table_culvert_html()
   } else table_culvert_flextable()
@@ -161,7 +170,7 @@ table_culvert_html()
 
 <br>
 
-```{r tablehabitat, eval=T}
+```{r tablehabitat-125186, eval=T}
 if(knitr::is_html_output() == TRUE){
 table_habitat_html()
   } else table_habitat_flextable()
@@ -171,14 +180,8 @@ table_habitat_html()
 
 <br>
 
-```{r view-photo-names, eval = F}
-list.files(paste0('data/photos/', my_site, '/'))
-my_site
 
-```
-
-
-```{r photo-culvert, fig.cap= caption}
+```{r photo-culvert-125186, fig.cap= caption}
 
 my_photo = 'outlet.JPG'
 
@@ -192,7 +195,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream1, fig.cap= my_caption, eval=T}
+```{r photo-downstream1-125186, fig.cap= my_caption, eval=T}
 my_photo = 'ds2.JPG'
 
 my_caption = paste0('Habitat downstream of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -202,7 +205,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream2, fig.cap= my_caption, eval=T}
+```{r photo-downstream2-125186, fig.cap= my_caption, eval=T}
 my_photo ='ds4.JPG'
 
 my_caption = paste0('Habitat downstream of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -214,7 +217,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-upstream1, fig.cap= my_caption, eval=T}
+```{r photo-upstream1-125186, fig.cap= my_caption, eval=T}
 my_photo ='us4.JPG'
 
 my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -225,7 +228,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-upstream2, fig.cap= my_caption, eval=T}
+```{r photo-upstream2-125186, fig.cap= my_caption, eval=T}
 my_photo ='us5.JPG'
 
 my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -243,6 +246,8 @@ rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
 
 <br>
 
-### References
 
+```{r, eval = knitr::is_html_output()}
+knitr::asis_output("##### References") # Header that is only shown if print_option == TRUE
+```
 

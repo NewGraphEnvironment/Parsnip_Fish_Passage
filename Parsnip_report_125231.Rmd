@@ -13,7 +13,7 @@ bibliography: references.bib
 biblio-style: apalike
 ---
 
-```{r setup, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
+```{r setup-125231, include=T, comment=NA, echo =FALSE, message=FALSE, warning=FALSE}
 ##references reference https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM and http://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf and 
 # https://www.lib4ri.ch/files/bibtexcheatsheet.pdf
 ### this one ! https://www.bibtex.com/e/entry-types/
@@ -35,7 +35,7 @@ my_site <- '125231'
 
 
 
-```{r load-data}
+```{r load-data-125231}
 
 title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 my_overview_info <- drake::readd(table_overview_raw) %>% filter(site == my_site & location == 'Upstream')
@@ -99,7 +99,17 @@ my_habitat_info_t <- left_join(
 
 ```
 
-## Crossing `r my_site` - `r my_overview_info %>% pull(road_name)` - `r my_overview_info %>% pull(stream_name)`
+```{r, eval = knitr::is_html_output() == FALSE}
+word_title <- paste0('# Appendix - Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(word_title) # Header that is only shown if print_option == TRUE
+```
+
+
+```{r, eval = knitr::is_html_output()}
+html_title <- paste0('### Crossing ', my_site, ' - ', my_overview_info %>% pull(road_name), ' - ', my_overview_info %>% pull(stream_name))
+knitr::asis_output(html_title) # Header that is only shown if print_option == TRUE
+```
+
 
 ```{r}
 # test <- pull_data(sheet = loc_data, site = my_site)
@@ -108,14 +118,14 @@ my_habitat_info_t <- left_join(
 #   geom_sf(data = my_watershed, lwd = 0.15)
 ```
 
-### Site Location
+##### Site Location
 
-Crossing `r my_site` is located on an unnamed tributary to the Table River near the 20km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km from the confluence of the Table River on the upstream side of the CN Railway (Table \@ref(tab:tableoverview)). At the time of the field surveys, there was active log hauling on the FSR. 
+Crossing `r my_site` is located on an unnamed tributary to the Table River near the 20km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km from the confluence of the Table River on the upstream side of the CN Railway (Table \@ref(tab:tableoverview-125231)). At the time of the field surveys, there was active log hauling on the FSR. 
 
 
 <br>
 
-### Background Information
+##### Background Information
 
 At the crossing location, the stream is a 3rd order stream with a watershed area upstream of the road of `r my_watershed %>% pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 1400m to 760m at the culvert.  One previously unassessed crossing (16603641) is located upstream (450m) and previously unassessed crossing (16603278) is located downstream 210m under the CN Railway. 
 
@@ -140,13 +150,13 @@ In 2018, the Table River watershed was designated as a fisheries sensitive water
 
 <br>
 
-Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modeled instream habitat (`r my_overview_info %>% pull(uphab_gross_sub22)`km) with a relatively large channel size (`r my_planning_data %>% pull(downstream_channel_width)`m) and Rainbow Trout documented upstream (Table \@ref(tab:table-planning)). The habitat confirmation was completed on September 4, 2019 (downstream) and `r date` (upstream). A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
+Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modeled instream habitat (`r my_overview_info %>% pull(uphab_gross_sub22)`km) with a relatively large channel size (`r my_planning_data %>% pull(downstream_channel_width)`m) and Rainbow Trout documented upstream (Table \@ref(tab:table-planning-125231)). The habitat confirmation was completed on September 4, 2019 (downstream) and `r date` (upstream). A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
 
 <br>
 
-### Stream Characteristics at Crossing
+##### Stream Characteristics at Crossing
 
-At the time of the survey, the un-embedded and non-backwatered double (`r my_pscis_info %>% pull(diameter_or_span_meters)`m each) crossing was considered a barrier to upstream fish passage with pipe lengths of `r my_pscis_info %>% pull(length_or_width_meters)`m, a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)`% and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert), Figure \@ref(fig:photo-culvert)). Water temperature was `r my_habitat_info_us %>% pull(temperature_c)`$^\circ$C and conductivity was `r my_habitat_info_us %>% pull(conductivity_m_s_cm)`uS/cm.
+At the time of the survey, the un-embedded and non-backwatered double (`r my_pscis_info %>% pull(diameter_or_span_meters)`m each) crossing was considered a barrier to upstream fish passage with pipe lengths of `r my_pscis_info %>% pull(length_or_width_meters)`m, a culvert slope of `r my_pscis_info %>% pull(culvert_slope_percent)`% and an outlet drop of `r my_pscis_info %>% pull(outlet_drop_meters)`m (Table \@ref(tab:tableculvert-125231), Figure \@ref(fig:photo-culvert-125231)). Water temperature was `r my_habitat_info_us %>% pull(temperature_c)`$^\circ$C and conductivity was `r my_habitat_info_us %>% pull(conductivity_m_s_cm)`uS/cm.
 
 <br>
 
@@ -159,28 +169,28 @@ drake::readd(priorities_spreadsheet) %>% filter(site == my_site) %>% pull(commen
 
 ```
 
-### Stream Characteristics Downstream
+##### Stream Characteristics Downstream
 
-The stream was surveyed downstream from the culvert for `r my_priority_info_ds %>% pull(length)`m to within the floodplain of the Table River. Overall, total cover amount was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(ds)` with  `r my_habitat_info_t %>% filter(ds == 'dominant') %>% pull(rowname)` dominant (Figures \@ref(fig:photo-downstream1) - \@ref(fig:photo-downstream2)). Cover was also present as `r my_habitat_info_t %>% filter(ds == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()`. Gravels suitable for spawning were abundant throughout the area surveyed. The average channel width was `r my_habitat_info_ds %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_ds %>% mutate(avg_wetted_width_m = round(avg_wetted_width_m,1)) %>%  pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_ds %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). Habitat value downstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
-
-<br>
-
-### Stream Characteristics Upstream
-
-The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m to 100m above the location of a newly installed bridge (modeled crossing 16603641, Figure \@ref(fig:photo-upstream3)). The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat)). Riparian vegetation was comprised of a mature coniferous forest and instream cover quantity was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`.  The dominant cover form of cover was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available. Gravels suitable for spawning were present intermittently throughout the area surveyed (Figures \@ref(fig:photo-upstream1) - \@ref(fig:photo-upstream2)). Although there were no permanent barriers, some debris steps from 30 - 70 cms high were located throughout. Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
-
+The stream was surveyed downstream from the culvert for `r my_priority_info_ds %>% pull(length)`m to within the floodplain of the Table River. Overall, total cover amount was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(ds)` with  `r my_habitat_info_t %>% filter(ds == 'dominant') %>% pull(rowname)` dominant (Figures \@ref(fig:photo-downstream1-125231) - \@ref(fig:photo-downstream2-125231)). Cover was also present as `r my_habitat_info_t %>% filter(ds == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()`. Gravels suitable for spawning were abundant throughout the area surveyed. The average channel width was `r my_habitat_info_ds %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_ds %>% mutate(avg_wetted_width_m = round(avg_wetted_width_m,1)) %>%  pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_ds %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125231)). Habitat value downstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
 
 <br>
 
+##### Stream Characteristics Upstream
 
-### Conclusion
+The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m to 100m above the location of a newly installed bridge (modeled crossing 16603641, Figure \@ref(fig:photo-upstream3-125231)). The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125231)). Riparian vegetation was comprised of a mature coniferous forest and instream cover quantity was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`.  The dominant cover form of cover was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available. Gravels suitable for spawning were present intermittently throughout the area surveyed (Figures \@ref(fig:photo-upstream1-125231) - \@ref(fig:photo-upstream2-125231)). Although there were no permanent barriers, some debris steps from 30 - 70 cms high were located throughout. Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
+
+
+<br>
+
+
+##### Conclusion
 
 There is approximately 2.2km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient. Habitat surveyed was rated as high value for salmonids with Rainbow Trout presence confirmed upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout is known to utilize adjacent streams of similiar size and topography within the vicinity of this stream and the watershed is designated as Fisheries Sensitive with critical habitat for Bull Trout and Arctic Grayling spawning as well as critical rearing habitat for Bull Trout juveniles and Arctic Grayling fry known in the Table River system.  The forest licensees in the area are Sinclar Group and Canfor and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
 
 <br>
 
 
-```{r tableoverview, eval=T}
+```{r tableoverview-125231, eval=T}
 
 if(knitr::is_html_output() == TRUE){
   table_overview_html()
@@ -189,7 +199,7 @@ if(knitr::is_html_output() == TRUE){
 
 <br>
 
-```{r table-planning, eval= T}
+```{r table-planning-125231, eval= T}
 
 if(knitr::is_html_output() == TRUE){
   table_planning_html()
@@ -201,7 +211,7 @@ if(knitr::is_html_output() == TRUE){
 <br>
 
 
-```{r tableculvert, eval=T}
+```{r tableculvert-125231, eval=T}
 if(knitr::is_html_output() == TRUE){
 table_culvert_html()
   } else table_culvert_flextable()
@@ -211,7 +221,7 @@ table_culvert_html()
 
 <br>
 
-```{r tablehabitat, eval=T}
+```{r tablehabitat-125231, eval=T}
 if(knitr::is_html_output() == TRUE){
 table_habitat_html()
   } else table_habitat_flextable()
@@ -221,14 +231,14 @@ table_habitat_html()
 
 <br>
 
-```{r view-photo-names, eval = F}
+```{r view-photo-names-125231, eval = F}
 list.files(paste0('data/photos/', my_site, '/'))
 my_site
 
 ```
 
 
-```{r photo-culvert, fig.cap= caption}
+```{r photo-culvert-125231, fig.cap= caption}
 
 my_photo = 'outlet.JPG'
 
@@ -242,7 +252,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream1, fig.cap= my_caption, eval=T}
+```{r photo-downstream1-125231, fig.cap= my_caption, eval=T}
 my_photo = 'downstream.JPG'
 
 my_caption = paste0('Habitat downstream of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -252,7 +262,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream2, fig.cap= my_caption, eval=T}
+```{r photo-downstream2-125231, fig.cap= my_caption, eval=T}
 ##SPECIAL CASE####
 
 my_photo ='downstream_railway_passable2.JPG'
@@ -266,7 +276,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream3, fig.cap= my_caption, eval=T}
+```{r photo-downstream3-125253, fig.cap= my_caption, eval=T}
 my_photo ='DSCF4561.JPG'
 
 my_caption = paste0('Habitat downstream of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -277,7 +287,7 @@ grid::grid.raster(get_img())
 <br>
 
 
-```{r photo-upstream3, fig.cap= my_caption, eval=T}
+```{r photo-upstream3-125231, fig.cap= my_caption, eval=T}
 #######remove next time#########################
 my_photo ='DSCF4729.JPG'
 
@@ -287,10 +297,9 @@ grid::grid.raster(get_img())
 ```
 
 
-
 <br>
 
-```{r photo-upstream1, fig.cap= my_caption, eval=T}
+```{r photo-upstream1-125231, fig.cap= my_caption, eval=T}
 my_photo ='DSCF4714.JPG'
 
 my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
@@ -301,13 +310,14 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-upstream2, fig.cap= my_caption, eval=T}
+```{r photo-upstream2-125231, fig.cap= my_caption, eval=T}
 my_photo ='DSCF4721.JPG'
 
 my_caption = paste0('View of habitat upstream of crossing ', my_site, ' (', get_photo_utm(), ').')
 
 grid::grid.raster(get_img())
 ```
+
 <br>
 
 
@@ -319,6 +329,8 @@ rmarkdown::render(input = paste0('Parsnip_report_', my_site, '.Rmd'),
 
 <br>
 
-### References
 
+```{r, eval = knitr::is_html_output()}
+knitr::asis_output("##### References") # Header that is only shown if print_option == TRUE
+```
 
