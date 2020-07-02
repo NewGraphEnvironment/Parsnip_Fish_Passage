@@ -13,3 +13,4 @@ source('make.R')
 
 ## also run the render manually from the rmd after loading all chunks above.  
 ## this saves running a full plan with all the appendices getting made which takes a while
+##when we want to render all the appendices we need to make all our targets first and then add the appendices to the plan

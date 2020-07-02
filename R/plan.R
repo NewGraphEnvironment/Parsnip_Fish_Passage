@@ -52,11 +52,13 @@ plan1 <- drake_plan(
   table_planning = make_table_planning(planning_data = planning_data),
   crossing_watersheds = sf::st_read("data/parsnip.gpkg", layer = "watersheds"),
   report_appendices_rmd_files = list.files(pattern = "[.]Rmd$") %>% ##automated grab of the appendices
-    str_replace_all('Parsnip_report_','') %>% 
+    str_replace_all('Parsnip_report_','') %>%
     str_replace_all('.Rmd','') %>%
-    data.frame(files_df = .) %>% 
-    filter(files_df != 'Parsnip_report' &  files_df != 'planning_summary' & files_df != 'test') %>% 
-    pull(files_df),
+    data.frame(files_df = .) %>%
+    filter(files_df != 'Parsnip_report' &  files_df != 'planning_summary' & files_df != 'test') %>%
+    pull(files_df) %>%
+    as.vector(),
+  ##this just now shows us the order we made the appendices
   # report_appendices_rmd_files = c(
   #   '057681',
   #   '057690',
@@ -76,10 +78,10 @@ plan1 <- drake_plan(
   ##now make the report
     report_main = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"), ##JUST CHANGED FOR A SEC
-    output_file = file_out("./docs/index.html"),
+    output_file = file_out("./docs/index.html"), #"./docs/index.html"
     quiet = TRUE
   ),
-  # report_appendices = report_appendices_rmd_files %>% map(render_separately_all), ##turned this off for speed
+  report_appendices = report_appendices_rmd_files %>% map(render_separately_all), ##turned this off for speed
   planning_summary_table = rmarkdown::render(
     knitr_in("Parsnip_report_planning_summary.Rmd"),
     output_file = file_out("./docs/Parsnip_report_planning_summary.html"),
