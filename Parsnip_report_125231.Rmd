@@ -1,14 +1,14 @@
 ---
 title: 
 output:
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: no
     fig_caption: yes
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
 bibliography: references.bib
 biblio-style: apalike
 ---
@@ -30,13 +30,13 @@ options(knitr.table.format = "html")
 #              planning_data, photo_metadata, habitat_data)
 
 drake::loadd(table_habitat_report, table_overview_report, table_planning, table_culvert, photo_metadata)
-my_site <- '125231'
 ```
 
 
 
 ```{r load-data-125231}
 
+my_site <- '125231'
 title_var <- paste0('Habitat Confirmation - PSCIS Crossing ', my_site)
 my_overview_info <- drake::readd(table_overview_raw) %>% filter(site == my_site & location == 'Upstream')
 my_pscis_info <- drake::readd(PSCIS_submission) %>% filter(pscis_crossing_id == my_site)
@@ -86,17 +86,6 @@ my_habitat_info_t <- left_join(
 ) %>% 
   mutate(rowname = stringr::str_replace_all(rowname, '_', ' '))
   
-
-
-
-# my_cover_dom_us <- my_habitat_info_t %>% filter(value_us == 'dominant') %>% pull(rowname) %>% stringr::str_replace_all('_', ' ')##dominant cover
-# my_cover_subdom_us <-my_habitat_info_us_t %>% filter(value == 'sub-dominant') %>% pull(rowname) %>% stringr::str_replace_all('_', ' ') %>% knitr::combine_words()
-# my_cover_dom_us <- my_habitat_info_t %>% filter(value_us == 'dominant') %>% pull(rowname) %>% stringr::str_replace_all('_', ' ')##dominant cover
-# my_cover_subdom_us <-my_habitat_info_us_t %>% filter(value == 'sub-dominant') %>% pull(rowname) %>% stringr::str_replace_all('_', ' ') %>% knitr::combine_words()
-
-
-# `r if(knitr::is_html_output() == TRUE){"Habitat Confirmation"}`
-
 ```
 
 ```{r, eval = knitr::is_html_output() == FALSE}
@@ -276,7 +265,7 @@ grid::grid.raster(get_img())
 
 <br>
 
-```{r photo-downstream3-125253, fig.cap= my_caption, eval=T}
+```{r photo-downstream3-125231, fig.cap= my_caption, eval=T}
 my_photo ='DSCF4561.JPG'
 
 my_caption = paste0('Habitat downstream of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
