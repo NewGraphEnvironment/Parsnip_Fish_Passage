@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 docs/stable_website_backup
-*.docx
+
 *.kml
 *.gpkg-shm
 *.gpkg-wal

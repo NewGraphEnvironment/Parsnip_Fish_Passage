@@ -153,6 +153,15 @@ Habitat confirmation assessments were conducted between August 30, 2019 and Sept
 
 At the time of reporting, communications were underway with Ministry of Forests, Lands, Natural Resource Operations & Rural Development representatives, forest licensees and engineering consultants to commission an engineering site plan and design for a fish passable structure to replace one of the barrier culverts identified as a high priority for replacement. It is expected that funding for the design will be provided through this project. 
 
+<br>
+
+Recommended next steps for fish passage restoration in the Parsnip River Watershed include:
+
+ * Acquisition of funding to contribute towards costs for replacing the high priority structure receiving replacement designs through this 2019/2020 phase of the project.
+ * Acquisition of funding to procure site plans and replacement designs for structures identified as high priorities for restoration through this 2019/2020 phase of the project. 
+ * Explore and pursue opportunities to obtain buy-in and funding for replacement of identified high priority structures.
+ * Drafting and implementation of a collaborative plan for assessing the impacts of fish passage restoration investments.  The plan should be designed to provide data necesary to effectively monitor the outcomes of restoration efforts, inform future investments and build capacity/momentum for ecosystem restoration activities in the FWCP Peace Region.
+
 
 
 ```{r}
@@ -282,7 +291,7 @@ Construction of the 183 m high and 2134 m long W.A.C. Bennett Dam was completed 
 <br>
 
 
-```{r overview-map, fig.cap="Overview Map", out.width = '100%', eval= (knitr::is_html_output() == FALSE)}
+```{r overview-map, fig.cap="Overview Map", out.width = '100%', eval= T}
 knitr::include_graphics("fig/overview_map.jpg")
 ```
 
@@ -486,26 +495,25 @@ A Google Earth (.kml) file with crossing locations and rational for prioritizing
 
 <br>
 
-In the field, PSCIS crossings ranked as high priorities for follow-up were assessed for fish passage following the procedures outlined in “Field Assessment for Determining Fish Passage Status of Closed Bottomed Structures” (MoE 2011) to confirm that the crossings were still barriers to fish passage. The following criteria, which act as hydraulic indices, were utilized to determine if a crossing was a barrier to fish passage: depth and degree of embedment, outlet drop, slope of culvert, stream width ratio (ratio of average downstream channel width to culvert width), and length of the culvert. 
+In the field, PSCIS crossings ranked as high priorities for follow-up were first assessed for fish passage following the procedures outlined in “Field Assessment for Determining Fish Passage Status of Closed Bottomed Structures” (MoE 2011) to confirm that the crossings were still barriers to fish passage. The following criteria, which act as hydraulic indices, were utilized to determine if a crossing was a barrier to fish passage: depth and degree of embedment, outlet drop, slope of culvert, stream width ratio (ratio of average downstream channel width to culvert width), and length of the culvert. 
 
 <br>
 
-Habitat confirmations were completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” (FPTWG 2011). The main objective of the field surveys was to document upstream habitat quantity and quality and to determine if any other obstructions exist above or below the crossing.  Habitat value was assessed based on channel morphology, flow characteristics (perennial, intermittent, ephemeral), the 
-presence/absence of deep  pools,un-embedded  boulders, substrate, woody debris, undercut banks, aquatic vegetation and overhanging riparian vegetation. Criteria used to rank habitat value is specified in @confirmation_checklist and summarized in Table \@ref(tab:tablehabvalue). Data from fish habitat assessments and habitat confirmation assessments will be submitted to the PSCIS database.
+Following fish passage assessments, habitat confirmations were completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” (FPTWG 2011). The main objective of the field surveys was to document upstream habitat quantity and quality and to determine if any other obstructions exist above or below the crossing.  Habitat value was assessed based on channel morphology, flow characteristics (perennial, intermittent, ephemeral), the presence/absence of deep  pools,un-embedded  boulders, substrate, woody debris, undercut banks, aquatic vegetation and overhanging riparian vegetation. Criteria used to rank habitat value is specified in @confirmation_checklist and summarized in Table \@ref(tab:tablehabvalue). Data from fish habitat assessments and habitat confirmation assessments will be submitted to the PSCIS database.
 
 <br>
 
-During habitat confirmations assessment of habitat was completed in accordance with procedures outlined in Resources Inventory Standards Committee (RIC) Fish and Fish Habitat Inventory Standards and Procedures [@bcfisheriesinformationservicesbranchReconnaissance200002001] with data collated on ["Site Cards"](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/laws-policies-standards-guidance/inventory-standards/aquatic-ecosystems) and submitted to the provincial database under scientific fish collection permit PG19-550935. The [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) was used to store field data and facilitate data input.  Among others, habitat characteristics recorded included channel widths, wetted widths, residual pool depths, gradients, bankfull depths, stage, temperature, conductivity, pH, cover by type, substrate and channel morphology. When possible, the crew surveyed the stream downstream of the crossing to the point where fish presence had been previously confirmed. Any  potential  obstacles  to  fish  passage  were  inventoried  with  photos, physical  descriptions  and  locations  recorded on RIC site cards.  Surveyed routes were recorded using time-stamped handheld GPS units. When sites surveyed were located in areas near to where the subsequent day's surveys were planned, minnow-traps were set overnight to obtain fish sampling data.
+During habitat confirmations, assessment of habitat was completed following procedures outlined in Resources Inventory Standards Committee (RIC) Fish and Fish Habitat Inventory Standards and Procedures [@bcfisheriesinformationservicesbranchReconnaissance200002001] with data collated on ["Site Cards"](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/laws-policies-standards-guidance/inventory-standards/aquatic-ecosystems) and submitted to the provincial database under scientific fish collection permit PG19-550935. The [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) was used to store field data and facilitate data input.  Among others, habitat characteristics recorded included channel widths, wetted widths, residual pool depths, gradients, bankfull depths, stage, temperature, conductivity, pH, cover by type, substrate and channel morphology. When possible, the crew surveyed the stream downstream of the crossing to the point where fish presence had been previously confirmed. Any  potential  obstacles  to  fish  passage  were  inventoried  with  photos, physical  descriptions  and  locations  recorded on RIC site cards.  Surveyed routes were recorded with time-signatures on handheld GPS units. When sites surveyed were located in areas near to where the subsequent day's surveys were planned, minnow-traps were set overnight to obtain fish sampling data.
 
 <br>
 
-This pdf report and an online interactive version were generated from Rmarkdown documents processing raw data available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage). Although there currently are no plans for long-term maintenance of the site, the interactive version of this report was made available at https://newgraphenvironment.github.io/Parsnip_Fish_Passage/ . In addition to numerous spatial layers sourced through the BC Data Catalogue and along with outputs from the Fish Habitat Model, data inputs for this project included: 
+This pdf report and an online interactive version were generated from Rmarkdown documents processing raw data available at [New Graph Environment Github Site ](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage). Although there currently are no plans for long-term maintenance of the site, the interactive version of this report was made available at https://newgraphenvironment.github.io/Parsnip_Fish_Passage/ . In addition to numerous spatial layers sourced through the BC Data Catalogue and along with outputs from the Fish Habitat Model, data inputs for this project included completed: 
 
  * [Fish Data Submission Spreadsheet Template - V 2.0, April 16, 2019 ](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/fish/fish-and-fish-habitat-data-information/fish-data-submission/submit-fish-data#submitfish) 
 
  * [pscis_assessment_template_v23.xls](https://www2.gov.bc.ca/gov/content/environment/natural-resource-stewardship/land-based-investment/investment-categories/fish-passage/assessment-projects)
 
- * Excel spreadsheet with mpriority level and linear amount of mainstem habitat upstream of the crossing detailed for each of the crossings surveyed.
+ * Excel spreadsheet with priority level and linear amount of mainstem habitat upstream of the crossing detailed for each of the crossings surveyed.
 
  * GPS tracks and points from field surveys.  
 
@@ -794,11 +802,12 @@ if(knitr::is_html_output() == TRUE){
 <br>
 
 ## Recommendations
-Recommended next steps for fish passage restoration in the Parsnip Watershed include:
+Recommended next steps for fish passage restoration in the Parsnip River Watershed include:
 
- * Acquisition of funding to contribute towards costs related to the implementation of the physical works to replace the structure receiving replacement structure design through the 2019/2020 project.
- * Drafting and implementation of a plan to conduct aquatic assessments evaluating the impacts of proposed restoration works on local fish populations. 
- * Facilitated discussions between watershed stakeholders (i.e. First Nations, FWCP, FLNRORD, forest licensees, CN Rail, Coastal Gaslink) and potential funding sources to acquire funding to first procure site plans and replacement designs for structures identified as high priorities for restoration and then for the replacement of these structures as well as for monitoring of the impacts of these investments. 
+ * Acquisition of funding to contribute towards costs for replacing the high priority structure receiving replacement designs through this 2019/2020 phase of the project.
+ * Acquisition of funding to procure site plans and replacement designs for structures identified as high priorities for restoration through this 2019/2020 phase of the project. 
+ * Explore and pursue opportunities to obtain buy-in and funding for replacement of identified high priority structures.
+ * Drafting and implementation of a collaborative plan for assessing the impacts of fish passage restoration investments.  The plan should be designed to provide data necesary to effectively monitor the outcomes of restoration efforts, inform future investments and build capacity/momentum for ecosystem restoration activities in the FWCP Peace Region.
 
 
 ```{r, eval = knitr::is_html_output()}
