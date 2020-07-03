@@ -58,6 +58,7 @@ plan1 <- drake_plan(
     filter(files_df != 'Parsnip_report' &  files_df != 'planning_summary' & files_df != 'test') %>%
     pull(files_df) %>%
     as.vector(),
+  # report_appendices_rmd_files = c('125231'),
   ##this just now shows us the order we made the appendices
   # report_appendices_rmd_files = c(
   #   '057681',
@@ -73,7 +74,8 @@ plan1 <- drake_plan(
   #   'CV1',
   #   '057695',
   #   '057696',
-  #   '125098'),
+  #   '125098',
+  # '125403'),
   ##REMOVED THE HYDROGRAPHs from the plan and intro_methods file to allow report production using png outputs only
   ##now make the report
     report_main = rmarkdown::render(
