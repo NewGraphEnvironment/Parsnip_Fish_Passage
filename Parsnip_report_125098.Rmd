@@ -124,7 +124,7 @@ knitr::asis_output(html_title) # Header that is only shown if print_option == TR
 
 ##### Site Location
 
-Crossing `r my_site` is located on an unnamed `r my_pscis_info %>% pull(stream_name)` near the 1km mark of an unnamed road (tenure ID R01821B).  The road is accessed from the Chuchinka-Arctic FSR.  The culvert is located `r my_distance_downstream`km upstream from the confluence with the Parsnip River (Table \@ref(tab:tableoverview-125098)). At the time of the field surveys, there appeared to be no active log hauling on the road at the crossing location. 
+Crossing `r my_site` is located on an unnamed `r my_pscis_info %>% pull(stream_name)` near the 1km mark of an unnamed road (tenure ID R01821B).  The road is accessed from the Chuchinka-Arctic FSR.  The culvert is located `r my_distance_downstream`km upstream from the confluence with the Parsnip River (Table \@ref(tab:tableoverview-125098)). At the time of the field surveys, there appeared to be no active log hauling on the road. 
 
 
 <br>
@@ -140,7 +140,6 @@ Provincial records indicate that Rainbow Trout were captured upstream of the cro
 <br>
 
 Although they concede that information adequacy for assessing critical habitats for Bull Trout in the Upper Parsnip sub-basin is poor, @hagen_2015_critical_habs report that low juvenile Bull Trout density and turbid water conditions indicate that this area is likely of relatively low importance for the Parsnip River population. 
-
 
 <br>
 
@@ -180,7 +179,7 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 
 ##### Conclusion
 
-Mapping indicates there is 1km of habitat upstream of crossing `r my_site`. Although Rainbow Trout have been recorded upstream, habitat value was rated as low value due to a lack of significant flow volume. Review of Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR) licensee operating areas maps indicate that the forest licensee in the area is Sinclar Group however the road tenure holder is detailed as Winton Global Lumber Ltd. [@moeForestTenureRoad2019].  The crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.
+Mapping indicates there is 1km of habitat upstream of crossing `r my_site`. Although Rainbow Trout have been recorded upstream, habitat value was rated as low value due to a lack of significant flow volume. Review of Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR) licensee operating areas maps indicate that the forest licensee in the area is Sinclar Group with the road tenure holder detailed as Winton Global Lumber Ltd. [@moeForestTenureRoad2019].  The crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.
 
 <br>
 

@@ -277,7 +277,7 @@ grid::grid.raster(get_img())
 ```{r photo-upstream-extra1-57696, fig.cap= my_caption, eval=T}
 my_photo ='upstream-extra1.JPG'
 
-my_caption = paste0('Downstream view of 15m long cascade with gradient of 32% located upstream of PSCIS crossing ', my_site, '650m (', get_photo_utm(), ').')
+my_caption = paste0('Downstream view of 15m long cascade with gradient of 32% located 650m upstream of PSCIS crossing ', my_site, ' (', get_photo_utm(), ').')
 
 grid::grid.raster(get_img())
 ```

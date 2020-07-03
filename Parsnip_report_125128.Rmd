@@ -130,7 +130,7 @@ Crossing `r my_site` is located on an unnamed tributary to the Missinka River ne
 
 ##### Background Information
 
-At the crossing location, the stream is a 3rd order stream with a watershed area upstream of the road of approximately `r my_watershed %>% pull(area_km)`km^2^. Although upstream tributaries are not mapped below 1000m the elevation of the watershed ranges from a maximum of 1560m to 920m at the culvert. No other crossings are modeled upstream. 
+At the crossing location, the stream is a 3rd order stream with a watershed area upstream of the road of approximately `r my_watershed %>% pull(area_km)`km^2^. Although upstream tributaries are not mapped below 1000m, the elevation of the watershed ranges from a maximum of 1560m to 920m at the culvert. No other crossings were modeled upstream. 
 
 <br>
 
@@ -148,7 +148,7 @@ In 2018, the Missinka River watershed was designated as a fisheries sensitive wa
 
 <br>
 
-Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modeled instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) and wetland (`r my_overview_info %>% mutate(upstr_awet_gross_all = round(upstr_awet_gross_all,1)) %>% pull(upstr_awet_gross_all)`ha) habitat and due to a past habitat value rating assessed as medium.  Review of historic fisheries information also indicated a 1.9m wide channel located well upstream of the crossing (Table \@ref(tab:table-planning-125128)). The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
+Following office review, PSCIS stream crossing `r my_site` was ranked as a high priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modeled instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) and wetland (`r my_overview_info %>% mutate(upstr_awet_gross_all = round(upstr_awet_gross_all,1)) %>% pull(upstr_awet_gross_all)`ha) habitat and due to a past habitat value rating assessed as medium by @hooftPrinceGeorgeForest.  Review of historic fisheries information also indicated a 1.9m wide channel located well upstream of the crossing (Table \@ref(tab:table-planning-125128)). The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
 
 <br>
 
@@ -184,7 +184,7 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 
 ##### Conclusion
 
-There is approximately 0.7km of mainstem habitat within an extensive wetland area upstream of crossing `r my_site`. However, large bodied Bull Trout are likely the only species potentially capable of getting over the steep cascade sections located just downstream of the road.  Additionally, the likely shallow depths present in the wetland and a likely absence of habitat suitable for rearing or spawning upstream of the wetland areas due to the small size of tributary watersheds are likely not conducive to Bull Trout spawning and rearing.  The forest licensee in the area are Sinclar Group and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
+There is approximately 0.7km of mainstem habitat within an extensive wetland area upstream of crossing `r my_site`. However, large bodied Bull Trout are likely the only species potentially capable of getting over the steep cascade sections located just downstream of the road.  Additionally, the likely shallow depths present in the wetland and a likely absence of habitat suitable for rearing or spawning upstream of the wetland areas (due to the small size of tributary watersheds) are likely not conducive to Bull Trout spawning and rearing.  The forest licensee in the area are Sinclar Group and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
 
 <br>
 

@@ -98,7 +98,7 @@ knitr::asis_output(html_title) # Header that is only shown if print_option == TR
 
 ##### Site Location
 
-Crossing `r my_site` is located on an unnamed tributary to the Missinka River near the 7.5km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located approximately 2.4km and 1.7km east of crossings 125180 and 125179 respectively which also were surveyed with habitat confirmation assessments. The stream empties into the Missinka River `r my_distance_downstream`km downstream of crossing `r my_site` (Table \@ref(tab:tableoverview-125175)). At the time of the field surveys, there was very little traffic on the FSR, the road was in disrepair and there appeared to be no active logging in the immediate area. 
+Crossing `r my_site` is located on an unnamed tributary to the Missinka River near the 7.5km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located approximately 2.4km and 1.7km east of crossings 125180 and 125179 respectively which also were surveyed with habitat confirmation assessments. The stream empties into the Missinka River `r my_distance_downstream`km downstream of the crossing (Table \@ref(tab:tableoverview-125175)). At the time of the field surveys, there was very little traffic on the FSR, the road was in disrepair and there appeared to be no active logging in the immediate area. 
 
 <br>
 
