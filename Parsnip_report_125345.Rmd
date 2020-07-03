@@ -146,7 +146,7 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 
 ##### Conclusion
 
-There is approximately 4.7km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient with several large tributaries also present likely providing additional high value fish habitat. Habitat surveyed was rated as high value for salmonids with fish presence confirmed immediately downstream of the crossings. The forest licensees in the area are BC Timber Sales and Sinclar Group. The road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR). Overall, crossing 125345 and 57687 were ranked as `r tolower(my_priority_info_us %>% pull(priority))` priorities for rehabilitation. Effective remediation of fish passage at these locations will require coordination between CN Rail and FLNR. 
+There is approximately 4.7km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient with several large tributaries also present likely providing additional high value fish habitat. Habitat surveyed was rated as high value for salmonids with fish presence confirmed immediately downstream of the crossings. The forest licensees in the area are BC Timber Sales and Sinclar Group. The road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR). Overall, crossing 125345 and 57687 were ranked as `r tolower(my_priority_info_us %>% pull(priority))` priorities for rehabilitation. Works on this stream will require coordination between CN Rail and FLNR to remediate fish passage at both crossings. 
 
 <br>
 

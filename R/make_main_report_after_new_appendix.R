@@ -7,10 +7,14 @@
 
 ##add the number of the crossing to he make_overview_table_html function in the R/functions.R file then: (this should be automated)
 
-clean(c('table_overview_raw','photo_metadata', 'table_overview_report', 'report_main')) ##not sure why drake does not know that report main needs a rerun...
+clean(c('table_overview_raw','photo_metadata', 'table_overview_report', 
+        'report_main', 'PSCIS_submission', 'report_appendices_rmd_files')) ##not sure why drake does not know that report main needs a rerun...
 source('make.R')      
 
 
 ## also run the render manually from the rmd after loading all chunks above.  
 ## this saves running a full plan with all the appendices getting made which takes a while
 ##when we want to render all the appendices we need to make all our targets first and then add the appendices to the plan
+
+clean('report_appendices_rmd_files', 'report_appendices')
+clean('main_report')

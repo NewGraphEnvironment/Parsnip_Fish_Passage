@@ -117,7 +117,7 @@ knitr::asis_output(html_title) # Header that is only shown if print_option == TR
 ```
 ##### Site Location
 
-Crossing `r my_site` is located on an unnamed tributary to the Table River under the CN Railway near the 17km mark of the Chuchinka-Table FSR.  The culvert is located approximately 230m upstream from the FSR and `r my_distance_downstream`km upstream from the confluence of the Table River (Table \@ref(tab:tableoverview-cv1)). At the time of the field surveys, there was active log hauling on the FSR. 
+Crossing `r my_site` is located on an unnamed tributary to the Table River under the CN Railway near the 17km mark of the Chuchinka-Table FSR.  The culvert is located approximately 230m upstream from the FSR and 0.3km upstream from the confluence of the Table River (Table \@ref(tab:tableoverview-cv1)). At the time of the field surveys, there was active log hauling on the FSR. 
 
 <br>
 
