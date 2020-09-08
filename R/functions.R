@@ -165,6 +165,8 @@ table_habitat_flextable <- function(df = table_habitat_report, site = my_site, .
     my_flextable(fontsize = 8, ...) %>%
     flextable::width(j = c(1,3:5), width = 0.8) %>%
     flextable::width(j = 2, width = 0.8) %>%
+    flextable::align(j = c(1,8), align = "left", part = "all") %>% 
+    flextable::align(j = 2:7, align = "center", part = "all") %>%
     # flextable::width(., j = 9, width = 2.2) %>%
     flextable::set_caption('Summary of habitat details')
 }
@@ -186,6 +188,8 @@ table_culvert_flextable <- function(df = table_culvert, site = my_site){
     flextable::width( j = c(1,8,9), width = 0.658) %>%
     flextable::width( j = c(4), width = 0.75) %>%
     flextable::width( j = c(5), width = 0.88) %>%
+    flextable::align(j = c(1,10), align = "left", part = "all") %>% 
+    flextable::align(j = 2:9, align = "center", part = "all") %>%
     # flextable::width(., j = 9, width = 2.2) %>%
     flextable::set_caption('Summary of culvert fish passage assessment.')
 }
@@ -201,16 +205,20 @@ table_culvert_html <- function(df = table_culvert, site = my_site){
 
 table_overview_flextable <- function(df = table_overview_report, site = my_site){
   df %>% 
-    select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>%
+    # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>%
+    select(-`Habitat Value`, -Comments) %>%
     filter(Site == site) %>%
     my_flextable(fontsize = 8) %>% 
-    flextable::width(j = c(1,7), width = 0.658) %>%
+    flextable::width(j = c(1,8), width = 0.658) %>%
+    flextable::align(j = c(1,8), align = "left", part = "all") %>% 
+    flextable::align(j = 2:7, align = "center", part = "all") %>%
     flextable::set_caption('Overview of stream crossing.')
 }
 
 table_overview_html <- function(df = table_overview_report, site = my_site){
   df %>% ##changed this
-    select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
+    # select(-`Habitat Gain (km)`, -`Habitat Value`, -Comments) %>% 
+    select(-`Habitat Value`, -Comments) %>% 
     filter(Site == site) %>% 
     knitr::kable(caption = 'Overview of stream crossing.') %>% 
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
@@ -315,7 +323,7 @@ table_planning_html <- function(df = table_planning, site = my_site){
     filter(Site == site) %>% 
     select(-stream_word, -`Map 50k`, -Site, -Stream, -Road, -`UTM (10N)`) %>% 
     rename(`Map 50k` = map_linked) %>% 
-    knitr::kable(caption = 'Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization for follow up with fish habiat confirmation rank/comments.') %>% 
+    knitr::kable(caption = 'Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization for follow up with fish habitat confirmation rank/comments.') %>% 
     kableExtra::column_spec(column = 9, width_min = '2in') %>% 
     kableExtra::column_spec(column = 6, width_max = '1in') %>% ##fish species
     kableExtra::kable_styling(c("condensed"), full_width = T) %>% 
@@ -331,13 +339,27 @@ table_planning_flextable <- function(df = table_planning, site = my_site){
     flextable::width(j = c(1,2,9), width = 0.55) %>%
     flextable::width(j = c(10), width = 1.5) %>%
     flextable::width(j = c(5,7), width = 0.69) %>% #was 6 and 8
-    flextable::set_caption('Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization for follow up with fish habiat confirmation rank/comments.')
+    flextable::align(j = c(1,10), align = "left", part = "all") %>% 
+    flextable::align(j = 2:9, align = "center", part = "all") %>% 
+    flextable::footnote(i=1, j = c(3,4,5), ref_symbols = c("a"),
+             value = as_paragraph(
+               c('Fish Habitat Model output.')), part = "header") %>% 
+    flextable::footnote(i=1, j = c(6,8), ref_symbols = c("b"),
+                        value = as_paragraph(
+                          c('From PSCIS database.')), part = "header", inline = T) %>% 
+    flextable::footnote(i=1, j = c(7), ref_symbols = c("c"),
+                        value = as_paragraph(
+                          c('From FISS database.')), part = "header", inline = T) %>%
+    flextable::font(fontname = 'tahoma', part = 'footer') %>% 
+    flextable::fontsize(size = 8, part = 'footer') %>% 
+    flextable::set_caption('Field map, Fish Habitat Model outputs, historic PSCIS details and prioritization for follow up with fish habitat confirmation rank/comments.')
 }
 
 
 
 ##--------------------------make the overview table-------------------------
 ##should break the get_fish_habitat-info out of this function as it is used elsewhere.
+##this is way too complicated.  Next time put the postgres info in local sqlite then run reports off of that.  Too easy to break!!
 make_table_overview <- function(priorities_spreadsheet, PSCIS_submission){
   #establish connection with database
   drv <- dbDriver("PostgreSQL")
@@ -378,7 +400,7 @@ make_table_overview <- function(priorities_spreadsheet, PSCIS_submission){
   
   table_overview <- left_join(
     select(priorities_spreadsheet,
-           site, model_crossing_id, location, length_surveyed = length, priority, comments), ##just moved the hab_value from here to pscis
+           site, model_crossing_id, location, length_surveyed = length, priority, comments,length_of_new_habitat), ##just moved the hab_value from here to pscis ##20200830 - adding the length_of_new_habitat
     select(PSCIS_submission,
            pscis_crossing_id, utm_zone, easting, northing, stream_name, road_name, road_tenure, hab_value = habitat_value),
     by = c('site' = 'pscis_crossing_id')) %>% 
@@ -436,24 +458,45 @@ return(planning_data)
 }
 
 ##--------------------------------table overview
+# make_table_overview_report <- function(table_overview_raw){
+#   table_overview_raw %>% 
+#   filter(location == 'Upstream' ) %>% 
+#   mutate(upstr_species = as.character(upstr_species),
+#          upstr_species = case_when(site %like% '125000' ~ 'RB, CC', ##add species - could be scripted I guess
+#                                    site %like% '57690' ~ 'RB',
+#                                    site %like% 'CV1' ~ 'RB, (BT)',
+#                                    site %like% '125345' ~ '(RB), CC',
+#                                    TRUE ~ upstr_species),
+#          `UTM (10N)` = paste0(easting, " ", northing),
+#          # road_tenure = str_to_title(road_tenure),
+#          road_tenure = str_replace_all(road_tenure, 'DMPG', 'FLNRORD'),
+#          upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
+#   arrange(site_int) %>% 
+#   mutate_all(~replace_na(.,"-")) %>% 
+#   select(Site = site, Stream = stream_name, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
+#          `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, 
+#          Priority = priority, Comments = comments, -site_int, -location, -'easting', -'northing')
+# }
+
+##new try at this including the length upstream as confirmed
 make_table_overview_report <- function(table_overview_raw){
   table_overview_raw %>% 
-  filter(location == 'Upstream' ) %>% 
-  mutate(upstr_species = as.character(upstr_species),
-         upstr_species = case_when(site %like% '125000' ~ 'RB, CC', ##add species - could be scripted I guess
-                                   site %like% '57690' ~ 'RB',
-                                   site %like% 'CV1' ~ 'RB, (BT)',
-                                   site %like% '125345' ~ '(RB), CC',
-                                   TRUE ~ upstr_species),
-         `UTM (10N)` = paste0(easting, " ", northing),
-         # road_tenure = str_to_title(road_tenure),
-         road_tenure = str_replace_all(road_tenure, 'DMPG', 'FLNRORD'),
-         upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
-  arrange(site_int) %>% 
-  mutate_all(~replace_na(.,"-")) %>% 
-  select(Site = site, Stream = stream_name, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
-         `Fish Species` = upstr_species, `Habitat Gain (km)` = uphab_gross_sub22, `Habitat Value` = hab_value, 
-         Priority = priority, Comments = comments, -site_int, -location, -'easting', -'northing')
+    filter(location == 'Upstream' ) %>% 
+    mutate(upstr_species = as.character(upstr_species),
+           upstr_species = case_when(site %like% '125000' ~ 'RB, CC', ##add species - could be scripted I guess
+                                     site %like% '57690' ~ 'RB',
+                                     site %like% 'CV1' ~ 'RB, (BT)',
+                                     site %like% '125345' ~ '(RB), CC',
+                                     TRUE ~ upstr_species),
+           `UTM (10N)` = paste0(easting, " ", northing),
+           # road_tenure = str_to_title(road_tenure),
+           road_tenure = str_replace_all(road_tenure, 'DMPG', 'FLNRORD'),
+           upstr_species = str_replace_all(upstr_species, ',', ', ')) %>% 
+    arrange(site_int) %>% 
+    mutate_all(~replace_na(.,"-")) %>% 
+    select(Site = site, Stream = stream_name, `Road` = road_name, Tenure = road_tenure, `UTM (10N)`, 
+           `Fish Species` = upstr_species, `Habitat Gain (km)` = length_of_new_habitat, `Habitat Value` = hab_value, ##changed uphab_gross_sub22 to length_of_new_habitat
+           Priority = priority, Comments = comments, -site_int, -location, -'easting', -'northing')
 }
 
 
@@ -474,20 +517,8 @@ make_table_culvert <- function(PSCIS_submission){
   select(-site_sort)
 }
 
-make_fish_sampling_data <- function(fish_data_submission, site_location_data){
-  a <- dplyr::left_join(fish_data_submission %>% 
-                          purrr::pluck("step_2_fish_coll_data"),
-                        dplyr::select(site_location_data,
-                                      alias_local_name, utm_zone, utm_easting, utm_northing),
-                        by = c('local_name' = 'alias_local_name')
-  )
-  b <- left_join(a,
-                 fish_data_submission %>% 
-                   purrr::pluck('species_by_group') %>% 
-                   select(common_name, species_code),
-                 by = c('species' = 'common_name'))
-  return(b)
-}
+
+
 
 
 

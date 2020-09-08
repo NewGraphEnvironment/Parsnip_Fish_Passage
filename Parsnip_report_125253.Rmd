@@ -126,7 +126,7 @@ At the crossing location, the stream is 3rd order with a watershed area upstream
 
 <br>
 
-Following office review, PSCIS stream crossing `r my_site` was ranked as a moderate priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modeled instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) and wetland (`r my_overview_info %>% pull(upstr_awet_gross_all)`ha) habitat (Table \@ref(tab:table-planning-125253)). Review of a historic FISS sample site indicated that the channel width upstream was 2.2m as apposed to the 1.2m recorded within the PSCIS system [@moeStreamInventorySample].  The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
+Following office review, PSCIS stream crossing `r my_site` was ranked as a moderate priority for follow up with habitat confirmation due to the potential for rehabilitation of the crossing to provide access to modeled instream (`r my_overview_info %>% pull(uphab_gross_sub22)`km) and wetland (`r my_overview_info %>% pull(upstr_awet_gross_all)`ha) habitat (Table \@ref(tab:table-planning-125253)). Review of a historic FISS sample site indicated that the channel width upstream was 2.2m as opposed to the 1.2m recorded within the PSCIS system [@moeStreamInventorySample].  The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
 
 <br>
 

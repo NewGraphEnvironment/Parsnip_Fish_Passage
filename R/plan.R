@@ -1,4 +1,8 @@
 # The workflow plan data frame outlines what you are going to do.
+###!!!!!!!!!!!WEIRD STUFF - you need to go into the 
+##03_Parsnip_report_057681.html needs to be knit in the main and copied into the docs folder
+##you need to go into the rmd file and turn on the last lines of the file before knitting to word.  Make
+##sure that you turn it off again after though as it gets really messy if you leave it on!!!!!!!
 plan1 <- drake_plan(
   fish_data_submission = drake::file_in("./data/parsnip_habitat_assessments.xls") %>% 
     readxl::excel_sheets() %>% 
@@ -18,7 +22,9 @@ plan1 <- drake_plan(
     purrr::pluck("step_1_ref_and_loc_info") %>% 
     dplyr::filter(!is.na(site_number))%>% 
     mutate(survey_date = janitor::excel_numeric_to_date(as.numeric(survey_date))), 
-  fish_sampling_data = make_fish_sampling_data(fish_data_submission = fish_data_submission, site_location_data = site_location_data),
+  fish_sampling_data = make_fish_sampling_data(fish_data_submission = fish_data_submission, 
+                                               site_location_data = site_location_data) %>% 
+    filter(!is.na(reference_number)),
   table_habitat_raw = make_table_habitat(loc_dat = site_location_data, site_dat = habitat_data),
   table_habitat_report = make_table_habitat_report(table_habitat_raw = table_habitat_raw, 
                                                    PSCIS_submission = PSCIS_submission, 
@@ -80,15 +86,16 @@ plan1 <- drake_plan(
   ##now make the report
     report_main = rmarkdown::render(
     knitr_in("Parsnip_report.Rmd"), ##JUST CHANGED FOR A SEC
-    output_file = file_out("./docs/index.html"), #"./docs/index.html"
-    quiet = TRUE
+    output_file = file_out("./index2.html"), #"./docs/index.html"  THERE ARE ISSUES with writing outside of main directory. Should prob just script to move after burnt!
+    quiet = TRUE 
   ),
+  report_docs = file.rename(report_main, './docs/index.html'),
   report_appendices = report_appendices_rmd_files %>% map(render_separately_all), ##turned this off for speed
-  planning_summary_table = rmarkdown::render(
-    knitr_in("Parsnip_report_planning_summary.Rmd"),
-    output_file = file_out("./docs/Parsnip_report_planning_summary.html"),
-    quiet = TRUE
-    )
+  # planning_summary_table = rmarkdown::render(
+  #   knitr_in("Parsnip_report_planning_summary.Rmd"),
+  #   output_file = file_out("./docs/Parsnip_report_planning_summary.html"),
+  #   quiet = TRUE
+  #   )
 )
 
 ##old news
@@ -97,3 +104,4 @@ plan1 <- drake_plan(
 #     output_file = file_out("./docs/Parsnip_report_intro_methods.html"),
 #     quiet = TRUE
 #   ),
+

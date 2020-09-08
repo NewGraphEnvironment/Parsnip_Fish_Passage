@@ -131,7 +131,7 @@ Crossing `r my_site` is located on an unnamed `r my_pscis_info %>% pull(stream_n
 
 ##### Background Information
 
-At the crossing location, the stream is 2nd order with a watershed area upstream of the road of approximately `r my_watershed %>% mutate(area_km = area_km + 1) %>%  pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 900m to 750m at the culvert. One PSCIS crossing (57608) and several modeled crossings (79706, 189512, 190084, 79707, 7289, 6472) are located upstream on small tributaries to the mainstem of the subject stream. Provincial records indicate that there is no fisheries information available for the stream [@data_fish_obs:1; @moeStreamInventorySample].
+At the crossing location, the stream is 2nd order with a watershed area upstream of the road of approximately `r my_watershed %>% mutate(area_km = area_km + 1) %>%  pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 900m to 750m at the culvert. One PSCIS crossing (57608) and several modeled crossings (79706, 189512, 190084, 79707, 7289, 6472) are located upstream on small tributaries to the mainstem of the subject stream. Provincial records indicate that there is no fisheries information available for the stream [@moeStreamInventorySample].
 
 <br>
 

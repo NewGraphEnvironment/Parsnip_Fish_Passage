@@ -123,7 +123,7 @@ Crossing `r my_site` is located on an unnamed tributary to the Table River under
 
 ##### Background Information
 
-At the crossing location, the stream is 3rd order with a watershed area upstream of the road of `r my_watershed %>% pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of approximately 1600m to 780m at the culvert. A newly installed bridge is located just upstream of CV1 on a forestry road as well as downstream on the Chuchinka-Table FSR.
+At the crossing location, the stream is 3rd order stream and the elevation of the watershed ranges from a maximum of approximately 1600m to 780m at the culvert. A newly installed bridge is located just upstream of CV1 on a forestry road as well as downstream on the Chuchinka-Table FSR.
 
 <br>
 
@@ -131,11 +131,11 @@ Provincial records indicate that Rainbow Trout have been captured downstream of 
 
 <br>
 
-@hagen_2015_critical_habs have identified the Table River watershed and several of it's tributaries as containing critical spawning and juvenile rearing habitat for large body Bull Trout with an estimated minimum spawner abundance of 100 fish. 
+@hagen_2015_critical_habs have identified the Table River watershed and several of its tributaries as containing critical spawning and juvenile rearing habitat for large body Bull Trout with an estimated minimum spawner abundance of 100 fish. 
 
 <br>
 
-The Table River (along with the Anzac River) is identified as the primary core of post-Williston Arctic Grayling distribution in the Parsnip River watershed with life history, migration behaviours and critical habitats summarized in @hagen_2015_critical_habs.  The mainstem of the Table River contains critical habitats for all life stages of Arctic Grayling with adults observed moving among mainstem locations and tributaries during summer [@hagen_2015_critical_habs].  
+The Table River (along with the Anzac River) is identified as the primary core of post-Williston Arctic Grayling distribution in the Parsnip River watershed with life history, migration behaviors and critical habitats summarized in @hagen_2015_critical_habs.  The mainstem of the Table River contains critical habitats for all life stages of Arctic Grayling with adults observed moving among mainstem locations and tributaries during summer [@hagen_2015_critical_habs].  
 
 
 <br>
@@ -147,7 +147,7 @@ In 2018, the Table River watershed was designated as a fisheries sensitive water
 <br>
 
 
-The stream associated with crossing `r my_site` is situated in a location approximately 230m to the west of the location mapped in the provincial freshwater atlas stream layer. There was no data available for the crossing in the PSCIS system however potential habitat gains for the site are likely similiar to those associated with modeled crossing 16603266 which provides access to approximately 6.6km of modeled instream habitat. The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
+The stream associated with crossing `r my_site` is situated in a location approximately 230m to the west of the location mapped in the provincial freshwater atlas stream layer. There was no data available for the crossing in the PSCIS system however potential habitat gains for the site are likely similar to those associated with modeled crossing 16603266 which provides access to approximately 6.6km of modeled instream habitat. The habitat confirmation was completed on `r date`. A map of the watershed including areas surveyed is provided in Attachment 1 – Map [`r my_mapsheet`](`r my_map_link`).
 
 <br>
 
@@ -174,7 +174,7 @@ The stream was surveyed downstream from the culvert for `r my_priority_info_ds %
 
 ##### Stream Characteristics Upstream
 
-The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m. The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-cv1)). Riparian vegetation was comprised of a mature coniferous forest and instream cover quantity was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`.  The dominant cover form was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available (Figure \@ref(fig:photo-upstream1-cv1). Gravels suitable for spawning were present throughout the area surveyed and a suspected Bull Trout spawning redd (40 - 50cm diameter gravel "egg nest") was observed  (Figure \@ref(fig:photo-upstream2-cv1)- \@ref(fig:photo-upstream3-cv1)). A 20cm long salmonid (suspect Bull Trout) and young of year salmonids were also observed. Channel morphology was `r my_habitat_info_t %>% filter(rowname == 'morphology') %>% pull(us)`. An open span bridge was located upstream of the culvert approximately 100m (Figure \@ref(fig:photo-upstream4-cv1)).  Three minnow traps were set upstream of the crossing and left to soak overnight.  One Rainbow Trout (48mm fork length) was captured (Figure \@ref(fig:photo-extra2-cv1)).  Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
+The stream was surveyed upstream from the culvert for `r my_priority_info_us %>% pull(length)`m. The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-cv1)). Riparian vegetation was comprised of a mature coniferous forest and instream cover quantity was rated as `r my_habitat_info_t %>% filter(rowname == 'total cover') %>% pull(us)`.  The dominant cover form was `r my_habitat_info_t %>% filter(us == 'dominant') %>% pull(rowname)` with `r my_habitat_info_t %>% filter(us == 'sub-dominant') %>% pull(rowname) %>% knitr::combine_words()` also available (Figure \@ref(fig:photo-upstream1-cv1)). Gravels suitable for spawning were present throughout the area surveyed and a suspected Bull Trout spawning redd (40 - 50cm diameter gravel "egg nest") was observed  (Figure \@ref(fig:photo-upstream2-cv1)- \@ref(fig:photo-upstream3-cv1)). A 20cm long salmonid (suspect Bull Trout) and young of year salmonids were also observed. Channel morphology was `r my_habitat_info_t %>% filter(rowname == 'morphology') %>% pull(us)`. An open span bridge was located upstream of the culvert approximately 100m (Figure \@ref(fig:photo-upstream4-cv1)).  Three minnow traps were set upstream of the crossing and left to soak overnight.  One Rainbow Trout (48mm fork length) was captured (Figure \@ref(fig:photo-extra2-cv1)).  Habitat value upstream of the crossing was rated as `r my_pscis_info %>% pull(habitat_value) %>% tolower()`.
 
 
 <br>

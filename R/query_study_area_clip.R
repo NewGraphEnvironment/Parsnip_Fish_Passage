@@ -52,7 +52,7 @@ dbGetQuery(conn,
 dbGetQuery(conn,
            "SELECT column_name,data_type 
            FROM information_schema.columns 
-           WHERE table_name='modelled_habitat_potential'")
+           WHERE table_name='pscis_assessment_svw'")
 
 dbGetQuery(conn,
            "SELECT column_name,data_type 
@@ -62,6 +62,21 @@ dbGetQuery(conn,
 ##list the unique values in the column of a table
 dbGetQuery(conn,"SELECT DISTINCT(watershed_group_name)
            FROM whse_basemapping.fwa_watershed_groups_poly")
+
+##see what srid you are in
+dbGetQuery(conn, "SELECT ST_SRID(geom) FROM whse_fish.pscis_assessment_svw LIMIT 1;")
+dbGetQuery(conn, "SELECT ST_SRID(geom) FROM whse_basemapping.fwa_watershed_groups_poly LIMIT 1;")
+
+##this doesn't work
+dbGetQuery(conn, "SELECT whse_fish.UpdateGeometrySRID('pscis_assessment_svw','geom',3005);")
+
+dbGetQuery(conn, 
+           "ALTER TABLE whse_fish.pscis_assessment_svw
+           ALTER COLUMN geom
+           Type geometry(Point, 3005)
+           USING ST_SetSRID(geom, 3005);")
+
+dbGetQuery(conn, "SELECT whse_fish.UpdateGeometrySRID('pscis_assessment_svw','geom',3005);")
 
 ##this is using dbplyr
 # test <- tbl(conn, dbplyr::in_schema("whse_basemapping", "fwa_watershed_groups_poly")) 
