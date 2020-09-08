@@ -78,7 +78,7 @@ The unnamed tributary to the Parsnip River is a 3rd order stream with a watershe
 
 <br>
 
-Although they concede that information adequacy for assessing critical habitats for Bull Trout in the Upper Parsnip sub-basin is poor, @hagen_2015_critical_habs report that low juvenile Bull Trout density and turbid water conditions indicate that this area is likely of relatively low importance for the Parsnip River population. 
+Although information adequacy for assessing critical habitats for Bull Trout in the Upper Parsnip sub-basin is noted as poor, @hagen_2015_critical_habs report that low juvenile Bull Trout density and turbid water conditions indicate that this area is likely of relatively low importance for the Parsnip River population. 
 
 
 
@@ -108,14 +108,14 @@ The stream was surveyed downstream from the culvert for 325m.  Immediately downs
 
 <br>
 
-Based on google earth imagery and modelled gradients, it is likely that there were additional beaver dams between the downstream end of the stream section surveyed and the confluence of the Parsnip River approximately 1.7km downstream. Minnow trapping (3 traps set and left overnight) and electrofishing (70m long site electrofished for 45 seconds) were conducted downstream of the crossing structure.  A standardized 100m long electrofishing site was not completed due to equipment malfunction.Four Sculpin ranging from 57 - 61mm long were captured in minnow traps. One Sculpin (57mm) and one Rainbow Trout parr (61mm) were captured by electrofishing (Figure \@ref(fig:photo-downstream4)).
+Based on google earth imagery and modelled gradients, it is likely that there were additional beaver dams between the downstream end of the stream section surveyed and the confluence of the Parsnip River approximately 1.7km downstream. Minnow trapping (3 traps set and left overnight) and electrofishing (70m long site electrofished for 45 seconds) were conducted downstream of the crossing structure.  A standardized 100m long electrofishing site was not completed due to equipment malfunction. Four Sculpin species ranging from 57 - 61mm long were captured in minnow traps. One Sculpin (57mm) and one Rainbow Trout parr (61mm) were captured by electrofishing (Figure \@ref(fig:photo-downstream4)).
 
 
 <br>
 
 ##### Stream Characteristics Upstream
 
-The stream was surveyed upstream from the culvert continuously for 330m to a beaver influenced wetland area where walking became difficult due to water depth (UTM:10N 577830 6038053). The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125000)). The stream was accessed again from logging roads at points 1.6km upstream from the crossing then again at approximately 2.5km upstream of the crossing. Undercut banks, large woody debris, overhanging vegetation and gravels suitable for spawning were located within all upstream areas surveyed (Figures \@ref(fig:photo-upstream1-125000) - \@ref(fig:photo-upstream2-125000)). An unmanned aerial vehicle was utilized to capture video footage of upstream habitat and is available [HERE](https://www.youtube.com/watch?v=-foWvX1MSkg).  Minnow trapping was conducted upstream of the crossing (3 traps set and left overnight) with no fish captured. One culvert on a small upstream tributary (modeled crossing 16604087) was assessed and determined to be a barrier (Figure - \@ref(fig:photo-upstream3-125000)). 
+The stream was surveyed upstream from the culvert continuously for 330m to a beaver influenced wetland area where walking became difficult due to water depth (UTM:10N 577830 6038053). The average channel width was `r my_habitat_info_us %>% pull(avg_channel_width_m)`m, the average wetted width was `r my_habitat_info_us %>% pull(avg_wetted_width_m)`m and the average gradient was `r my_habitat_info_us %>% pull(average_gradient_percent)`% (Table \@ref(tab:tablehabitat-125000)). The stream was accessed again from logging roads at points 1.6km upstream from the crossing then again at approximately 2.5km upstream of the crossing. Undercut banks, large woody debris, overhanging vegetation and gravels suitable for spawning were located within all upstream areas surveyed (Figures \@ref(fig:photo-upstream1-125000) - \@ref(fig:photo-upstream2-125000)). An unmanned aerial vehicle was utilized to capture video footage of upstream habitat and is available at https://www.youtube.com/watch?v=-foWvX1MSkg.  Minnow trapping was conducted upstream of the crossing (3 traps set and left overnight) with no fish captured. One culvert on a small upstream tributary (modeled crossing 16604087) was assessed and determined to be a barrier (Figure - \@ref(fig:photo-upstream3-125000)). 
 
 <br>
 

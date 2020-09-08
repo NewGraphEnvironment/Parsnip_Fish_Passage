@@ -116,7 +116,7 @@ Crossing `r my_site` is located on an unnamed tributary to the Table River near 
 
 ##### Background Information
 
-At the crossing location, the stream is a 3rd order stream with a watershed area upstream of the road of `r my_watershed %>% pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 1400m to 760m at the culvert.  One previously unassessed crossing (16603641) is located upstream (450m) and previously unassessed crossing (16603278) is located downstream 210m under the CN Railway. 
+At the crossing location, the stream is 3rd order with a watershed area upstream of the road of `r my_watershed %>% pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 1400m to 760m at the culvert.  One previously unassessed crossing (16603641) is located upstream (450m) and previously unassessed crossing (16603278) is located downstream 210m under the CN Railway. 
 
 <br>
 

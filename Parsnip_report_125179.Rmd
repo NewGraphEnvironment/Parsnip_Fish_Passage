@@ -101,7 +101,7 @@ knitr::asis_output(html_title) # Header that is only shown if print_option == TR
 
 ##### Site Location
 
-Crossing `r my_site` is located on an unnamed tributary to the Missinka River near the 12km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located approximately 660m east of surveyed crossing 125180 and joins this adjacent stream just before emptying into the Missinka River `r my_distance_downstream`km downstream of the crossing (Table \@ref(tab:tableoverview-125179)). At the time of the field surveys, there was very little traffic on the FSR and it appeared as though there was no active logging. The forest licensee in the area is Canfor Forest Products and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. 
+Crossing `r my_site` is located on an unnamed tributary to the Missinka River near the 12km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located approximately 660m east of surveyed crossing 125180 and joins this adjacent stream just before emptying into the Missinka River `r my_distance_downstream`km downstream of the crossing (Table \@ref(tab:tableoverview-125179)). At the time of the field surveys, there was very little traffic on the FSR and it appeared as though there was no active logging. The forest licensee in the area is Sinclar Group and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. 
 
 <br>
 
@@ -111,7 +111,11 @@ The unnamed tributary to the Missinka River is a 2nd order stream with a watersh
 
 <br>
 
-Provincial records indicate that in 1998 there were Rainbow Trout captured upstream [@data_fish_obs; @tritonenvironmentalconsultantsltd.Reconnaissance200001999]. @hagen_2015_critical_habs have identified the Missinka River watershed as containing critical spawning habitat for large body adult Bull Trout with potentially less than 50 spawners utilizing the watershed.  Critical juvenile rearing habitat is also noted as present in the Missinka River watershed [@hagen_2015_critical_habs]. The Missinka River watershed is utilized by a possibly genetically distinct, self-sustaining Arctic Grayling population with the mainstem of the river providing critical habitat for fry and adult fish [@shrimptonj.m.GeneticAnalysisArctic2012; @hagen_2015_critical_habs].
+Provincial records indicate that in 1998 there were Rainbow Trout and Bull Trout captured upstream [@data_fish_obs; @tritonenvironmentalconsultantsltd.Reconnaissance200001999] of the crossing with Rainbow Trout, Bull Trout, Slimy Sculpin and Burbot captured below. @hagen_2015_critical_habs have identified the Missinka River watershed as containing critical spawning habitat for large body adult Bull Trout with potentially less than 50 spawners utilizing the watershed.  Critical juvenile Bull Trout rearing habitat is also noted as present in the Missinka River watershed [@hagen_2015_critical_habs]. 
+
+<br>
+
+The Missinka River watershed is utilized by a possibly genetically distinct, self-sustaining Arctic Grayling population with the mainstem of the river providing critical habitat for fry and adult fish [@shrimptonj.m.GeneticAnalysisArctic2012; @hagen_2015_critical_habs].
 
 <br>
 
@@ -156,9 +160,11 @@ The stream was surveyed upstream from the culvert for `r my_priority_info_us %>%
 
 ##### Conclusion
 
-There is approximately 2km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient.  The majority of this habitat is likely of high value with Rainbow Trout presence confirmed up to 1.5km upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout has also been confirmed upstream of the crossing and the watershed is designated as Fisheries Sensitive with critical habitat for the species known nearby. The forest licensee in the area is Sinclar Group and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development. Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation.  
+There is approximately 2km of mainstem habitat upstream of crossing `r my_site` modeled as less than 22% gradient.  The majority of this habitat is likely of high value with Rainbow Trout presence confirmed up to 1.5km upstream of the crossing [@tritonenvironmentalconsultantsltd.Reconnaissance200001999]. Bull Trout has also been confirmed upstream of the crossing and the watershed is designated as Fisheries Sensitive with critical habitat for the species known nearby. The forest licensee in the area is Sinclar Group and the road tenure holder is the Ministry of Forests, Lands, Natural Resource Operations & Rural Development (FLNR). Overall, the crossing located on the `r my_overview_info %>% pull(road_name)` was ranked as a `r tolower(my_priority_info_us %>% pull(priority))` priority for rehabilitation. 
 
 <br>
+
+As the result of 2019 field work findings and ongoing communications between SERNbc, McLeod Lake Indian Band, Sinclar Group and FLNR, site plan designs have been developed for a fish passable structure at the crossing (Digital Attachment 3). Of note, crossing 125179 is adjacent to other streams of similar size and character which are also transected by FSR crossing structure barriers (i.e. PSCIS Crossings 125180 and 125186). Should fish passage restoration at crossing 125179 be completed, this setting could present a scenario favorable for monitoring impacts of the works on local fish populations (i.e. biological monitoring at the stream where crossing 125179 is located can be compared not only to pre-restoration conditions but also to adjacent similar systems where non-remediated crossing structures are located).
 
 
 ```{r tableoverview-125179, eval=T}
