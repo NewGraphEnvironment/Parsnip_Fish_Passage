@@ -1,14 +1,14 @@
 ---
 title: 
 output:
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
   bookdown::word_document2:
     reference_docx: C:/Users/allan/OneDrive/New_Graph/Current/Code/R/Templates/RMDTemplates/R/word_template.docx
     bibliography: references.bib
     toc: no
     fig_caption: yes
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
 bibliography: references.bib
 biblio-style: apalike
 editor_options: 

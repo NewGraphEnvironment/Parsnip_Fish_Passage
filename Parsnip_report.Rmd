@@ -1,14 +1,14 @@
 ---
-title: "Parsnip River Watershed – Fish Habitat Confirmations (PEA-F20-F-2967) - DRAFT"
+title: "Parsnip River Watershed – Fish Habitat Confirmations (PEA-F20-F-2967)"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
-  bookdown::html_document2:
-    number_sections: no
-    self_contained: yes
   bookdown::word_document2:
     reference_docx: word_template.docx
     bibliography: references.bib
     toc: yes
+  bookdown::html_document2:
+    number_sections: no
+    self_contained: yes
 bibliography: references.bib
 biblio-style: apalike
 ---
@@ -135,11 +135,11 @@ knitr::asis_output("## Executive Summary")
 ```
 
 
-The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats. In addition, open migration corridors are can facilitate adaptation to the impacts of climate change such as rising water temperatures and changing flow regimes. Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues.  There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat.
+The health and viability of freshwater fish populations depends on access to tributary and off channel areas which provide refuge during high flows, opportunities for foraging as well as overwintering, spawning and summer rearing habitats. In addition, open migration corridors can facilitate adaptation to the impacts of climate change such as rising water temperatures and changing flow regimes. Culverts can present barriers to fish migration due to increased water velocity, turbulence, a vertical drop at the culvert outlet and/or maintenance issues.  There are hundreds of culverts presenting barriers to fish passage in the Parsnip River watershed with some of these structures obstructing fish movement to valuable fish habitat.
 
 <br>
 
-In the spring and summer of 2019, the Society for Ecosystem Restoration Northern BC (in collaboration with New Graph Environment, Hillcrest Geographics and the McLeod Lake Indian Band) conducted fish habitat confirmation assessments throughout the Parsnip River watershed.  Prior to the field surveys a literature and Provincial Stream Crossing Inventory Summary System (PSCIS) database review was conducted and a community scoping exercise within the McLeod Lake Indian Band was undertaken to focus the work on fish passage restoration candidates with the highest potential benefits for salmonid populations in the watershed. Crossings prioritized for habitat confirmation field assessments were those identified as having potentially high fisheries value as well as likely large quantities of habitat upstream. The project aligns with the Fish and Wildlife Compensation Program Streams Action Plan [@fishandwildlifecompensationprogramPeaceBasinStreams2014] objective of conserving or enhancing high priority species and habitats by implementing actions to both identify restoration opportunities and restore fish passage in streams.
+In the spring and summer of 2019, the Society for Ecosystem Restoration Northern BC (in collaboration with New Graph Environment, Hillcrest Geographics and the McLeod Lake Indian Band) conducted fish habitat confirmation assessments throughout the Parsnip River watershed.  Prior to the field surveys a literature and Provincial Stream Crossing Inventory Summary System (PSCIS) database review was conducted and a community scoping exercise within the McLeod Lake Indian Band was undertaken to focus the work on fish passage restoration candidates with the highest potential benefits for salmonid populations in the watershed. Crossings prioritized for habitat confirmation field assessments were those identified as having potentially high fisheries value as well as likely large quantities of habitat upstream. The project aligns with the Fish and Wildlife Compensation Program Streams Action Plan [@fishandwildlifecompensationprogramPeaceBasinStreams2014] objective 1d-1 of reviewing existing information on stream restoration/enhancement opportunities and provide prioritized enhancement recommendations. Additionally, the project aims to conserve and enhance high priority species and habitats by aligning with @fishandwildlifecompensationprogramPeaceBasinStreams2014 objective 1d-3: restoring fish passage in streams.
 
 <br>
 
@@ -151,16 +151,16 @@ Habitat confirmation assessments were conducted between August 30, 2019 and Sept
 
 <br>
 
-At the time of reporting, communications were underway with Ministry of Forests, Lands, Natural Resource Operations & Rural Development representatives, forest licensees and engineering consultants to commission an engineering site plan and design for a fish passable structure to replace one of the barrier culverts identified as a high priority for replacement. It is expected that funding for the design will be provided through this project. 
+As the result of 2019 field work findings and ongoing communications between SERNbc; McLeod Lake Indian Band; Sinclar Group (forest licensee); Ministry of Forests, Lands, Natural Resource Operations & Rural Development representatives,  site plan designs have been developed for a fish passable structure over an unnamed tributary to Missinka River (PSCIS crossing 125179) located at 12km on the Chuchinka-Missinka FSR Road.  The crossing was identified as a barrier to upstream fish migration and a high priority for replacement through this project.  The current crossing structures (two round bottom corrugated metal pipes) were noted as being located in fisheries sensitive watershed and adjacent to other streams of similar size and character which are also transected by FSR crossing structure barriers. Should fish passage restoration at crossing 125179 be completed, this setting could present a scenario favorable for monitoring of impacts of stream passage remediation on local fisheries populations (i.e. biological monitoring at the stream where crossing 125179 is located can be compared not only to pre-restoration conditions but also to similar adjacent streams where non-remediated crossing structures are located).  
 
 <br>
 
 Recommended next steps for fish passage restoration in the Parsnip River Watershed include:
 
- * Acquisition of funding to contribute towards costs for replacing the high priority structure receiving replacement designs through this 2019/2020 phase of the project.
+ * Acquisition of funding to contribute towards costs for replacing the high priority structure 125179 which received replacement designs through this 2019/2020 phase of the project.
  * Acquisition of funding to procure site plans and replacement designs for structures identified as high priorities for restoration through this 2019/2020 phase of the project. 
  * Explore and pursue opportunities to obtain buy-in and funding for replacement of identified high priority structures.
- * Drafting and implementation of a collaborative plan for assessing the impacts of fish passage restoration investments.  The plan should be designed to provide data necesary to effectively monitor the outcomes of restoration efforts, inform future investments and build capacity/momentum for ecosystem restoration activities in the FWCP Peace Region.
+ * Drafting and implementation of a collaborative plan for assessing the impacts of fish passage restoration investments.  The plan should be designed to provide data necessary to effectively monitor the outcomes of restoration efforts, inform future investments and build capacity/momentum for ecosystem restoration activities in the FWCP Peace Region.
 
 
 
@@ -170,7 +170,15 @@ knitr::asis_output("## Acknowledgements")
   } else knitr::asis_output('**Acknowledgements**')  
 ```
 
-The Society For Ecosystem Restoration Northern BC gratefully acknowledges the financial support of the Fish and Wildlife Compensation Program for its contribution to this project. The FWCP is partnership between BC Hydro, the Province of B.C., Fisheries and Oceans Canada, First Nations and public stakeholders to conserve and enhance fish and wildlife in watersheds impacted by BC Hydro dams.
+The Society For Ecosystem Restoration Northern BC gratefully acknowledges the financial support of the Fish and Wildlife Compensation Program (FWCP) for its contribution to this project. The FWCP is partnership between BC Hydro, the Province of B.C., Fisheries and Oceans Canada, First Nations and public stakeholders to conserve and enhance fish and wildlife in watersheds impacted by BC Hydro dams. Mussi.
+
+<br>
+
+This project was a collaboration between FWCP, the Society for Ecosystem Restoration Northern BC (SERNbc), New Graph Environment, Hillcrest Geographics, Onsite Engineering Ltd. the McLeod Lake Indian Band and many others.  Many thanks to John DeGagne from SERNbc for spearheading the initiative and for his help with facilitating of multiple aspects of the project.  Thank you Chelsea Cody from FWCP for connecting our team and facilitating collaboration from the office and the field. Much gratitude to Simon Norris for leveraging decades of hard work towards the GIS, modeling and mapping that were key to the success of this work.  Thank you to Karla Graf from CN Rail for reviewing our study plan and providing funding for field work assistance for crossings under the CN Railway. Arlene Solonas from the McLeod Lake Indian Band is acknowledged as instrumental for elevating this project off the ground, motivating our team and for engaging the McLeod Lake community. Thank you to Nathan Prince from McLeod Lake Indian Band for playing a lead role in helping the project succeed. Thank you to all the many others not individually mentioned here. Mussi.
+
+<br>
+
+Field work for the project was completed by Allan Irvine, R.P.Bio. (New Graph Environment), Jonathan St.Jean, R.P.Bio. (Alces Environmental), Tyler Valle, Environmental Technologist (McLeod Lake Indian band) and Ken Solonas (McLeod Lake Indian Band). Hard work and good times. Mussi. 
 
 \newpage
 
@@ -182,6 +190,8 @@ The health and viability of freshwater fish populations depends on access to tri
 In the spring and summer of 2019, the Society for Ecosystem Restoration Northern BC (in collaboration with New Graph Environment, Hillcrest Geographics and the McLeod Lake Indian Band) conducted fish habitat confirmation assessments throughout the Parsnip River watershed.  Prior to the field surveys a literature and database review was conducted and a community scoping exercise within the McLeod Lake Indian Band was undertaken to focus the work on fish passage restoration candidates with the highest potential benefits for salmonid populations in the watershed. Crossings prioritized for habitat confirmation field assessments were those identified as having potentially high fisheries value as well as likely large quantities of habitat upstream. Prioritization rankings were assigned based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, near the crossing; stream order, previously recorded channel size and recommendations of past fish passage assessments [@gollnerPrinceGeorgeTimber2013]. 
 
 <br>
+
+Although there currently are no plans for long-term maintenance of the site, an interactive version of this report was made available at https://newgraphenvironment.github.io/Parsnip_Fish_Passage/.
 
 
 ```{r, eval = knitr::is_html_output() == FALSE}
@@ -278,7 +288,7 @@ fish_table <- fish_species_watershed %>%
 ```
 
 ### Study Area 
-The Parsnip River watershed is located within the south-eastern portion of the 108,000 km^2^ traditional territory of the Tse'khene from the [McLeod Lake Indian Band](https://www.mlib.ca/about/History).  The Tse'khene *"People of the Rocks"* are a south westerly extension of the Athabascan speaking people of northern Canada.  They were a nomadic hunting people who's language belongs to the Beaver-Sarcee-Tse'khene branch of Athapaskan [@HistoryWhoWe]. 
+The Parsnip River watershed is located within the south-eastern portion of the 108,000 km^2^ traditional territory of the Tse'khene from the [McLeod Lake Indian Band](https://www.mlib.ca/about/History).  The Tse'khene *"People of the Rocks"* are a south westerly extension of the Athabascan speaking people of northern Canada.  They were a nomadic hunting people whose language belongs to the Beaver-Sarcee-Tse'khene branch of Athapaskan [@HistoryWhoWe]. 
 
 <br>
 
@@ -331,7 +341,7 @@ grid::grid.raster(img)
 
 <br>
 
-```{r hydrosummaryplot, fig.dim = c(5.1, 3.4), fig.cap="Summary discharge statistics (annual maximum, minimum, mean and standard deviation) for Parsnip River at hyrometric station #07EE007.  Solid line is long term mean."}
+```{r hydrosummaryplot, fig.dim = c(5.1, 3.4), fig.cap="Summary discharge statistics (annual maximum, minimum, mean and standard deviation) for Parsnip River at hydrometric station #07EE007.  Solid line is long term mean."}
 ##fasstr::plot_data_screening2 is a custom version of plot_data_screening 
 # fasstr::plot_data_screening3(station_number = "07EE007")[["Data_Screening"]]
 
@@ -392,7 +402,7 @@ A study of Bull Trout critical habitats in the Parsnip River was conducted in 20
 
 <br>
 
-In 2018, sub-basins of the Anzac River watershed, Homininka River, Missinki River and Table River watersheds were designated as fisheries sensitive watersheds under the authority of the *Forest and Range Practices Act* due to significant downstream fisheries values and significant watershed sensitivity [@anzac_sens; @hominka_sens; @table_sens; @missinka_sens]. Special management is required in these watersheds to protect habitat for fish species including Bull Trout and Arctic Grayling including measures (among others) to limit equivalent clearcut area, reduce impacts to natural stream channel morphology, retain old growth attributes and maintain fish habitat/movement [@fsw_order].    
+In 2018, sub-basins of the Anzac River watershed, Homininka River, Missinka River and Table River watersheds were designated as fisheries sensitive watersheds under the authority of the *Forest and Range Practices Act* due to significant downstream fisheries values and significant watershed sensitivity [@anzac_sens; @hominka_sens; @table_sens; @missinka_sens]. Special management is required in these watersheds to protect habitat for fish species including Bull Trout and Arctic Grayling including measures (among others) to limit equivalent clearcut area, reduce impacts to natural stream channel morphology, retain old growth attributes and maintain fish habitat/movement [@fsw_order].    
 
 <br>
 
@@ -405,7 +415,7 @@ A detailed review of Arctic Grayling life history can be referenced in @stamford
 
 <br>
 
-Migration of mature adult Arctic Grayling occurs in the spring with arrival at known spawning locations coinciding with water temperatures of 4$^\circ$C.  Spawning in the Parsnip watershed appears to occur between late-May and late-June within sites located primarily within the lower reaches of the Anzac and Table rivers as well as within the Parsnip River mainstem. Side-channel and multiple-channel locations containing small gravels appear to be selected for spawning. Currently, the primary distribution of Williston Arctic Grayling appears to be among fourth order and larger streams [@williamson_2004; @stamfordFWCPArcticGrayling]. @stewartFishLifeHistory2007 report that Arctic Grayling spawn in large and small tributaries to rivers and lakes, intermittent streams, within mainstem rivers as well as lakes, most commonly at tributary mouths.   Although past study results indicate that 0+ grayling appeared to overwinter in lower reaches of larger tributaries (i.e. Table, Anzac rivers) as well as the Parsnip River and that few age-1+ grayling have been sampled in tributaries, habitat use in small tributaries and the extent they are connected with the mainstem habitats of all core areas is not well understood. Between 1995 and 2019, Arctic Grayling population monitoring has been conducted in the Table River in nine out of 25 years (8 years for the Anzac) using snorkel surveys.  Results from 2018 are 2019 are intended to contributing to assessment of the conservation status of the species in the Parsnip Core area [@hagenTrendAbundanceArctic2018].
+Migration of mature adult Arctic Grayling occurs in the spring with arrival at known spawning locations coinciding with water temperatures of 4$^\circ$C.  Spawning in the Parsnip watershed appears to occur between late-May and late-June within sites located primarily within the lower reaches of the Anzac and Table rivers as well as within the Parsnip River mainstem. Side-channel and multiple-channel locations containing small gravels appear to be selected for spawning. Currently, the primary distribution of Williston Arctic Grayling appears to be among fourth order and larger streams [@williamson_2004; @stamfordFWCPArcticGrayling]. @stewartFishLifeHistory2007 report that Arctic Grayling spawn in large and small tributaries to rivers and lakes, intermittent streams, within mainstem rivers as well as lakes, most commonly at tributary mouths.   Although past study results indicate that 0+ grayling appeared to overwinter in lower reaches of larger tributaries (i.e. Table, Anzac rivers) as well as the Parsnip River and that few age-1+ grayling have been sampled in tributaries, habitat use in small tributaries and the extent they are connected with the mainstem habitats of all core areas is not well understood. Between 1995 and 2019, Arctic Grayling population monitoring has been conducted in the Table River in nine out of 25 years (8 years for the Anzac) using snorkel surveys.  Results from 2018 are 2019 are intended to contribute to the assessment of the conservation status of the species in the Parsnip Core area [@hagenTrendAbundanceArctic2018].
 
 <br>
 
@@ -491,7 +501,7 @@ Past fish passage assessment reports for the Parsnip River watershed were first 
 <br>
 
 
-A Google Earth (.kml) file with crossing locations and rational for prioritizing for habitat confirmations was forwarded to provincial fish habitat biologists, McLeod Lake Indian Band staff, representatives from CN Rail, BC Timber Sales and Canfor Forest Products to provide an opportunity for review and scope for feedback. Additionally, Arlene Salonas (Land and Resource Consultation Coordinator from McLeod Lake) issued a mailout document to scope for feedback from the community on potential fish passage restoration candidates as well as to inquire about fisheries information in traditional territory watersheds potentially relevant to fish passage restoration activities.
+A Google Earth (.kml) file with crossing locations and rational for prioritizing for habitat confirmations was forwarded to provincial fish habitat biologists, McLeod Lake Indian Band staff, representatives from CN Rail, BC Timber Sales and Canfor Forest Products to provide an opportunity for review and scope for feedback. Additionally, Arlene Solonas (Land and Resource Consultation Coordinator from McLeod Lake) issued a mailout document to scope for feedback from the community on potential fish passage restoration candidates as well as to inquire about fisheries information in traditional territory watersheds potentially relevant to fish passage restoration activities.
 
 <br>
 
@@ -499,7 +509,7 @@ In the field, PSCIS crossings ranked as high priorities for follow-up were first
 
 <br>
 
-Following fish passage assessments, habitat confirmations were completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” (FPTWG 2011). The main objective of the field surveys was to document upstream habitat quantity and quality and to determine if any other obstructions exist above or below the crossing.  Habitat value was assessed based on channel morphology, flow characteristics (perennial, intermittent, ephemeral), the presence/absence of deep  pools,un-embedded  boulders, substrate, woody debris, undercut banks, aquatic vegetation and overhanging riparian vegetation. Criteria used to rank habitat value is specified in @confirmation_checklist and summarized in Table \@ref(tab:tablehabvalue). Data from fish habitat assessments and habitat confirmation assessments will be submitted to the PSCIS database.
+Following fish passage assessments, habitat confirmations were completed in accordance with procedures outlined in the document “A Checklist for Fish Habitat Confirmation Prior to the Rehabilitation of a Stream Crossing” (FPTWG 2011). The main objective of the field surveys was to document upstream habitat quantity and quality and to determine if any other obstructions exist above or below the crossing.  Habitat value was assessed based on channel morphology, flow characteristics (perennial, intermittent, ephemeral), the presence/absence of deep  pools, un-embedded  boulders, substrate, woody debris, undercut banks, aquatic vegetation and overhanging riparian vegetation. Criteria used to rank habitat value is specified in @confirmation_checklist and summarized in Table \@ref(tab:tablehabvalue). Data from fish habitat assessments and habitat confirmation assessments will be submitted to the PSCIS database.
 
 <br>
 
@@ -555,19 +565,23 @@ if(knitr::is_html_output() == TRUE){
 <br>
 
 ## Results and Discussion {.tabset .active}
-Review of the PSCIS database indicated that within the Parsnip River watershed, since `r min(pscis_historic_references$year)`, `r length(pscis_historic$id)` assessments for fish passage (Phase 1) have been conducted at crossing structures. Locations of 99 crossing structure assessments were selected for a detailed office review based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, near the crossing; stream order, previously recorded channel size and recommendations of past fish passage assessments. Following review, `r pscis_planning_summary %>% filter(my_priority == 'High') %>% pull(count)` crossings given a high priority for field review with habitat confirmation assessments. It should be noted that 4 of the crossings prioritized as high priorities for follow up were logged twice in the PSCIS database so in actuality only 22 crossings were present in the field.  `r pscis_planning_summary %>% filter(my_priority == 'Mod') %>% pull(count) %>% english::as.english() %>% str_to_title()` crossings were assessed with a moderate priority, `r pscis_planning_summary %>% filter(my_priority == 'Low') %>% pull(count)` crossings were assessed with a low priority and `r pscis_planning_summary %>% filter(my_priority == 'No Fix') %>% pull(count)` were assessed as "no fix". Additionally, `r pscis_planning_summary %>% filter(my_priority == 'Fixed') %>% pull(count) %>% english::as.english()` crossings were noted as "fixed". Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments is available [HERE](https://newgraphenvironment.github.io/Parsnip_Fish_Passage/Parsnip_report_planning_summary.html) and a Google Earth (.kml) file with crossing locations and pre-habitat confirmation prioritization rational for crossing rated as high and moderate priority for follow up with habitat confirmations is available  [HERE](https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage/raw/master/data/planning_high_mod_culverts.zip). In addition to the Parsnip River watershed group, georeferenced field maps were also generated for the Carp River watershed group and the Crooked River Watershed group areas to prepare for future fish passage and habitat confirmation surveys and are available [HERE](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/) along with associated Fish Habitat Model data outputs which are available [HERE](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/data/).
-
-<br>
- 
-Habitat confirmation assessments were conducted between August 30, 2019 and September 8, 2019 by Allan Irvine, R.P.Bio, Jonathan St.Jean, R.P.Bio, Tyler Valle, Environmental Technician and Ken Solonas, Environmental Technician with 17 crossings ranked as high or moderate priority for follow. During the habitat confirmations a total of approximately 15 km of stream was assessed and fish sampling (primarily minnow trapping) was conducted upstream and downstream of six restoration candidate sites. Several crossings were also surveyed briefly from the road with fish passage assessments completed only (no habitat confirmation assessments completed) as conditions were assessed as passable for fish migrating upstream. Crossing 125149 was an overflow for an adjacent channel where a bridge was located, crossing 57621 had been replaced by a bridge and crossing 125261 (Fern Creek) was equipped with baffles and appeared passable to most life stages of salmonids at most flows. Additionally, fish passage assessments were conducted on all significantly sized streams on the Hodda-Lake FSR located immediately east of McLeod Lake with data to be uploaded to the PSCIS database.   
- 
-<br>
- 
-Following habitat confirmation assessments, `r table_overview_report %>% filter(Priority %ilike% 'high') %>% nrow() %>% english::as.english()` crossings were rated as high priorities for rehabilitation due to the relatively high value and/or quantity of habitat gain associated with rehabilitation. `r table_overview_report %>% filter(Priority %ilike% 'Moderate') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings were rated as moderate priorities. `r table_overview_report %>% filter(Priority %ilike% 'Low') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings were rated as low priority since the fisheries value gains associated with crossing rehabilitation were relatively low and/or where the presence of natural barriers would nullify the potential value of crossing rehabilitation. Field maps showing crossing locations, habitat confirmation field tracks, Fish Habitat Model outputs, historic fish observations and documented barriers to fish passage are available [here](https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/). Results from sites surveyed are summarized in `r if(knitr::is_html_output() == TRUE){knitr::asis_output("Figure \\@ref(fig:overview-map-interactive) ([Overview Map]) and ")}`Table \@ref(tab:tableoverviewreportall) `r if(knitr::is_html_output() == TRUE){knitr::asis_output("([Overview Table])")}` with detailed reporting including links to georeferenced maps also provided in site specific appendices of this document`r if(knitr::is_html_output() == TRUE){knitr::asis_output(" (linked through Site column of Table \\@ref(tab:tableoverviewreportall))")}`.
+Review of the PSCIS database indicated that within the Parsnip River watershed, since `r min(pscis_historic_references$year)`, `r length(pscis_historic$id)` assessments for fish passage (Phase 1) have been conducted at crossing structures. Locations of 99 crossing structure assessments were selected for a detailed office review based on upstream wetland, lake, and instream habitat quantity, and quality; fish species present, or suspected, near the crossing; stream order, previously recorded channel size and recommendations of past fish passage assessments. Following review, `r pscis_planning_summary %>% filter(my_priority == 'High') %>% pull(count)` crossings given a high priority for field review with habitat confirmation assessments. It should be noted that 4 of the crossings prioritized as high priorities for follow up were logged twice in the PSCIS database so in actuality only 22 crossings were present in the field.  `r pscis_planning_summary %>% filter(my_priority == 'Mod') %>% pull(count) %>% english::as.english() %>% str_to_title()` crossings were assessed with a moderate priority, `r pscis_planning_summary %>% filter(my_priority == 'Low') %>% pull(count)` crossings were assessed with a low priority and `r pscis_planning_summary %>% filter(my_priority == 'No Fix') %>% pull(count)` were assessed as "no fix". Additionally, `r pscis_planning_summary %>% filter(my_priority == 'Fixed') %>% pull(count) %>% english::as.english()` crossings were noted as "fixed". 
 
 <br>
 
-At the time of reporting, communications were underway with Ministry of Forests, Lands, Natural Resource Operations & Rural Development representatives, forest licensees and engineering consultants to commission an engineering site plan and design for a fish passable structure to replace one of the barrier culverts identified as a high priority for replacement. It is expected that funding for the design will be provided through this project. 
+Historic PSCIS photos and details, Fish Habitat Model outputs and prioritization rank/comments related to crossings ranked for follow up with habitat confirmation assessments is available at https://newgraphenvironment.github.io/Parsnip_Fish_Passage/Parsnip_report_planning_summary.html and a Google Earth (.kml) file with crossing locations and pre-habitat confirmation prioritization rational for crossing rated as high and moderate priority for follow up with habitat confirmations is available  at https://github.com/NewGraphEnvironment/Parsnip_Fish_Passage/raw/master/data/planning_high_mod_culverts.zip. In addition to the Parsnip River watershed group, georeferenced field maps were also generated for the Carp River watershed group and the Crooked River Watershed group areas to prepare for future fish passage and habitat confirmation surveys and are available https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/ along with associated Fish Habitat Model data outputs which are available at https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/data/.
+
+<br>
+ 
+Habitat confirmation assessments were conducted between August 30, 2019 and September 8, 2019 by Allan Irvine, R.P.Bio, Jonathan St.Jean, R.P.Bio, Tyler Valle, Environmental Technician and Ken Solonas, Environmental Technician with 17 crossings ranked as high or moderate priority for follow up. During the habitat confirmations a total of approximately 15 km of stream was assessed and fish sampling (primarily minnow trapping) was conducted upstream and downstream of six restoration candidate sites. Several crossings were also surveyed briefly from the road with fish passage assessments completed only (no habitat confirmation assessments completed) as conditions were assessed as passable for fish migrating upstream. Crossing 125149 was an overflow for an adjacent channel where a bridge was located, crossing 57621 had been replaced by a bridge and crossing 125261 (Fern Creek) was equipped with baffles and appeared passable to most life stages of salmonids at most flows. Additionally, fish passage assessments were conducted on all significantly sized streams on the Hodda-Lake FSR located immediately east of McLeod Lake with data to be uploaded to the PSCIS database.   
+ 
+<br>
+ 
+Following habitat confirmation assessments, `r table_overview_report %>% filter(Priority %ilike% 'high') %>% nrow() %>% english::as.english()` crossings were rated as high priorities for rehabilitation due to the relatively high value and/or quantity of habitat gain associated with rehabilitation. `r table_overview_report %>% filter(Priority %ilike% 'Moderate') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings were rated as moderate priorities. `r table_overview_report %>% filter(Priority %ilike% 'Low') %>% nrow() %>% english::as.english() %>% str_to_title()` crossings were rated as low priority since the fisheries value gains associated with crossing rehabilitation were relatively low and/or where the presence of natural barriers would nullify the potential value of crossing rehabilitation. Field maps showing crossing locations, habitat confirmation field tracks, Fish Habitat Model outputs, historic fish observations and documented barriers to fish passage are available at https://hillcrestgeo.ca/outgoing/forNewGraph/parsnip/maps/. Results from sites surveyed are summarized in `r if(knitr::is_html_output() == TRUE){knitr::asis_output("Figure \\@ref(fig:overview-map-interactive) ([Overview Map]) and ")}`Table \@ref(tab:tableoverviewreportall) `r if(knitr::is_html_output() == TRUE){knitr::asis_output("([Overview Table])")}` with detailed reporting including links to georeferenced maps also provided in site specific appendices of this document`r if(knitr::is_html_output() == TRUE){knitr::asis_output(" (linked through Site column of Table \\@ref(tab:tableoverviewreportall))")}`.
+
+<br>
+
+As the result of 2019 field work findings and ongoing communications between SERNbc; McLeod Lake Indian Band; Sinclar Group (forest licensee); Ministry of Forests, Lands, Natural Resource Operations & Rural Development representatives,  site plan designs have been developed for a fish passable structure over an unnamed tributary to Missinka River (PSCIS crossing 125179) located at 12km on the Chuchinka-Missinka FSR Road.  The crossing was identified as a barrier to upstream fish migration and a high priority for replacement through this project.  The current crossing structures (two round bottom corrugated metal pipes) were noted as being located in a fisheries sensitive watershed and adjacent to other streams of similar size and character which are also transected by FSR crossing structure barriers. Should fish passage restoration at crossing 125179 be completed, this setting could present a scenario favorable for monitoring of impacts of stream passage remediation on local fisheries populations as biological monitoring at the stream where crossing 125179 is located can be compared not only to pre-restoration conditions but also to similar adjacent streams where non-remediated crossing structures are located.
 
 <br>
 
@@ -797,17 +811,17 @@ if(knitr::is_html_output() == TRUE){
 } else table_overview_flextable_all(df = table_overview_report)
 ```
 
-*Habitat gain based on Fish Habitat Model estimates of linear stream length upstream of crossing with no section of modeled gradients >22% for 100m or more. Estimates currently not adjusted to indicate results from field surveys. Please see individual memos (appendices`r if(knitr::is_html_output() == TRUE){knitr::asis_output(" linked through Site column")}`) for refined estimates of potential habitat gained based on field surveys and conservative GIS estimates of upstream habitat in mainstem of stream only.
+*Habitat gain based on conservative estimates of mainstem habitat upstream.
 
 <br>
 
 ## Recommendations
 Recommended next steps for fish passage restoration in the Parsnip River Watershed include:
 
- * Acquisition of funding to contribute towards costs for replacing the high priority structure receiving replacement designs through this 2019/2020 phase of the project.
+ * Acquisition of funding to contribute towards costs for replacing the high priority structure 125179 which is receiving replacement designs through this 2019/2020 phase of the project.
  * Acquisition of funding to procure site plans and replacement designs for structures identified as high priorities for restoration through this 2019/2020 phase of the project. 
  * Explore and pursue opportunities to obtain buy-in and funding for replacement of identified high priority structures.
- * Drafting and implementation of a collaborative plan for assessing the impacts of fish passage restoration investments.  The plan should be designed to provide data necesary to effectively monitor the outcomes of restoration efforts, inform future investments and build capacity/momentum for ecosystem restoration activities in the FWCP Peace Region.
+ * Drafting and implementation of a collaborative plan for assessing the impacts of fish passage restoration investments.  The plan should be designed to provide data necessary to effectively monitor the outcomes of restoration efforts, inform future investments and build capacity/momentum for ecosystem restoration activities in the FWCP Peace Region.
 
 
 ```{r, eval = knitr::is_html_output()}

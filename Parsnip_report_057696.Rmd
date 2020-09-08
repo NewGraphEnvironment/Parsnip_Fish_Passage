@@ -124,7 +124,7 @@ knitr::asis_output(html_title) # Header that is only shown if print_option == TR
 
 ##### Site Location
 
-Crossing `r my_site` is located on an unnamed `r my_pscis_info %>% pull(stream_name)` near the `r my_pscis_info %>% pull(road_km_mark)`km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km from the confluence with Wichcika Creek (Table \@ref(tab:tableoverview-57696)). At the time of the field surveys, there appeared to be no active log hauling on the FSR however their was a mining exploration camp on the road roughly near the 5km mark and some pickup truck traffic was encountered. 
+Crossing `r my_site` is located on an unnamed `r my_pscis_info %>% pull(stream_name)` near the `r my_pscis_info %>% pull(road_km_mark)`km mark of the `r my_overview_info %>% pull(road_name)`.  The culvert is located `r my_distance_downstream`km from the confluence with Wichcika Creek (Table \@ref(tab:tableoverview-57696)). At the time of the field surveys, there appeared to be no active log hauling on the FSR however there was a mining exploration camp on the road roughly near the 5km mark and some pickup truck traffic was encountered. 
 
 
 <br>

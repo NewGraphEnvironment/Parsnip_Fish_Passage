@@ -129,7 +129,7 @@ Crossing `r my_site` is located on an unnamed tributary to Wichcika Creek near t
 
 ##### Background Information
 
-At the crossing location, the stream is a 3rd order stream with a watershed area upstream of the road of approximatley `r my_watershed %>% pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 1000m to 800m at the culvert. No other crossings are modeled upstream. 
+At the crossing location, the stream is a 3rd order stream with a watershed area upstream of the road of approximately `r my_watershed %>% pull(area_km)`km^2^. The elevation of the watershed ranges from a maximum of 1000m to 800m at the culvert. No other crossings are modeled upstream. 
 
 <br>
 
